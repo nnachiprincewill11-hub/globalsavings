@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Global Savings helps you build better saving habits, manage your money, and work toward your financial goals.">
+  <title>Global Savings | Save with purpose</title>
+  <style>
+    :root {
+      --blue: #155eef;
+      --blue-dark: #1047bd;
+      --blue-soft: #eef4ff;
+      --ink: #17243b;
+      --muted: #62718a;
+      --line: #e4eaf3;
+      --white: #ffffff;
+      --shadow: 0 18px 50px rgba(22, 65, 140, .10);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--white);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .container { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+    header {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(255,255,255,.94); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(228,234,243,.9);
+    }
+    .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand { display: inline-flex; align-items: center; gap: 11px; font-weight: 850; letter-spacing: -.5px; }
+    .logo {
+      width: 42px; height: 42px; border-radius: 14px; display: grid; place-items: center;
+      color: white; font-weight: 900; font-size: 21px;
+      background: linear-gradient(145deg, #4387ff, #1047bd);
+      box-shadow: 0 8px 20px rgba(21,94,239,.25);
+    }
+    .brand-name { font-size: 18px; }
+    .nav-links { display: flex; align-items: center; gap: 28px; color: #4c5c74; font-size: 14px; font-weight: 650; }
+    .nav-links a:hover { color: var(--blue); }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+      border: 0; border-radius: 12px; padding: 13px 21px; font: inherit; font-weight: 750;
+      cursor: pointer; transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { color: white; background: var(--blue); box-shadow: 0 9px 22px rgba(21,94,239,.22); }
+    .btn-primary:hover { background: var(--blue-dark); }
+    .btn-outline { color: var(--blue); background: white; border: 1px solid #cbd9f7; }
+    .menu-toggle { display: none; background: white; border: 1px solid var(--line); border-radius: 10px; padding: 8px 11px; font-size: 22px; color: var(--ink); }
+    .hero { overflow: hidden; position: relative; padding: 86px 0 78px; background: linear-gradient(180deg, #f7faff 0%, #fff 100%); }
+    .hero::before, .hero::after { content: ""; position: absolute; border-radius: 50%; pointer-events: none; }
+    .hero::before { width: 370px; height: 370px; background: rgba(21,94,239,.06); right: -120px; top: -100px; }
+    .hero::after { width: 210px; height: 210px; border: 1px solid rgba(21,94,239,.12); right: 10%; bottom: -130px; }
+    .hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: 55px; position: relative; z-index: 1; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border: 1px solid #dbe7ff; border-radius: 999px; background: white; color: var(--blue); font-size: 12px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; }
+    .eyebrow span { width: 7px; height: 7px; border-radius: 50%; background: #25b981; }
+    h1 { font-size: clamp(40px, 5.2vw, 66px); line-height: 1.06; letter-spacing: -2.8px; margin: 22px 0 20px; max-width: 650px; }
+    h1 em { color: var(--blue); font-style: normal; }
+    .hero-copy { max-width: 570px; color: var(--muted); font-size: 17px; margin: 0 0 28px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .trust-note { display: flex; align-items: center; gap: 10px; margin-top: 24px; color: #65748b; font-size: 12px; }
+    .trust-icons { display: flex; }
+    .trust-icons span { display: grid; place-items: center; width: 29px; height: 29px; border-radius: 50%; margin-right: -7px; background: #dbe8ff; border: 2px solid white; color: #155eef; font-size: 11px; font-weight: 800; }
+    .visual { position: relative; min-height: 380px; display: grid; place-items: center; }
+    .money-card { width: min(100%, 390px); background: white; border: 1px solid #e8eef8; border-radius: 24px; padding: 27px; box-shadow: var(--shadow); transform: rotate(1deg); }
+    .card-top { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 13px; font-weight: 650; }
+    .mini-logo { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; background: var(--blue-soft); color: var(--blue); font-weight: 900; }
+    .balance-label { margin-top: 27px; color: var(--muted); font-size: 13px; }
+    .balance { font-size: 35px; letter-spacing: -1px; font-weight: 850; margin: 2px 0 5px; }
+    .positive { color: #13966b; font-size: 12px; font-weight: 750; }
+    .chart { height: 95px; margin: 19px 0 22px; border-radius: 12px; background: linear-gradient(180deg, #eef4ff, rgba(238,244,255,0)); position: relative; overflow: hidden; }
+    .chart svg { width: 100%; height: 100%; }
+    .goal-row { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; color: var(--muted); }
+    .progress { height: 8px; border-radius: 99px; background: #edf1f8; margin-top: 10px; overflow: hidden; }
+    .progress span { display: block; width: 68%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #155eef, #72a4ff); }
+    .floating-note { position: absolute; left: -12px; bottom: 25px; background: white; border: 1px solid var(--line); box-shadow: var(--shadow); border-radius: 16px; padding: 14px 17px; display: flex; align-items: center; gap: 11px; font-size: 12px; font-weight: 750; }
+    .floating-icon { width: 34px; height: 34px; display: grid; place-items: center; background: #e9fbf4; color: #10976a; border-radius: 11px; font-size: 18px; }
+    section { padding: 78px 0; }
+    .section-heading { max-width: 650px; text-align: center; margin: 0 auto 42px; }
+    .section-heading .kicker { color: var(--blue); font-size: 12px; font-weight: 850; letter-spacing: 1.3px; text-transform: uppercase; }
+    h2 { font-size: clamp(29px, 3.6vw, 42px); letter-spacing: -1.3px; line-height: 1.15; margin: 11px 0 13px; }
+    .section-heading p { color: var(--muted); margin: 0; }
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .feature { padding: 27px; border: 1px solid var(--line); border-radius: 18px; background: white; }
+    .feature-icon { width: 48px; height: 48px; display: grid; place-items: center; background: var(--blue-soft); color: var(--blue); border-radius: 14px; font-size: 23px; }
+    .feature h3 { margin: 18px 0 8px; font-size: 18px; }
+    .feature p { color: var(--muted); font-size: 14px; margin: 0; }
+    .how { background: #f7faff; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; counter-reset: step; }
+    .step { position: relative; padding: 10px 10px 10px 65px; }
+    .step::before { counter-increment: step; content: "0" counter(step); position: absolute; left: 0; top: 5px; width: 47px; height: 47px; display: grid; place-items: center; border-radius: 15px; background: white; color: var(--blue); border: 1px solid #dce7ff; font-weight: 850; }
+    .step h3 { margin: 0 0 7px; font-size: 17px; }
+    .step p { margin: 0; color: var(--muted); font-size: 14px; }
+    .testimonials { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .quote { border: 1px solid var(--line); border-radius: 18px; padding: 25px; }
+    .stars { color: #f4ad32; letter-spacing: 2px; font-size: 15px; }
+    .quote blockquote { margin: 14px 0 22px; color: #46556d; font-size: 14px; }
+    .person { display: flex; align-items: center; gap: 11px; }
+    .avatar { width: 39px; height: 39px; border-radius: 50%; display: grid; place-items: center; color: var(--blue); background: #e5edff; font-weight: 850; }
+    .person strong { display: block; font-size: 13px; }
+    .person small { color: var(--muted); font-size: 11px; }
+    .testimonial-note { text-align: center; margin-top: 20px; color: var(--muted); font-size: 12px; }
+    .cta-wrap { padding-top: 15px; }
+    .cta { text-align: center; padding: 55px 25px; color: white; border-radius: 26px; background: linear-gradient(120deg, #155eef, #103ea7); position: relative; overflow: hidden; }
+    .cta::after { content: ""; position: absolute; width: 280px; height: 280px; border: 1px solid rgba(255,255,255,.18); border-radius: 50%; right: -80px; top: -150px; }
+    .cta h2 { position: relative; z-index: 1; max-width: 650px; margin: 0 auto 13px; }
+    .cta p { position: relative; z-index: 1; color: #dbe7ff; max-width: 570px; margin: 0 auto 25px; }
+    .cta .btn { position: relative; z-index: 1; color: var(--blue); background: white; }
+    footer { border-top: 1px solid var(--line); padding: 26px 0; color: var(--muted); font-size: 12px; }
+    .footer-row { display: flex; justify-content: space-between; align-items: center; gap: 18px; flex-wrap: wrap; }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a:hover { color: var(--blue); }
+    @media (max-width: 800px) {
+      .nav-links { display: none; position: absolute; top: 76px; left: 0; right: 0; padding: 18px 20px 22px; background: white; border-bottom: 1px solid var(--line); flex-direction: column; align-items: stretch; gap: 18px; }
+      .nav-links.open { display: flex; }
+      .nav-links .btn { width: 100%; }
+      .menu-toggle { display: inline-flex; }
+      .hero { padding: 60px 0 55px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 25px; }
+      h1 { letter-spacing: -1.7px; }
+      .visual { min-height: 340px; }
+      .floating-note { left: 0; }
+      .features, .testimonials { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; gap: 22px; }
+      section { padding: 60px 0; }
+    }
+    @media (max-width: 460px) {
+      .container { width: min(100% - 28px, 1120px); }
+      .brand-name { font-size: 16px; }
+      .nav { min-height: 68px; }
+      .nav-links { top: 68px; }
+      .hero { padding-top: 46px; }
+      h1 { font-size: 42px; }
+      .hero-copy { font-size: 15px; }
+      .hero-actions .btn { width: 100%; }
+      .money-card { padding: 21px; }
+      .visual { min-height: 315px; }
+      .floating-note { bottom: 5px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="#home" aria-label="Global Savings home">
+        <span class="logo" aria-hidden="true">G</span>
+        <span class="brand-name">GLOBAL SAVINGS</span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false">☰</button>
+      <nav class="nav-links" id="navLinks" aria-label="Main navigation">
+        <a href="#about">About</a>
+        <a href="#benefits">Benefits</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#testimonials">Testimonials</a>
+        <a class="btn btn-primary" href="#get-started">Get Started <span aria-hidden="true">→</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow"><span></span> Build better money habits</div>
+          <h1>Make your goals happen, <em>one saving step at a time.</em></h1>
+          <p class="hero-copy">Global Savings is designed to help you build consistent saving habits, keep your financial goals in focus, and manage your money with greater confidence.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#get-started">Get Started <span aria-hidden="true">→</span></a>
+            <a class="btn btn-outline" href="#about">Learn More</a>
+          </div>
+          <div class="trust-note">
+            <div class="trust-icons" aria-hidden="true"><span>G</span><span>S</span><span>+</span></div>
+            <span>A clearer plan for your financial goals starts here.</span>
+          </div>
+        </div>
+        <div class="visual" aria-label="Illustration of a savings goal dashboard">
+          <div class="money-card">
+            <div class="card-top"><span>My savings overview</span><span class="mini-logo">G</span></div>
+            <div class="balance-label">Your goals, all in one place</div>
+            <div class="balance">Save with purpose</div>
+            <div class="positive">Small steps can make a difference</div>
+            <div class="chart" aria-hidden="true">
+              <svg viewBox="0 0 340 100" preserveAspectRatio="none">
+                <path d="M0 82 C30 78 40 55 68 63 S105 74 130 48 S170 62 197 36 S235 45 257 22 S300 33 340 8 L340 100 L0 100Z" fill="#dce9ff"/>
+                <path d="M0 82 C30 78 40 55 68 63 S105 74 130 48 S170 62 197 36 S235 45 257 22 S300 33 340 8" fill="none" stroke="#155eef" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="goal-row"><span>Example savings goal</span><strong>Progress starts with a plan</strong></div>
+            <div class="progress" aria-label="Decorative example progress bar"><span></span></div>
+          </div>
+          <div class="floating-note"><span class="floating-icon">✓</span><span>Set a goal.<br>Build a habit.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="container">
+        <div class="section-heading">
+          <div class="kicker">About Global Savings</div>
+          <h2>A simpler way to think about saving</h2>
+          <p>Good financial habits begin with a clear goal. Global Savings aims to give users a convenient, easy-to-understand place to focus on their saving plans and financial progress.</p>
+        </div>
+        <div class="features" id="benefits">
+          <article class="feature">
+            <div class="feature-icon" aria-hidden="true">◎</div>
+            <h3>Set meaningful goals</h3>
+            <p>Define what you are saving for and turn a big ambition into smaller, more manageable steps.</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon" aria-hidden="true">▤</div>
+            <h3>Stay organised</h3>
+            <p>Keep your saving intentions and plans clear so it is easier to stay focused over time.</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon" aria-hidden="true">↗</div>
+            <h3>Build consistency</h3>
+            <p>Make saving a regular habit and review your progress as you work toward your goals.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="how" id="how-it-works">
+      <div class="container">
+        <div class="section-heading">
+          <div class="kicker">Getting started</div>
+          <h2>Your goals. Your plan. Your next step.</h2>
+          <p>Start with a simple plan and build from there.</p>
+        </div>
+        <div class="steps">
+          <article class="step"><h3>Create your account</h3><p>Use the Get Started link to continue to the registration page when your account system is connected.</p></article>
+          <article class="step"><h3>Choose a savings goal</h3><p>Think about what matters to you, the amount you need, and a realistic timeframe.</p></article>
+          <article class="step"><h3>Keep moving forward</h3><p>Follow your plan, review your progress, and adjust your goals when your needs change.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="testimonials">
+      <div class="container">
+        <div class="section-heading">
+          <div class="kicker">Testimonials</div>
+          <h2>Stories belong to real users</h2>
+          <p>We want Global Savings to be clear, helpful, and easy to use. Add feedback from real users here as your community grows.</p>
+        </div>
+        <div class="testimonials">
+          <article class="quote">
+            <div class="stars" aria-label="Five star design placeholder">★★★★★</div>
+            <blockquote>“I like having a clear place to think about my goals and plan the steps I need to take.”</blockquote>
+            <div class="person"><span class="avatar">U1</span><div><strong>Early user feedback</strong><small>Replace with a real user's name and permission</small></div></div>
+          </article>
+          <article class="quote">
+            <div class="stars" aria-label="Five star design placeholder">★★★★★</div>
+            <blockquote>“A simple saving routine helps me stay focused on what I am working toward.”</blockquote>
+            <div class="person"><span class="avatar">U2</span><div><strong>Community feedback</strong><small>Replace with a verified testimonial</small></div></div>
+          </article>
+          <article class="quote">
+            <div class="stars" aria-label="Five star design placeholder">★★★★★</div>
+            <blockquote>“Clear goals make it easier to review my plans and keep building better habits.”</blockquote>
+            <div class="person"><span class="avatar">U3</span><div><strong>User story placeholder</strong><small>Add an authentic customer quote here</small></div></div>
+          </article>
+        </div>
+        <p class="testimonial-note">Note: The quotes above are sample placeholders, not verified customer reviews. Replace them with genuine testimonials before publishing.</p>
+      </div>
+    </section>
+
+    <section class="cta-wrap" id="get-started">
+      <div class="container">
+        <div class="cta">
+          <h2>Ready to take the next step toward your goals?</h2>
+          <p>Start building a clearer savings plan with Global Savings. Your journey begins with one simple step.</p>
+          <!-- Replace # with your real signup page, e.g. signup.html, when it is ready. -->
+          <a class="btn" href="#" id="getStartedButton">Get Started Now <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <a class="brand" href="#home"><span class="logo" aria-hidden="true">G</span><span class="brand-name">GLOBAL SAVINGS</span></a>
+      <span>© <span id="year"></span> Global Savings. All rights reserved.</span>
+      <div class="footer-links"><a href="#about">About</a><a href="#benefits">Benefits</a><a href="#get-started">Get Started</a></div>
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    menuToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(isOpen));
+      menuToggle.textContent = isOpen ? '×' : '☰';
+    });
+
+    navLinks.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        menuToggle.textContent = '☰';
+      });
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Set this link to your real registration page when it exists.
+    document.getElementById('getStartedButton').addEventListener('click', (event) => {
+      event.preventDefault();
+      alert('Your registration page has not been connected yet. Once you create signup.html, update this button link to signup.html.');
+    });
+  </script>
+</body>
+</html>

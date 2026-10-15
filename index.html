@@ -1,177 +1,60 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GLOBAL SAVINGS - Secure Your Future</title>
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', system-ui, sans-serif;}
-        body{background:#f8fbff;color:#0f2a54;line-height:1.6;overflow-x:hidden;}
-        
-        /* NAV */
-        nav{background:#ffffff;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,0.05);position:sticky;top:0;z-index:100;}
-        .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:22px;color:#0d47a1;}
-        .logo-icon{width:42px;height:42px;background:linear-gradient(135deg,#0d47a1,#1976d2);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;}
-        
-        .nav-links{display:flex;align-items:center;gap:20px;}
-        .nav-links a{ text-decoration:none;color:#0f2a54;font-weight:600;transition:.3s;}
-        .nav-links a:hover{color:#1976d2;}
-        
-        /* Hamburger */
-        .hamburger{display:none;font-size:28px;cursor:pointer;color:#0d47a1;background:none;border:none;}
-        
-        .btn{padding:12px 28px;border-radius:30px;text-decoration:none;font-weight:700;display:inline-block;transition:.3s;border:none;cursor:pointer;text-align:center;}
-        .btn-primary{background:#0d47a1;color:white;}
-        .btn-primary:hover{background:#08367d;transform:translateY(-2px);}
-        .btn-outline{background:white;color:#0d47a1;border:2px solid #0d47a1;}
-        .btn-outline:hover{background:#0d47a1;color:white;}
-
-        /* HERO */
-        .hero{padding:60px 5%;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:30px;background:linear-gradient(120deg,#e3f2fd 0%, #ffffff 60%);}
-        .hero-text{flex:1 1 350px;max-width:600px;}
-        .hero-text h1{font-size:clamp(32px,5vw,52px);color:#0d47a1;line-height:1.1;margin-bottom:20px;}
-        .hero-text h1 span{color:#1976d2;}
-        .hero-text p{font-size:clamp(16px,2.5vw,18px);color:#4a6582;margin-bottom:30px;}
-        .hero-buttons{display:flex;gap:12px;flex-wrap:wrap;}
-        .hero-img{flex:1 1 300px;display:flex;justify-content:center;}
-        .hero-card{background:white;padding:30px;border-radius:20px;box-shadow:0 15px 40px rgba(13,71,161,0.15);width:100%;max-width:380px;text-align:center;}
-        .hero-card h2{color:#0d47a1;font-size:32px;}
-
-        /* SECTIONS */
-        .section{padding:60px 5%;text-align:center;}
-        .section h2{color:#0d47a1;font-size:clamp(26px,4vw,34px);margin-bottom:10px;}
-        .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:25px;margin-top:40px;}
-        .card{background:white;padding:30px;border-radius:16px;box-shadow:0 5px 20px rgba(0,0,0,0.05);border-top:4px solid #1976d2;}
-
-        /* TESTIMONIALS */
-        .testimonials{background:#0d47a1;color:white;}
-        .testimonials h2{color:white;}
-        .testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px;margin-top:40px;}
-        .testi{background:white;color:#0f2a54;padding:25px;border-radius:16px;text-align:left;}
-        .testi .stars{color:#ffb300;margin-bottom:10px;}
-        .testi .name{font-weight:800;margin-top:15px;color:#0d47a1;}
-
-        /* CONTACT BANNER */
-        .contact-banner{background:#e3f2fd;padding:30px 5%;text-align:center;border:2px dashed #1976d2;margin:30px 5%;border-radius:16px;}
-        .contact-banner h3{font-size:clamp(20px,3vw,24px);color:#0d47a1;margin-bottom:15px;}
-        .contact-info p{font-size:clamp(14px,2.5vw,18px);word-break:break-all;}
-        .contact-info strong{font-size:clamp(16px,3vw,20px);color:#000;}
-
-        footer{background:#0a2f6b;color:#c9d9f0;padding:30px 5%;text-align:center;}
-        footer a{color:white;text-decoration:underline;}
-
-        /* --- MOBILE RESPONSIVE --- */
-        @media (max-width: 768px){
-            .hamburger{display:block;}
-            .nav-links{
-                position:fixed;top:70px;right:-100%;width:80%;max-width:300px;height:100vh;
-                background:white;flex-direction:column;align-items:flex-start;
-                padding:30px;gap:25px;box-shadow:-5px 0 20px rgba(0,0,0,0.1);
-                transition:0.4s ease;
-            }
-            .nav-links.active{right:0;}
-            .hero{flex-direction:column;text-align:center;padding:40px 5%;}
-            .hero-buttons{justify-content:center;}
-            .hero-text{max-width:100%;}
-            .contact-banner .btn{display:block;width:100%;margin:10px 0 !important;}
-        }
-        @media (max-width: 480px){
-            nav{padding:12px 4%;}
-            .logo{font-size:18px;}
-            .section{padding:40px 4%;}
-            .hero-card{padding:20px;}
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0866e9">
+  <title>Global Savings | Save Today, Build Tomorrow</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="site.js" defer></script>
 </head>
 <body>
-
-    <nav>
-        <div class="logo">
-            <div class="logo-icon">GS</div>
-            GLOBAL SAVINGS
-        </div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <div class="nav-links" id="navLinks">
-            <a href="about.html">About</a>
-            <a href="services.html">Services</a>
-            <a href="testimonials.html">Testimonials</a>
-            <a href="contact.html">Contact</a>
-            <a href="login.html" class="btn btn-outline" style="padding:8px 20px;">Login</a>
-            <a href="get started.html" class="btn btn-primary" style="padding:8px 20px;">Get Started</a>
-        </div>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Global Savings home"><span class="brand-mark">↗</span><span><strong>Global Savings</strong><small>Save Today · Build Tomorrow</small></span></a>
+    <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a class="active" href="index.html">Home</a><a href="about.html">About</a><a href="testimonials.html">Testimonials</a><a href="news.html">News</a><a href="support.html">Support</a>
+      <a class="button button-small nav-cta" href="get-started.html">Get Started</a>
     </nav>
-
+  </header>
+  <main>
     <section class="hero">
-        <div class="hero-text">
-            <h1>Save Smarter. <span>Grow Globally.</span></h1>
-            <p>Join over 50,000 Nigerians trusting GLOBAL SAVINGS to secure their future. Flexible savings, high returns, and 100% security guaranteed.</p>
-            <div class="hero-buttons">
-                <a href="get started.html" class="btn btn-primary">Get Started Now</a>
-                <a href="learn more.html" class="btn btn-outline">Learn More</a>
-                <a href="how it works.html" class="btn btn-outline">How It Works</a>
-            </div>
-        </div>
-        <div class="hero-img">
-            <div class="hero-card">
-                <p>Your Balance</p>
-                <h2>₦1,450,000</h2>
-                <p style="color:green;font-weight:700;margin:10px 0;">+12.5% Interest</p>
-                <a href="dashboard.html" class="btn btn-primary" style="width:100%;margin-top:15px;">Go to Dashboard</a>
-                <a href="withdraw.html" class="btn btn-outline" style="width:100%;margin-top:10px;">Withdraw Funds</a>
-            </div>
-        </div>
+      <div class="hero-copy">
+        <span class="eyebrow">Your financial future starts here</span>
+        <h1>Save smarter,<br><span>grow with purpose.</span></h1>
+        <p>Build better money habits with a simple place to plan your goals, track your progress, and learn about saving.</p>
+        <div class="button-row"><a class="button" href="get-started.html">Get Started <span aria-hidden="true">→</span></a><a class="button button-outline" href="about.html">Learn More</a></div>
+        <p class="small-note">A planning and learning website. No deposits or transfers are processed here.</p>
+      </div>
+      <div class="hero-art" aria-label="Savings goals illustration">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="growth-card"><span class="growth-icon">▥</span><strong>Small steps.</strong><strong>Bright future.</strong><div class="mini-bars"><i></i><i></i><i></i><i></i><i></i></div></div>
+        <div class="person-illustration"><div class="person-hair"></div><div class="person-face"></div><div class="person-body"></div><div class="person-shirt"></div></div>
+        <div class="float-card float-top"><span class="round-icon">✓</span><span><strong>Plan with confidence</strong><small>One goal at a time</small></span></div>
+        <div class="float-card float-bottom"><span class="round-icon">↗</span><span><strong>Track your progress</strong><small>Keep moving forward</small></span></div>
+      </div>
     </section>
-
-    <section class="section">
-        <h2>Why Choose GLOBAL SAVINGS?</h2>
-        <p>We make saving simple, rewarding, and global.</p>
-        <div class="features">
-            <div class="card"><h3>🔒 100% Secure</h3><p>Your funds are insured and protected with bank-level encryption.</p><br><a href="security.html" class="btn btn-outline">Security Info</a></div>
-            <div class="card"><h3>📈 High Returns</h3><p>Earn up to 20% interest per annum on your savings.</p><br><a href="plans.html" class="btn btn-outline">View Plans</a></div>
-            <div class="card"><h3>⚡ Instant Withdrawal</h3><p>Access your money anytime, anywhere in less than 2 minutes.</p><br><a href="withdraw.html" class="btn btn-outline">How to Withdraw</a></div>
-        </div>
+    <section class="section testimonials-section">
+      <div class="section-heading"><span class="eyebrow">Community voices</span><h2>Stories that keep us moving</h2><p>Sample testimonials are shown below for layout demonstration. Replace them with real reviews shared with permission.</p></div>
+      <div class="testimonial-wrap">
+        <button class="circle-arrow" id="prev-review" aria-label="Previous testimonials">‹</button>
+        <div id="testimonial-grid" class="testimonial-grid" aria-live="polite"></div>
+        <button class="circle-arrow" id="next-review" aria-label="Next testimonials">›</button>
+      </div>
+      <div class="dots" id="review-dots" aria-label="Testimonial pages"></div>
+      <div class="center"><a href="testimonials.html" class="text-link">Read all testimonials →</a></div>
     </section>
-
-    <section class="section testimonials">
-        <h2>What Our Customers Say</h2>
-        <p style="color:#b3c9e6;">Trusted by thousands across Nigeria</p>
-        <div class="testi-grid">
-            <div class="testi"><div class="stars">★★★★★</div><p>"GLOBAL SAVINGS changed my life. I saved ₦2M in 8 months for my house. So transparent and reliable!"</p><div class="name">— Chidinma A., Port Harcourt</div></div>
-            <div class="testi"><div class="stars">★★★★★</div><p>"Customer service is top notch. They respond fast on WhatsApp and my withdrawals are always instant."</p><div class="name">— Tunde O., Lagos</div></div>
-            <div class="testi"><div class="stars">★★★★★</div><p>"Best savings platform I have used. The interest is real and the app is very easy to use."</p><div class="name">— Blessing E., Abuja</div></div>
-        </div>
-        <br><br><a href="testimonials.html" class="btn btn-outline" style="background:white;">Read More Testimonials</a>
+    <section class="section benefits-section">
+      <div class="section-heading"><span class="eyebrow">Why Global Savings?</span><h2>Your goals, your pace</h2><p>Tools and information to help you make more informed choices.</p></div>
+      <div class="benefit-grid">
+        <article class="benefit"><span class="benefit-icon">♢</span><h3>Privacy matters</h3><p>Use sensible account security and only share information you need to.</p></article>
+        <article class="benefit"><span class="benefit-icon">↗</span><h3>Build good habits</h3><p>Break a big savings goal into smaller, manageable steps.</p></article>
+        <article class="benefit"><span class="benefit-icon">▣</span><h3>Easy access</h3><p>Use the responsive site on your phone, tablet, or computer.</p></article>
+        <article class="benefit"><span class="benefit-icon">♡</span><h3>Helpful support</h3><p>Find answers or send a question through the support page.</p></article>
+      </div>
     </section>
-
-    <div class="contact-banner">
-        <h3>Need Help? Contact Our Customer Service</h3>
-        <div class="contact-info">
-            <p>Email: <strong>emmanuelomelu@gmail.com</strong></p>
-            <p>WhatsApp: <strong>08141844682</strong></p>
-            <br>
-            <a href="mailto:emmanuelomelu@gmail.com" class="btn btn-primary">Email Us</a>
-            <a href="https://wa.me/2348141844682" target="_blank" class="btn btn-primary" style="background:#25D366;">Chat on WhatsApp</a>
-        </div>
-    </div>
-
-    <footer>
-        <p><strong>GLOBAL SAVINGS</strong> © 2026. All Rights Reserved.</p>
-        <p>Customer Service: <strong>emmanuelomelu@gmail.com</strong> | <strong>08141844682</strong></p>
-        <br>
-        <p><a href="privacy policy.html">Privacy Policy</a> | <a href="terms and conditions.html">Terms and Conditions</a> | <a href="contact.html">Contact</a></p>
-    </footer>
-
-    <script>
-        function toggleMenu(){
-            document.getElementById('navLinks').classList.toggle('active');
-        }
-        // Close menu when link clicked on mobile
-        document.querySelectorAll('.nav-links a').forEach(link=>{
-            link.addEventListener('click',()=>{
-                document.getElementById('navLinks').classList.remove('active');
-            })
-        })
-    </script>
-
+    <section class="cta-band"><div><span class="eyebrow eyebrow-light">Ready to take the next step?</span><h2>Start building your plan today.</h2><p>Create an account to try the demo member area.</p></div><a class="button button-white" href="get-started.html">Get Started →</a></section>
+  </main>
+  <footer class="site-footer"><a class="brand brand-footer" href="index.html"><span class="brand-mark">↗</span><span><strong>Global Savings</strong><small>Save Today · Build Tomorrow</small></span></a><div class="footer-links"><a href="index.html">Home</a><a href="about.html">About</a><a href="testimonials.html">Testimonials</a><a href="news.html">News</a><a href="support.html">Support</a></div><p>© <span data-year></span> Global Savings. Demo website; not a bank or financial institution.</p></footer>
 </body>
 </html>

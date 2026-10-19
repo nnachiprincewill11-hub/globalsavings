@@ -1,5 +1,107 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Log In | Global Savings</title><link rel="stylesheet" href="styles.css"><script type="module" src="auth.js"></script><script src="site.js" defer></script></head>
-<body><header class="site-header"><a class="brand" href="index.html"><span class="brand-mark">↗</span><span><strong>Global Savings</strong><small>Save Today · Build Tomorrow</small></span></a><button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button><nav class="nav-links"><a href="index.html">Home</a><a href="about.html">About</a><a href="testimonials.html">Testimonials</a><a href="news.html">News</a><a href="support.html">Support</a><a class="button button-small nav-cta" href="get-started.html">Get Started</a></nav></header>
-<main><section class="page-hero"><span class="eyebrow">Member access</span><h1>Welcome back</h1><p>Log in securely with the email and password for your account.</p></section><section class="content-section"><form class="form-card" id="login-form"><h2>Log in</h2><p>Enter your account details below.</p><label class="field"><span>Email address</span><input name="email" type="email" autocomplete="email" required></label><label class="field"><span>Password</span><input name="password" type="password" autocomplete="current-password" minlength="6" required></label><button class="button" type="submit">Log In</button><p class="form-message" id="auth-message" role="status"></p><p class="form-alt"><a href="#" id="reset-password">Forgot password?</a></p><p class="form-alt">New here? <a href="register.html">Create an account</a></p><p class="form-alt"><a href="get-started.html">← Back to Get Started</a></p></form></section></main>
-<footer class="site-footer"><a class="brand brand-footer" href="index.html"><span class="brand-mark">↗</span><span><strong>Global Savings</strong><small>Save Today · Build Tomorrow</small></span></a><div class="footer-links"><a href="index.html">Home</a><a href="about.html">About</a><a href="support.html">Support</a></div><p>© <span data-year></span> Global Savings. Demo website; not a bank or financial institution.</p></footer></body></html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Global Savings | Login</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#edf4ff;color:#142b49;font-family:Arial,sans-serif;padding:22px;min-height:100vh;display:grid;place-items:center}
+.card{width:100%;max-width:430px;background:white;padding:28px;border-radius:18px;box-shadow:0 8px 30px #123b7018}
+.logo{font-size:25px;font-weight:bold;color:#155eef}
+p{color:#64748b}
+label{display:block;font-weight:bold;font-size:13px;margin:16px 0 6px}
+input{width:100%;padding:13px;border:1px solid #ccd8e8;border-radius:9px;font-size:15px}
+button{width:100%;padding:14px;background:#155eef;color:white;border:0;border-radius:9px;font-size:16px;font-weight:bold;margin-top:18px;cursor:pointer}
+.msg{font-size:14px;overflow-wrap:anywhere;margin-top:12px}
+a{color:#155eef}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">▣ Global Savings</div>
+  <h2>Welcome back</h2>
+  <p>Login to your account.</p>
+
+  <form id="loginForm">
+    <label for="email">Email address</label>
+    <input id="email" type="email" required autocomplete="email">
+
+    <label for="password">Password</label>
+    <input id="password" type="password" required
+      autocomplete="current-password">
+
+    <button id="loginBtn" type="submit">Login</button>
+    <div id="message" class="msg" role="status"></div>
+  </form>
+
+  <p><a href="#" id="resetLink">Forgot password?</a></p>
+  <p>Don't have an account? <a href="register.html">Register here</a></p>
+</div>
+
+<script type="module">
+import { initializeApp }
+  from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {
+  getAuth, signInWithEmailAndPassword, sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",
+  authDomain: "global-savings.firebaseapp.com",
+  projectId: "global-savings",
+  storageBucket: "global-savings.firebasestorage.app",
+  messagingSenderId: "83435054105",
+  appId: "1:83435054105:web:efac6cbd5a264a6892b688",
+  measurementId: "G-XC54YQ0R7N"
+};
+
+const auth = getAuth(initializeApp(firebaseConfig));
+const $ = id => document.getElementById(id);
+
+$("loginForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  $("loginBtn").disabled = true;
+  $("message").textContent = "";
+
+  try {
+    const result = await signInWithEmailAndPassword(
+      auth, $("email").value.trim(), $("password").value
+    );
+
+    $("message").textContent =
+      "Login successful. Signed in as " + result.user.email + ".";
+    // Connect your private dashboard here after verifying the
+    // authenticated user and enforcing Firestore security rules.
+  } catch (error) {
+    console.error(error);
+    $("message").textContent =
+      "Login failed. Check your email and password.";
+  } finally {
+    $("loginBtn").disabled = false;
+  }
+});
+
+$("resetLink").addEventListener("click", async event => {
+  event.preventDefault();
+  const email = $("email").value.trim();
+
+  if (!email) {
+    $("message").textContent =
+      "Enter your email address first.";
+    return;
+  }
+
+  try {
+    await sendPasswordResetEmail(auth, email);
+    $("message").textContent =
+      "If the account exists, a password-reset email will be sent.";
+  } catch {
+    $("message").textContent =
+      "Unable to request a reset. Check Firebase settings.";
+  }
+});
+</script>
+</body>
+</html>

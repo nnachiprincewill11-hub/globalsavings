@@ -1,10 +1,109 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Testimonials | Global Savings</title><link rel="stylesheet" href="styles.css"><script src="site.js" defer></script></head>
-<body><header class="site-header"><a class="brand" href="index.html"><span class="brand-mark">↗</span><span><strong>Global Savings</strong><small>Save Today · Build Tomorrow</small></span></a><button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button><nav class="nav-links"><a href="index.html">Home</a><a href="about.html">About</a><a class="active" href="testimonials.html">Testimonials</a><a href="news.html">News</a><a href="support.html">Support</a><a class="button button-small nav-cta" href="get-started.html">Get Started</a></nav></header>
-<main><section class="page-hero"><span class="eyebrow">Testimonials</span><h1>Voices from our community</h1><p>These sample reviews demonstrate the design. Replace them with genuine, permission-based feedback before publishing.</p></section><section class="content-section"><div class="content-grid">
-<article class="info-card"><span class="stars">★★★★★</span><p>“Breaking a goal into smaller steps makes the process feel more manageable.”</p><strong>Sample review · Tomi</strong></article>
-<article class="info-card"><span class="stars">★★★★★</span><p>“I appreciate that the information is straightforward and easy to read.”</p><strong>Sample review · Zainab</strong></article>
-<article class="info-card"><span class="stars">★★★★★</span><p>“A clean and simple experience that helps me stay focused on my personal plans.”</p><strong>Sample review · Chidi</strong></article>
-<article class="info-card"><span class="stars">★★★★★</span><p>“The pages are easy to navigate on my phone.”</p><strong>Sample review · Blessing</strong></article>
-</div><p class="notice">These are illustrative examples, not verified customer endorsements. Do not present them as real customer experiences.</p></section></main>
-<footer class="site-footer"><a class="brand brand-footer" href="index.html"><span class="brand-mark">↗</span><span><strong>Global Savings</strong><small>Save Today · Build Tomorrow</small></span></a><div class="footer-links"><a href="index.html">Home</a><a href="about.html">About</a><a href="testimonials.html">Testimonials</a><a href="news.html">News</a><a href="support.html">Support</a></div><p>© <span data-year></span> Global Savings. Demo website; not a bank or financial institution.</p></footer></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trade Signal Dashboard — Demo</title>
+<style>
+:root{--bg:#08111f;--panel:#101d30;--panel2:#0c1728;--line:#23344c;--text:#edf4ff;--muted:#8fa3bd;--green:#23d6a2;--red:#ff6174;--blue:#5c9dff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top right,#132747 0,transparent 35%),var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.wrap{max-width:1180px;margin:auto;padding:22px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}.brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,#2563eb,#23d6a2);display:grid;place-items:center;font-size:23px;font-weight:800}.eyebrow{color:var(--muted);font-size:12px;letter-spacing:.13em;text-transform:uppercase}.brand h1{font-size:21px;margin:0}.demo{border:1px solid #755c2b;background:#2a2417;color:#ffd783;border-radius:99px;padding:7px 12px;font-size:12px;font-weight:700}
+.grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(280px,1fr);gap:16px}.panel{background:linear-gradient(180deg,rgba(17,30,49,.97),rgba(12,23,40,.97));border:1px solid var(--line);border-radius:18px;padding:18px;min-width:0}.market-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}.pair{font-size:20px;font-weight:750}.price{font-size:30px;font-weight:800;letter-spacing:-.03em;margin-top:5px}.change{font-size:13px;color:var(--green);font-weight:700}.controls{display:flex;gap:6px;flex-wrap:wrap}.controls button,.action-btn{background:#17273d;color:#b7c7dc;border:1px solid #2a3d57;padding:8px 11px;border-radius:9px;cursor:pointer;font-weight:650}.controls button.active{background:#1b3d62;border-color:var(--blue);color:#fff}.chart-wrap{position:relative;margin-top:18px;background:#0a1423;border:1px solid #1d2d43;border-radius:12px;overflow:hidden}.chart-wrap canvas{width:100%;height:320px;display:block}.chart-note{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;padding:8px 3px 0}.signal{display:flex;justify-content:space-between;align-items:center;gap:12px}.signal-badge{border-radius:10px;padding:8px 12px;font-weight:850;letter-spacing:.04em}.buy{background:#123e36;color:#65f1c6;border:1px solid #206a59}.sell{background:#461f2b;color:#ff91a0;border:1px solid #783344}.neutral{background:#28354a;color:#c4d0e0;border:1px solid #3b4c65}.big-signal{font-size:26px;font-weight:850;margin:16px 0 3px}.muted{color:var(--muted)}.meter{height:8px;background:#26364d;border-radius:99px;overflow:hidden;margin:10px 0 5px}.meter span{height:100%;display:block;width:68%;background:linear-gradient(90deg,var(--blue),var(--green));transition:width .5s}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px}.stat{background:#0b1727;border:1px solid #1d2d43;border-radius:12px;padding:12px}.stat .label{font-size:12px;color:var(--muted)}.stat .value{font-size:18px;font-weight:750;margin-top:4px}.section-title{display:flex;justify-content:space-between;align-items:center;margin:0 0 13px;font-size:15px}.dot{display:inline-block;width:7px;height:7px;background:var(--green);border-radius:50%;margin-right:6px;box-shadow:0 0 10px #23d6a2}.history{margin-top:16px}.history-row{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid #1c2a3e;font-size:13px}.history-row:last-child{border-bottom:0}.tag{font-size:11px;padding:4px 7px;border-radius:6px;font-weight:800}.tag.buy{background:#123e36;color:#65f1c6}.tag.sell{background:#461f2b;color:#ff91a0}.footer-note{font-size:12px;color:var(--muted);margin-top:17px;border-top:1px solid var(--line);padding-top:14px}.actions{display:flex;gap:9px;margin-top:15px}.action-btn{flex:1;padding:11px}.action-btn.primary{background:#17684f;color:#e4fff6;border-color:#20866a}.action-btn.secondary{background:#482330;color:#ffdfe4;border-color:#7c3546}.status{font-size:12px;color:var(--muted);margin-top:12px}
+@media(max-width:760px){.wrap{padding:13px}.grid{grid-template-columns:1fr}.chart-wrap canvas{height:260px}.price{font-size:26px}.panel{padding:15px}.brand h1{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><div class="logo">↗</div><div><div class="eyebrow">Market pulse</div><h1>Trade Signal Dashboard</h1></div></div>
+    <div class="demo">● DEMO SIMULATION</div>
+  </header>
+  <main class="grid">
+    <section class="panel">
+      <div class="market-head">
+        <div><div class="pair">BTC / USDT <span class="muted" style="font-size:12px;font-weight:500">· Bitcoin</span></div><div class="price" id="price">$67,482.16</div><div class="change" id="change">+1.28% today</div></div>
+        <div class="controls" aria-label="Chart timeframe"><button class="active" data-tf="1m">1m</button><button data-tf="5m">5m</button><button data-tf="15m">15m</button><button data-tf="1h">1h</button></div>
+      </div>
+      <div class="chart-wrap"><canvas id="chart" aria-label="Simulated candlestick price chart"></canvas></div>
+      <div class="chart-note"><span><span style="color:var(--green)">■</span> Bullish <span style="color:var(--red);margin-left:10px">■</span> Bearish</span><span id="chartTime">Updating demo prices…</span></div>
+      <div class="stats">
+        <div class="stat"><div class="label">24h High (simulated)</div><div class="value" id="high">$68,120.00</div></div>
+        <div class="stat"><div class="label">24h Low (simulated)</div><div class="value" id="low">$66,810.00</div></div>
+        <div class="stat"><div class="label">Trend</div><div class="value" id="trend">Bullish ↗</div></div>
+        <div class="stat"><div class="label">RSI (demo)</div><div class="value" id="rsi">58.4</div></div>
+      </div>
+    </section>
+    <aside>
+      <section class="panel">
+        <div class="section-title"><span>Latest signal</span><span class="muted" style="font-size:12px"><span class="dot"></span>Auto-refresh</span></div>
+        <div class="signal"><span class="muted">BTC/USDT · <span id="tfLabel">1 minute</span></span><span class="signal-badge buy" id="signalBadge">BUY</span></div>
+        <div class="big-signal" id="signalTitle" style="color:var(--green)">Bullish momentum</div>
+        <div class="muted" id="signalDesc">Demo indicators currently lean upward.</div>
+        <div style="display:flex;justify-content:space-between;margin-top:17px;font-size:12px"><span class="muted">Signal strength</span><strong id="strengthText">68%</strong></div>
+        <div class="meter"><span id="strengthBar"></span></div>
+        <div class="stats">
+          <div class="stat"><div class="label">Entry (demo)</div><div class="value" id="entry">$67,482</div></div>
+          <div class="stat"><div class="label">Last update</div><div class="value" id="updated" style="font-size:14px">Just now</div></div>
+        </div>
+        <div class="actions"><button class="action-btn primary" id="buyBtn">Demo Buy</button><button class="action-btn secondary" id="sellBtn">Demo Sell</button></div>
+        <div class="status" id="actionStatus">Buttons only add a note to the demo history; no trades are placed.</div>
+      </section>
+      <section class="panel history">
+        <h2 class="section-title">Recent signal history <span class="muted" style="font-size:11px">SIMULATED</span></h2>
+        <div id="history">
+          <div class="history-row"><span>BTC/USDT · 1m</span><span class="tag buy">BUY</span><span class="muted">Now</span></div>
+          <div class="history-row"><span>BTC/USDT · 1m</span><span class="tag sell">SELL</span><span class="muted">2m ago</span></div>
+          <div class="history-row"><span>BTC/USDT · 5m</span><span class="tag buy">BUY</span><span class="muted">5m ago</span></div>
+        </div>
+        <div class="footer-note">This page generates random demo market movements. It does not connect to an exchange, use live prices, or predict actual market moves. Demo signals are not financial advice.</div>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+ const canvas=document.getElementById('chart'),ctx=canvas.getContext('2d');
+ const green='#23d6a2',red='#ff6174';
+ let price=67482.16, candles=[], timeframe='1m', tick=0, historyItems=[];
+ const fmt=n=>n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+ function seed(){let p=price; candles=[]; for(let i=0;i<46;i++){let o=p, c=o+(Math.random()-.49)*170, h=Math.max(o,c)+Math.random()*85, l=Math.min(o,c)-Math.random()*85;candles.push({o,c,h,l});p=c;} price=p;}
+ function resize(){const r=canvas.getBoundingClientRect(),d=window.devicePixelRatio||1;canvas.width=Math.round(r.width*d);canvas.height=Math.round(r.height*d);ctx.setTransform(d,0,0,d,0,0);draw();}
+ function draw(){
+   const w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return;
+   ctx.clearRect(0,0,w,h);ctx.fillStyle='#0a1423';ctx.fillRect(0,0,w,h);
+   const vals=candles.flatMap(c=>[c.h,c.l]),min=Math.min(...vals),max=Math.max(...vals),pad=(max-min)*.12||1,lo=min-pad,hi=max+pad;
+   const y=v=>h-22-(v-lo)/(hi-lo)*(h-42), step=w/candles.length,cw=Math.max(3,step*.56);
+   ctx.strokeStyle='#1a2a40';ctx.lineWidth=1;ctx.font='10px system-ui';ctx.fillStyle='#7187a3';
+   for(let i=0;i<5;i++){let yy=15+(h-38)*i/4;ctx.beginPath();ctx.moveTo(0,yy);ctx.lineTo(w,yy);ctx.stroke();let val=hi-(hi-lo)*i/4;ctx.fillText(val.toFixed(0),7,yy-3);}
+   candles.forEach((c,i)=>{let x=i*step+step/2,up=c.c>=c.o,col=up?green:red;ctx.strokeStyle=col;ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(x,y(c.h));ctx.lineTo(x,y(c.l));ctx.stroke();ctx.fillStyle=col;let top=y(Math.max(c.o,c.c)),bh=Math.max(2,Math.abs(y(c.o)-y(c.c)));ctx.fillRect(x-cw/2,top,cw,bh);});
+   const last=candles[candles.length-1];ctx.setLineDash([4,4]);ctx.strokeStyle=last.c>=last.o?green:red;ctx.beginPath();ctx.moveTo(0,y(last.c));ctx.lineTo(w,y(last.c));ctx.stroke();ctx.setLineDash([]);
+ }
+ function addHistory(type,label='Auto signal'){historyItems.unshift({type,label,time:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'})});historyItems=historyItems.slice(0,5);renderHistory();}
+ function renderHistory(){document.getElementById('history').innerHTML=historyItems.map(x=>`<div class="history-row"><span>${x.label}</span><span class="tag ${x.type.toLowerCase()}">${x.type}</span><span class="muted">${x.time}</span></div>`).join('');}
+ function update(){
+   tick++;let prev=price,move=(Math.random()-.49)*(timeframe==='1h'?390:timeframe==='15m'?220:timeframe==='5m'?130:75);price=Math.max(1000,price+move);
+   candles.push({o:prev,c:price,h:Math.max(prev,price)+Math.random()*45,l:Math.min(prev,price)-Math.random()*45});if(candles.length>46)candles.shift();
+   let pct=(price-67482.16)/67482.16*100,up=price>=prev,strength=Math.round(52+Math.random()*44),rsi=(35+Math.random()*38).toFixed(1);
+   document.getElementById('price').textContent='$'+fmt(price);
+   let change=document.getElementById('change');change.textContent=(pct>=0?'+':'')+pct.toFixed(2)+'% since demo start';change.style.color=pct>=0?green:red;
+   document.getElementById('high').textContent='$'+fmt(Math.max(...candles.map(c=>c.h)));
+   document.getElementById('low').textContent='$'+fmt(Math.min(...candles.map(c=>c.l)));
+   document.getElementById('trend').textContent=up?'Bullish ↗':'Bearish ↘';document.getElementById('trend').style.color=up?green:red;
+   document.getElementById('rsi').textContent=rsi;document.getElementById('entry').textContent='$'+Math.round(price).toLocaleString('en-US');
+   document.getElementById('updated').textContent=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+   document.getElementById('chartTime').textContent='Last tick: '+new Date().toLocaleTimeString();
+   let badge=document.getElementById('signalBadge');badge.textContent=up?'BUY':'SELL';badge.className='signal-badge '+(up?'buy':'sell');
+   let title=document.getElementById('signalTitle');title.textContent=up?'Bullish momentum':'Bearish momentum';title.style.color=up?green:red;
+   document.getElementById('signalDesc').textContent=up?'Latest simulated candle moved up.':'Latest simulated candle moved down.';
+   document.getElementById('strengthText').textContent=strength+'%';document.getElementById('strengthBar').style.width=strength+'%';
+   if(tick%3===0)addHistory(up?'BUY':'SELL');
+   draw();
+ }
+ document.querySelectorAll('[data-tf]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-tf]').forEach(x=>x.classList.remove('active'));b.classList.add('active');timeframe=b.dataset.tf;document.getElementById('tfLabel').textContent=({'1m':'1 minute','5m':'5 minutes','15m':'15 minutes','1h':'1 hour'})[timeframe];}));
+ document.getElementById('buyBtn').addEventListener('click',()=>{addHistory('BUY','Manual demo signal');document.getElementById('actionStatus').textContent='Demo BUY note added — no real order was placed.';});
+ document.getElementById('sellBtn').addEventListener('click',()=>{addHistory('SELL','Manual demo signal');document.getElementById('actionStatus').textContent='Demo SELL note added — no real order was placed.';});
+ seed();addHistory('BUY');resize();window.addEventListener('resize',resize);setInterval(update,1800);
+})();
+</script>
+</body>
+</html>

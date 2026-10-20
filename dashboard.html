@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Global Savings | Dashboard</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f0f5ff;font-family:Arial,sans-serif;color:#132a48}
+.topbar{background:#0f172a;color:white;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+.topbar .user{font-weight:bold}
+.nav{display:flex;gap:8px;flex-wrap:wrap}
+.nav button{background:#1e293b;color:white;border:0;padding:8px 12px;border-radius:8px;cursor:pointer}
+.wrap{max-width:1000px;margin:18px auto;padding:0 16px;display:grid;gap:16px}
+.cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.card{background:white;border-radius:16px;padding:18px;box-shadow:0 6px 20px #123b7012}
+.balance{background:linear-gradient(135deg,#155eef,#3b82f6);color:white}
+.balance h1{font-size:32px;margin:8px 0}
+.small{color:#64748b;font-size:13px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.action{padding:16px;border-radius:12px;border:1px solid #dbe6f5;background:white;cursor:pointer;text-align:center;font-weight:bold}
+.action span{display:block;font-size:22px;margin-bottom:6px}
+.action.trade{background:#155eef;color:white;border-color:#155eef}
+.list{display:flex;flex-direction:column;gap:10px;max-height:320px;overflow:auto}
+.item{display:flex;justify-content:space-between;padding:10px 12px;border:1px solid #e5eefb;border-radius:10px;background:#f8fbff}
+.badge{padding:3px 8px;border-radius:20px;font-size:11px;background:#eef4ff}
+.badge.pending{background:#fef3c7;color:#92400e}
+.badge.active{background:#dcfce7;color:#166534}
+.modal{position:fixed;inset:0;background:#0007;display:none;align-items:center;justify-content:center;padding:16px}
+.modal.open{display:flex}
+.modalBox{background:white;width:100%;max-width:420px;border-radius:16px;padding:20px}
+.modalBox input, .modalBox select{width:100%;padding:12px;border:1px solid #cbd7ea;border-radius:9px;margin-top:8px}
+.modalBox button{width:100%;margin-top:12px;padding:12px;background:#155eef;color:white;border:0;border-radius:9px;font-weight:bold;cursor:pointer}
+.close{float:right;cursor:pointer}
+@media(max-width:700px){.cards,.grid2,.actions{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div>▣ Global Savings</div>
+  <div class="nav">
+    <div class="user" id="userName">Loading...</div>
+    <button onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="cards">
+    <div class="card balance">
+      <div class="small" style="color:#dbeafe">Available Balance</div>
+      <h1 id="bal">$0.00</h1>
+      <div id="statusBadge" class="badge pending">pending</div>
+      <div class="small" style="color:#dbeafe;margin-top:8px" id="acctInfo">UID: ...</div>
+    </div>
+    <div class="card">
+      <div class="small">Full Name</div>
+      <div style="font-weight:bold;margin-top:6px" id="fullName">-</div>
+      <div class="small" style="margin-top:12px">Phone</div>
+      <div id="phone">-</div>
+      <div class="small" style="margin-top:12px">Referrals</div>
+      <div id="refCount" style="font-weight:bold">0</div>
+    </div>
+    <div class="card">
+      <div class="small">Referral Link</div>
+      <div style="font-size:12px;word-break:break-all;background:#f1f5f9;padding:8px;border-radius:8px;margin-top:8px" id="refLink">-</div>
+      <button onclick="copyRef()" style="margin-top:10px;width:100%;padding:10px;border-radius:8px;border:1px solid #155eef;color:#155eef;background:white;font-weight:bold;cursor:pointer">Copy Invite Link</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin:0 0 12px">Quick Actions</h3>
+    <div class="actions">
+      <div class="action" onclick="openModal('depositModal')"><span>💳</span>Deposit</div>
+      <div class="action" onclick="openModal('withdrawModal')"><span>🏧</span>Withdraw</div>
+      <div class="action" onclick="openModal('transferModal')"><span>🔄</span>Transfer</div>
+      <div class="action trade" onclick="openModal('tradeModal')"><span>📈</span>Trade Now</div>
+      <div class="action" onclick="document.getElementById('historySec').scrollIntoView()"><span>📜</span>History</div>
+      <div class="action" onclick="document.getElementById('refSec').scrollIntoView()"><span>👥</span>Referrals</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card" id="historySec">
+      <h3>Transaction History</h3>
+      <p class="small">From /transactions where uid = you</p>
+      <div class="list" id="txList">Loading...</div>
+    </div>
+    <div class="card">
+      <h3>My Trades</h3>
+      <p class="small">From /trades where uid = you</p>
+      <div class="list" id="tradeList">Loading...</div>
+    </div>
+  </div>
+
+  <div class="card" id="refSec">
+    <h3>My Referrals</h3>
+    <div class="list" id="referralList">Loading...</div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal" id="tradeModal">
+  <div class="modalBox">
+    <span class="close" onclick="closeModal('tradeModal')">✕</span>
+    <h3>Start a Trade</h3>
+    <p class="small">This will create a pending trade. Admin will approve it.</p>
+    <label>Trade Amount (USD)</label>
+    <input id="tradeAmount" type="number" placeholder="100">
+    <label>Plan</label>
+    <select id="tradePlan">
+      <option value="Basic - 5% Daily">Basic - 5% Daily for 7 days</option>
+      <option value="Standard - 8% Daily">Standard - 8% Daily for 7 days</option>
+      <option value="Premium - 12% Daily">Premium - 12% Daily for 5 days</option>
+    </select>
+    <button onclick="createTrade()">Confirm Trade</button>
+    <div id="tradeMsg" class="small"></div>
+  </div>
+</div>
+
+<div class="modal" id="depositModal"><div class="modalBox"><span class="close" onclick="closeModal('depositModal')">✕</span><h3>Deposit</h3><p class="small">Deposit requests are manual. Contact support after transfer.</p><input placeholder="Amount"><button onclick="closeModal('depositModal')">I have Paid</button></div></div>
+<div class="modal" id="withdrawModal"><div class="modalBox"><span class="close" onclick="closeModal('withdrawModal')">✕</span><h3>Withdraw</h3><p class="small">Withdrawals require active account.</p><input placeholder="Amount"><button onclick="closeModal('withdrawModal')">Request Withdrawal</button></div></div>
+<div class="modal" id="transferModal"><div class="modalBox"><span class="close" onclick="closeModal('transferModal')">✕</span><h3>Transfer</h3><input placeholder="Recipient Username"><input placeholder="Amount"><button onclick="closeModal('transferModal')">Transfer</button></div></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, query, where, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",
+  authDomain: "global-savings.firebaseapp.com",
+  projectId: "global-savings",
+  storageBucket: "global-savings.firebasestorage.app",
+  messagingSenderId: "83435054105",
+  appId: "1:83435054105:web:efac6cbd5a264a6892b688",
+  measurementId: "G-XC54YQ0R7N"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.openModal = id => document.getElementById(id).classList.add('open');
+window.closeModal = id => document.getElementById(id).classList.remove('open');
+window.logout = () => signOut(auth).then(()=>location.href='login.html');
+window.copyRef = () => {
+  navigator.clipboard.writeText(document.getElementById('refLink').innerText);
+  alert('Referral link copied!');
+};
+
+onAuthStateChanged(auth, async user => {
+  if(!user){ location.href='login.html'; return; }
+  
+  const userRef = doc(db, "users", user.uid);
+  const snap = await getDoc(userRef);
+  if(!snap.exists()){ document.getElementById('userName').innerText='No profile'; return; }
+  const data = snap.data();
+
+  document.getElementById('userName').innerText = data.username || user.email;
+  document.getElementById('fullName').innerText = data.fullName || '-';
+  document.getElementById('phone').innerText = data.phoneNumber || '-';
+  document.getElementById('bal').innerText = `$${Number(data.balance||0).toFixed(2)}`;
+  document.getElementById('refCount').innerText = data.referralCount || 0;
+  document.getElementById('acctInfo').innerText = `UID: ${user.uid.slice(0,8)}... | ${data.email}`;
+  document.getElementById('refLink').innerText = `${location.origin}/register.html?ref=${data.username}`;
+  
+  const badge = document.getElementById('statusBadge');
+  badge.innerText = data.accountStatus;
+  badge.className = 'badge ' + (data.accountStatus === 'active' ? 'active' : 'pending');
+
+  loadCollections(user.uid);
+});
+
+async function loadCollections(uid){
+  try{
+    // Transactions
+    const tq = query(collection(db, "transactions"), where("uid","==",uid));
+    const tSnap = await getDocs(tq);
+    document.getElementById('txList').innerHTML = tSnap.empty ? '<div class="small">No transactions yet</div>' : '';
+    tSnap.forEach(d=>{
+      const v=d.data();
+      document.getElementById('txList').innerHTML += `<div class="item"><div>${v.type||'Transaction'}<div class="small">${v.createdAt?.toDate?.()?.toLocaleString()||''}</div></div><div>$${v.amount||0}</div></div>`;
+    });
+
+    // Trades
+    const trq = query(collection(db, "trades"), where("uid","==",uid));
+    const trSnap = await getDocs(trq);
+    document.getElementById('tradeList').innerHTML = trSnap.empty ? '<div class="small">No trades yet</div>' : '';
+    trSnap.forEach(d=>{
+      const v=d.data();
+      document.getElementById('tradeList').innerHTML += `<div class="item"><div>${v.plan||'Trade'}<div class="small">${v.status||'pending'}</div></div><div>$${v.amount||0}</div></div>`;
+    });
+
+    // Referrals
+    const rq = query(collection(db, "referrals"), where("uid","==",uid));
+    const rSnap = await getDocs(rq);
+    document.getElementById('referralList').innerHTML = rSnap.empty ? '<div class="small">No referrals yet</div>' : '';
+    rSnap.forEach(d=>{
+      const v=d.data();
+      document.getElementById('referralList').innerHTML += `<div class="item"><div>${v.referredEmail||v.username||'User'}<div class="small">${v.createdAt?.toDate?.()?.toLocaleString()||''}</div></div><div class="badge">${v.status||'pending'}</div></div>`;
+    });
+
+  }catch(err){ console.error(err); }
+}
+
+window.createTrade = async () => {
+  const user = auth.currentUser;
+  if(!user) return;
+  const amount = Number(document.getElementById('tradeAmount').value);
+  const plan = document.getElementById('tradePlan').value;
+  const msg = document.getElementById('tradeMsg');
+  if(!amount || amount < 10){ msg.innerText='Minimum $10'; return; }
+  msg.innerText='Creating trade...';
+  try{
+    await addDoc(collection(db, "trades"), {
+      uid: user.uid,
+      amount: amount,
+      plan: plan,
+      status: 'pending',
+      profit: 0,
+      createdAt: serverTimestamp()
+    });
+    msg.innerText='Trade created! Pending admin approval.';
+    setTimeout(()=>closeModal('tradeModal'), 1500);
+    loadCollections(user.uid);
+  }catch(e){
+    console.error(e);
+    msg.innerText='Failed: ' + e.message;
+  }
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notifications</title>
+<style>body{margin:0;background:#eef4ff;font-family:Arial;padding-bottom:90px}.header{padding:16px;background:white;display:flex;justify-content:space-between}.card{margin:16px;background:white;border-radius:18px;padding:16px;box-shadow:0 6px 20px #123b7010}.notif{padding:12px;border:1px solid #e5eefb;border-radius:10px;margin-top:10px}
+.bottomNav{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #e2e8f0}.bottomNav a{text-decoration:none;color:#64748b;font-size:11px;text-align:center;display:flex;flex-direction:column}
+.bottomNav a.active{color:#155eef}
+</style>
+</head>
+<body>
+<div class="header"><b onclick="history.back()" style="cursor:pointer">← Back</b><b>Notifications</b><span></span></div>
+<div class="card" id="box">Loading...</div>
+<div class="bottomNav">
+<a href="dashboard.html">🏠<br>Home</a><a href="transactions.html">💳<br>Transactions</a><a href="trade.html">📊<br>Trade</a><a href="profile.html">👤<br>Profile</a>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",authDomain:"global-savings.firebaseapp.com",projectId:"global-savings",storageBucket:"global-savings.firebasestorage.app",messagingSenderId:"83435054105",appId:"1:83435054105:web:efac6cbd5a264a6892b688"};
+const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
+onAuthStateChanged(auth, async u=>{
+ if(!u){location.href="login.html";return;}
+ try{
+  const q=query(collection(db,"transactions"), where("uid","==",u.uid));
+  const s=await getDocs(q);
+  const box=document.getElementById("box");
+  if(s.empty) box.innerHTML="<div style='text-align:center;padding:20px'>🔕<br>No notifications yet</div>";
+  else{box.innerHTML=""; s.forEach(d=>{const v=d.data(); box.innerHTML+=`<div class='notif'><b>${v.type||"Update"}</b><br><span style='font-size:12px;color:#64748b'>${v.message||"$"+v.amount+" - "+(v.status||"completed")}</span></div>`})}
+ }catch(e){document.getElementById("box").innerHTML="No notifications yet";}
+});
+</script>
+</body>
+</html>

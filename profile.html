@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Profile | Global Savings</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#eef4ff;font-family:Arial;color:#132a48;padding-bottom:90px}
+.header{padding:16px;display:flex;justify-content:space-between;align-items:center;background:white}
+.card{background:white;border-radius:18px;padding:18px;margin:16px;box-shadow:0 6px 20px #123b7010}
+.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eef2f7}
+.row b{color:#64748b;font-size:12px}
+.row span{font-weight:bold;font-size:13px}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;background:#eef4ff}
+.badge.pending{background:#fef3c7;color:#92400e}.badge.active{background:#dcfce7;color:#166534}
+.btn{width:100%;padding:14px;border-radius:12px;border:0;font-weight:bold;cursor:pointer;margin-top:12px}
+.btnLogout{background:#fee2e2;color:#dc2626}
+.bottomNav{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #e2e8f0}
+.bottomNav a{text-decoration:none;color:#64748b;font-size:11px;text-align:center;display:flex;flex-direction:column;align-items:center}
+.bottomNav a.active{color:#155eef;font-weight:bold}
+</style>
+</head>
+<body>
+<div class="header"><b onclick="history.back()" style="cursor:pointer">← Back</b><b>Profile</b><span></span></div>
+
+<div class="card" style="text-align:center">
+  <div id="avatar" style="width:70px;height:70px;border-radius:50%;background:#155eef;color:white;font-size:28px;display:flex;align-items:center;justify-content:center;margin:0 auto">A</div>
+  <h3 id="name" style="margin:10px 0 4px">Loading...</h3>
+  <div id="email" style="color:#64748b;font-size:13px">-</div>
+  <div id="status" class="badge pending" style="margin-top:10px;display:inline-block">pending</div>
+</div>
+
+<div class="card">
+  <h3>Personal Information</h3>
+  <div class="row"><b>Full Name</b><span id="fullName">-</span></div>
+  <div class="row"><b>Username</b><span id="username">-</span></div>
+  <div class="row"><b>NIN</b><span id="nin">-</span></div>
+  <div class="row"><b>Date of Birth</b><span id="dob">-</span></div>
+  <div class="row"><b>Phone</b><span id="phone">-</span></div>
+  <div class="row"><b>Country Code</b><span id="country">-</span></div>
+  <div class="row"><b>Email</b><span id="email2">-</span></div>
+  <div class="row"><b>Invitation Code</b><span id="invite">-</span></div>
+  <div class="row"><b>Balance</b><span id="balance">$0</span></div>
+  <div class="row"><b>Referral Count</b><span id="refCount">0</span></div>
+  <div class="row"><b>Member Since</b><span id="created">-</span></div>
+</div>
+
+<div class="card">
+  <h3>My Referrals ( <span id="rc">0</span> )</h3>
+  <div id="refList" style="font-size:13px;color:#64748b">Loading referrals...</div>
+</div>
+
+<div class="card">
+  <button class="btn btnLogout" onclick="logout()">Logout</button>
+</div>
+
+<div class="bottomNav">
+  <a href="dashboard.html">🏠<br>Home</a>
+  <a href="transactions.html">💳<br>Transactions</a>
+  <a href="trade.html">📊<br>Trade</a>
+  <a href="profile.html" class="active">👤<br>Profile</a>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",authDomain:"global-savings.firebaseapp.com",projectId:"global-savings",storageBucket:"global-savings.firebasestorage.app",messagingSenderId:"83435054105",appId:"1:83435054105:web:efac6cbd5a264a6892b688"};
+const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
+
+onAuthStateChanged(auth, async user=>{
+  if(!user){location.href="login.html";return;}
+  const snap=await getDoc(doc(db,"users",user.uid));
+  if(!snap.exists())return;
+  const d=snap.data();
+  document.getElementById("name").textContent=d.fullName;
+  document.getElementById("avatar").textContent=(d.username||"A")[0].toUpperCase();
+  document.getElementById("email").textContent=d.email;
+  document.getElementById("email2").textContent=d.email;
+  document.getElementById("fullName").textContent=d.fullName;
+  document.getElementById("username").textContent=d.username;
+  document.getElementById("nin").textContent=d.nin;
+  document.getElementById("dob").textContent=d.dateOfBirth;
+  document.getElementById("phone").textContent=d.phoneNumber;
+  document.getElementById("country").textContent=d.countryCode;
+  document.getElementById("invite").textContent=d.invitationCode||"None";
+  document.getElementById("balance").textContent=`$${Number(d.balance||0).toFixed(2)}`;
+  document.getElementById("refCount").textContent=d.referralCount||0;
+  document.getElementById("rc").textContent=d.referralCount||0;
+  document.getElementById("created").textContent=d.createdAt?.toDate?.()?.toLocaleDateString()||"-";
+  const s=document.getElementById("status");s.textContent=d.accountStatus;s.className="badge "+(d.accountStatus==="active"?"active":"pending");
+
+  const rq=query(collection(db,"referrals"), where("uid","==",user.uid));
+  const rs=await getDocs(rq);
+  const box=document.getElementById("refList");
+  if(rs.empty) box.innerHTML="No referrals yet. Share your link: <br><b>"+location.origin+"/register.html?ref="+d.username+"</b>";
+  else { box.innerHTML=""; rs.forEach(x=>{box.innerHTML+=`<div class="row"><b>${x.data().referredEmail||"User"}</b><span>${x.data().status||"pending"}</span></div>`})}
+});
+
+window.logout=()=>{signOut(auth).then(()=>location.href="index.html")};
+</script>
+</body>
+</html>

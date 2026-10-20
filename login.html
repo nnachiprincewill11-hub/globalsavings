@@ -1,20 +1,17 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Global Savings | Login</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#edf4ff;color:#142b49;font-family:Arial,sans-serif;padding:22px;min-height:100vh;display:grid;place-items:center}
-.card{width:100%;max-width:430px;background:white;padding:28px;border-radius:18px;box-shadow:0 8px 30px #123b7018}
-.logo{font-size:25px;font-weight:bold;color:#155eef}
-p{color:#64748b}
-label{display:block;font-weight:bold;font-size:13px;margin:16px 0 6px}
-input{width:100%;padding:13px;border:1px solid #ccd8e8;border-radius:9px;font-size:15px}
-button{width:100%;padding:14px;background:#155eef;color:white;border:0;border-radius:9px;font-size:16px;font-weight:bold;margin-top:18px;cursor:pointer}
-.msg{font-size:14px;overflow-wrap:anywhere;margin-top:12px}
+*{box-sizing:border-box}body{margin:0;background:#edf4ff;color:#142b49;font-family:Arial,sans-serif;padding:22px}
+.card{max-width:420px;margin:40px auto;background:white;padding:28px;border-radius:18px;box-shadow:0 8px 30px #123b7018}
+.logo{font-size:26px;font-weight:bold;color:#155eef}
+input{padding:12px;border:1px solid #ccd8e8;border-radius:9px;font-size:15px;width:100%;margin-top:6px}
+label{font-size:13px;font-weight:bold;margin-top:14px;display:block}
+button{width:100%;padding:14px;background:#155eef;color:white;border:0;border-radius:9px;font-size:16px;font-weight:bold;cursor:pointer;margin-top:18px}
+.msg{font-size:14px;margin-top:12px;min-height:18px}
+.success{color:green}.error{color:red}
 a{color:#155eef}
 </style>
 </head>
@@ -22,85 +19,66 @@ a{color:#155eef}
 <div class="card">
   <div class="logo">▣ Global Savings</div>
   <h2>Welcome back</h2>
-  <p>Login to your account.</p>
-
+  <p style="color:#64748b">Login to your account.</p>
   <form id="loginForm">
-    <label for="email">Email address</label>
-    <input id="email" type="email" required autocomplete="email">
-
-    <label for="password">Password</label>
-    <input id="password" type="password" required
-      autocomplete="current-password">
-
-    <button id="loginBtn" type="submit">Login</button>
-    <div id="message" class="msg" role="status"></div>
+    <label>Email address<input id="email" type="email" required></label>
+    <label>Password<input id="password" type="password" required></label>
+    <button id="btn" type="submit">Login</button>
+    <div id="message" class="msg"></div>
   </form>
-
-  <p><a href="#" id="resetLink">Forgot password?</a></p>
+  <p><a href="#" id="forgot">Forgot password?</a></p>
   <p>Don't have an account? <a href="register.html">Register here</a></p>
 </div>
 
 <script type="module">
-import { initializeApp }
-  from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import {
-  getAuth, signInWithEmailAndPassword, sendPasswordResetEmail
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 const firebaseConfig = {
   apiKey: "AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",
   authDomain: "global-savings.firebaseapp.com",
   projectId: "global-savings",
   storageBucket: "global-savings.firebasestorage.app",
   messagingSenderId: "83435054105",
-  appId: "1:83435054105:web:efac6cbd5a264a6892b688",
-  measurementId: "G-XC54YQ0R7N"
+  appId: "1:83435054105:web:efac6cbd5a264a6892b688"
 };
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-const auth = getAuth(initializeApp(firebaseConfig));
-const $ = id => document.getElementById(id);
+const form=document.getElementById("loginForm");
+const msg=document.getElementById("message");
+const btn=document.getElementById("btn");
 
-$("loginForm").addEventListener("submit", async event => {
-  event.preventDefault();
-  $("loginBtn").disabled = true;
-  $("message").textContent = "";
-
-  try {
-    const result = await signInWithEmailAndPassword(
-      auth, $("email").value.trim(), $("password").value
-    );
-
-    $("message").textContent =
-      "Login successful. Signed in as " + result.user.email + ".";
-    // Connect your private dashboard here after verifying the
-    // authenticated user and enforcing Firestore security rules.
-  } catch (error) {
-    console.error(error);
-    $("message").textContent =
-      "Login failed. Check your email and password.";
-  } finally {
-    $("loginBtn").disabled = false;
+// If already logged in, go to dashboard immediately
+onAuthStateChanged(auth, user=>{
+  if(user && !form.dataset.submitting){
+    location.href="dashboard.html";
   }
 });
 
-$("resetLink").addEventListener("click", async event => {
-  event.preventDefault();
-  const email = $("email").value.trim();
-
-  if (!email) {
-    $("message").textContent =
-      "Enter your email address first.";
-    return;
+form.addEventListener("submit", async e=>{
+  e.preventDefault();
+  form.dataset.submitting="1";
+  btn.disabled=true; btn.textContent="Logging in...";
+  msg.textContent=""; msg.className="msg";
+  try{
+    const cred=await signInWithEmailAndPassword(auth, document.getElementById("email").value.trim(), document.getElementById("password").value);
+    msg.textContent=`Login successful. Signed in as ${cred.user.email}. Redirecting...`;
+    msg.className="msg success";
+    setTimeout(()=>{ location.href="dashboard.html"; }, 800);
+  }catch(err){
+    msg.textContent=err.code==="auth/invalid-credential"?"Wrong email or password":err.message;
+    msg.className="msg error";
+    btn.disabled=false; btn.textContent="Login";
+    form.dataset.submitting="";
   }
+});
 
-  try {
-    await sendPasswordResetEmail(auth, email);
-    $("message").textContent =
-      "If the account exists, a password-reset email will be sent.";
-  } catch {
-    $("message").textContent =
-      "Unable to request a reset. Check Firebase settings.";
-  }
+document.getElementById("forgot").addEventListener("click", async ev=>{
+  ev.preventDefault();
+  const email=document.getElementById("email").value.trim();
+  if(!email){msg.textContent="Enter your email first";return;}
+  try{await sendPasswordResetEmail(auth,email);msg.textContent="Reset email sent!";msg.className="msg success";}
+  catch(err){msg.textContent=err.message;msg.className="msg error";}
 });
 </script>
 </body>

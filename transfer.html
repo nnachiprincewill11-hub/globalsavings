@@ -3,31 +3,86 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Transfer</title>
-<style>body{margin:0;background:#eef4ff;font-family:Arial;padding-bottom:90px}.header{padding:16px;background:white;display:flex;justify-content:space-between}.card{margin:16px;background:white;border-radius:18px;padding:20px}input{width:100%;padding:12px;border:1px solid #cbd7ea;border-radius:9px;margin-top:10px}button{width:100%;padding:14px;background:#155eef;color:white;border:0;border-radius:10px;font-weight:bold;margin-top:12px;cursor:pointer}
-.bottomNav{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #e2e8f0}.bottomNav a{text-decoration:none;color:#64748b;font-size:11px;text-align:center;display:flex;flex-direction:column}
+<style>
+*{box-sizing:border-box}body{margin:0;background:#eef4ff;font-family:Arial;padding-bottom:90px}
+.header{padding:16px;background:white;display:flex;justify-content:space-between}
+.card{margin:16px;background:white;border-radius:18px;padding:20px;box-shadow:0 6px 20px #123b7010}
+input{width:100%;padding:13px;border:1px solid #cbd7ea;border-radius:10px;margin-top:12px;font-size:15px}
+button{width:100%;padding:14px;background:#155eef;color:white;border:0;border-radius:10px;font-weight:bold;margin-top:14px;cursor:pointer;font-size:16px}
+#popup{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:99;padding:20px}
+#popup.show{display:flex}
+.popBox{background:white;border-radius:20px;padding:28px;text-align:center;max-width:340px;width:100%}
+.popBox h2{color:#155eef}
+.bottomNav{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #e2e8f0}
+.bottomNav a{text-decoration:none;color:#64748b;font-size:11px;text-align:center;display:flex;flex-direction:column}
+.msg{font-size:13px;margin-top:10px;color:red}
 </style>
 </head>
 <body>
 <div class="header"><b onclick="history.back()" style="cursor:pointer">← Back</b><b>Transfer</b><span></span></div>
-<div class="card"><h3>Transfer Funds</h3><input id="toUser" placeholder="Recipient username or email"><input id="amount" type="number" placeholder="Amount USD"><button onclick="submit()">Transfer</button><div id="msg" style="font-size:13px;margin-top:10px"></div></div>
+
+<div class="card">
+<h3>Transfer Funds</h3>
+<p style="font-size:12px;color:#64748b">Enter recipient and confirm with your signup password</p>
+<input id="toUser" placeholder="Recipient username or email">
+<input id="amount" type="number" placeholder="Amount (USD)">
+<input id="pass" type="password" placeholder="Enter your signup password">
+<button id="btn" onclick="doTransfer()">Transfer</button>
+<div id="msg" class="msg"></div>
+</div>
+
+<div id="popup"><div class="popBox"><div style="font-size:50px">⏳</div><h2>Transfer Processing</h2><p style="color:#64748b">Your transfer of <b id="popAmt"></b> to <b id="popTo"></b> is processing.<br>It will appear in Transactions as pending until admin approves.</p><button onclick="location.href='transactions.html'">View Transactions</button></div></div>
+
 <div class="bottomNav"><a href="dashboard.html">🏠<br>Home</a><a href="transactions.html">💳<br>Transactions</a><a href="trade.html">📊<br>Trade</a><a href="profile.html">👤<br>Profile</a></div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 const firebaseConfig={apiKey:"AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",authDomain:"global-savings.firebaseapp.com",projectId:"global-savings",storageBucket:"global-savings.firebasestorage.app",messagingSenderId:"83435054105",appId:"1:83435054105:web:efac6cbd5a264a6892b688"};
 const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
-let user=null;
-onAuthStateChanged(auth,u=>{if(!u)location.href="login.html";else user=u;});
-window.submit=async()=>{
- const amt=Number(document.getElementById("amount").value);
+let user=null, userData=null;
+onAuthStateChanged(auth, async u=>{ if(!u) location.href="login.html"; else { user=u; const s=await getDoc(doc(db,"users",u.uid)); userData=s.data(); } });
+
+window.doTransfer=async()=>{
  const to=document.getElementById("toUser").value.trim();
- if(!to||!amt){document.getElementById("msg").textContent="Fill all fields";return;}
- document.getElementById("msg").textContent="Processing...";
+ const amt=Number(document.getElementById("amount").value);
+ const pass=document.getElementById("pass").value;
+ const msg=document.getElementById("msg");
+ if(!to||!amt||!pass){ msg.textContent="Fill all fields"; return; }
+ if(amt<1){ msg.textContent="Amount too small"; return; }
+ if(amt > (userData?.balance||0)){ msg.textContent=`Insufficient balance. You have $${userData.balance}`; return; }
+
+ msg.textContent="Verifying password...";
+ document.getElementById("btn").disabled=true;
+
  try{
-  await addDoc(collection(db,"transactions"),{uid:user.uid,type:"transfer",to:to,amount:amt,status:"pending",createdAt:serverTimestamp()});
-  document.getElementById("msg").textContent="Transfer request sent! Pending approval.";
- }catch(e){document.getElementById("msg").textContent=e.message;}
+   const cred=EmailAuthProvider.credential(user.email, pass);
+   await reauthenticateWithCredential(user, cred);
+   
+   msg.textContent="Password correct! Creating transfer...";
+   await addDoc(collection(db,"transactions"),{
+     uid:user.uid,
+     type:"transfer",
+     to:to,
+     amount:amt,
+     status:"pending",
+     fromEmail:user.email,
+     fromUsername:userData.username,
+     balanceBefore:userData.balance,
+     createdAt:serverTimestamp()
+   });
+
+   document.getElementById("popAmt").textContent="$"+amt;
+   document.getElementById("popTo").textContent=to;
+   document.getElementById("popup").classList.add("show");
+
+ }catch(e){
+   console.error(e);
+   if(e.code==="auth/wrong-password" || e.code==="auth/invalid-credential") msg.textContent="❌ Password incorrect! Transfer not allowed.";
+   else msg.textContent="Error: "+e.message;
+   document.getElementById("btn").disabled=false;
+ }
 };
 </script>
 </body>

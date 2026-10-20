@@ -6,192 +6,105 @@
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f5f5f5;font-family:Arial;color:#111;padding-bottom:90px}
 .top{background:white;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #ddd;font-weight:bold;position:sticky;top:0;z-index:10}
-.top b{font-size:14px}
 .cardTop{background:white;padding:12px 14px;border-bottom:1px solid #e5e7eb}
 .row{display:flex;justify-content:space-between;padding:7px 0;font-size:14px;border-bottom:1px dashed #f0f0f0}
-.row:last-child{border:0}
-.left{color:#111}.right{text-align:right;font-weight:600;min-width:100px}
-.green{color:#16a34a}.red{color:#dc2626}.blue{color:#155eef}
+.right{text-align:right;font-weight:600;min-width:100px}.green{color:#16a34a}.red{color:#dc2626}.blue{color:#155eef}
 .progress{height:5px;background:#e5e7eb;width:100%}.progress div{height:100%;background:#155eef;width:0%;transition:width 1s}
 .timerBox{background:white;text-align:center;padding:10px;font-size:28px;font-weight:bold;border-bottom:1px solid #e5e7eb}
 .liveBox{background:white;margin-top:8px;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb}
 .tradeRow{padding:12px 14px;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center}
-.tradeLeft{font-size:13px;line-height:16px}.tradeLeft b{font-size:13px}
 .price{font-size:11px;color:#6b7280}
-.tradeRight{font-size:14px;font-weight:bold}
 .centerCard{background:white;margin:12px;border-radius:12px;padding:16px;text-align:center;box-shadow:0 2px 8px #0001}
 #popupFinal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;z-index:99;padding:20px}
-#popupFinal.show{display:flex}
-.pop{background:white;border-radius:18px;padding:22px;width:100%;max-width:380px;text-align:center;animation:pop .3s}
-@keyframes pop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+#popupFinal.show{display:flex}.pop{background:white;border-radius:18px;padding:22px;width:100%;max-width:380px;text-align:center}
 </style>
 </head>
 <body>
-
-<div class="top">
-<b onclick="location.href='dashboard.html'">☰ Menu</b>
-<span id="headerBal">0.00 USD</span>
-<b>⋮</b>
-</div>
-
+<div class="top"><b onclick="location.href='dashboard.html'">☰</b><span id="headerBal">0.00 USD</span><b>⋮</b></div>
 <div class="cardTop">
-  <div class="row"><span class="left">Balance:</span><span class="right" id="b_balance">0.00</span></div>
-  <div class="row"><span class="left">Equity:</span><span class="right" id="b_equity">0.00</span></div>
-  <div class="row"><span class="left">Free margin:</span><span class="right green" id="b_free">0.00</span></div>
-  <div class="row"><span class="left">Margin Level (%):</span><span class="right" id="b_level">0.00</span></div>
-  <div class="row"><span class="left">Margin:</span><span class="right" id="b_margin">0.00</span></div>
-  <div class="row"><span class="left">Status:</span><span class="right blue" id="b_status">Running...</span></div>
+  <div class="row"><span>Balance:</span><span class="right" id="b_balance">0.00</span></div>
+  <div class="row"><span>Equity:</span><span class="right" id="b_equity">0.00</span></div>
+  <div class="row"><span>Free margin:</span><span class="right green" id="b_free">0.00</span></div>
+  <div class="row"><span>Margin Level (%):</span><span class="right" id="b_level">0.00</span></div>
+  <div class="row"><span>Margin:</span><span class="right" id="b_margin">0.00</span></div>
+  <div class="row"><span>Status:</span><span class="right blue" id="b_status">Running...</span></div>
 </div>
-
 <div class="progress"><div id="bar"></div></div>
 <div class="timerBox" id="timer">00:00</div>
-
 <div class="liveBox">
-  <div class="tradeRow">
-    <div class="tradeLeft">
-      <b id="coinPair">BPUSD, buy 1.00</b><br>
-      <span class="price" id="coinPrice">1.1151 → 1.13856</span><br>
-      <span class="price" id="pnlLabel">Profit: $0.00</span>
-    </div>
-    <div class="tradeRight" id="livePnl">0.00</div>
-  </div>
-  <div class="tradeRow">
-    <div class="tradeLeft">
-      <b>Take Profit / Stop Loss</b><br>
-      <span class="price" id="tpSlInfo">TP: 0.00 | SL: 0.00 | Time: 0s</span>
-    </div>
-    <div class="tradeRight blue" id="verdictLabel">Pending</div>
-  </div>
+  <div class="tradeRow"><div><b id="coinPair">BPUSD, buy 1.00</b><br><span class="price" id="coinPrice">1.1151 → 1.13856</span><br><span class="price" id="pnlLabel">Profit: $0.00</span></div><div class="right" id="livePnl">0.00</div></div>
+  <div class="tradeRow"><div><b>Take Profit / Stop Loss</b><br><span class="price" id="tpSlInfo">TP: 0.00 | SL: 0.00</span></div><div class="right blue" id="verdictLabel">Pending</div></div>
 </div>
-
 <div class="centerCard">
-  <p style="font-size:12px;color:#6b7280;margin:0">Trade amount has been removed from your main balance automatically. When trade is successful, Take Profit will be added to your main balance. All will show in Transactions.</p>
+  <p style="font-size:12px;color:#6b7280">Trade amount removed automatically. If successful, Take Profit added to main balance. All shows in Transactions.</p>
   <div id="finalMsg" style="font-weight:bold;margin-top:12px;font-size:13px"></div>
-  <button onclick="location.href='dashboard.html'" style="width:100%;padding:12px;background:#132a48;color:white;border:0;border-radius:10px;font-weight:bold;margin-top:12px">Back to Dashboard</button>
+  <button onclick="location.href='my-trades.html'" style="width:100%;padding:12px;background:#132a48;color:white;border:0;border-radius:10px;font-weight:bold;margin-top:12px">My Trades - Trade View</button>
   <button onclick="location.href='transactions.html'" style="width:100%;padding:12px;background:white;color:#132a48;border:1px solid #132a48;border-radius:10px;font-weight:bold;margin-top:8px">View Transactions</button>
 </div>
-
 <div id="popupFinal"><div class="pop"><div style="font-size:64px" id="finalIcon">🥳</div><h2 id="finalTitle">Congratulations your trade was successful 🥳</h2><p id="finalText"></p><button onclick="location.href='dashboard.html'" style="width:100%;padding:14px;background:#155eef;color:white;border:0;border-radius:10px;font-weight:bold;margin-top:10px">Continue</button></div></div>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import { getFirestore, doc, getDoc, updateDoc, addDoc, collection, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 const firebaseConfig={apiKey:"AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",authDomain:"global-savings.firebaseapp.com",projectId:"global-savings",storageBucket:"global-savings.firebasestorage.app",messagingSenderId:"83435054105",appId:"1:83435054105:web:efac6cbd5a264a6892b688"};
 const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
-const params=new URLSearchParams(location.search);
-const tradeId=params.get("id");
+const tradeId=new URLSearchParams(location.search).get("id");
 let trade=null,user=null,userData=null,secLeft=0,interval=null,entryPrice=0,settled=false;
-
 onAuthStateChanged(auth, async u=>{
  if(!u){location.href="login.html";return;}
  user=u;
- const uDoc=await getDoc(doc(db,"users",u.uid));
- if(!uDoc.exists()){location.href="login.html";return;}
- userData=uDoc.data();
+ const uDoc=await getDoc(doc(db,"users",u.uid)); userData=uDoc.data();
  document.getElementById("headerBal").textContent="$"+Number(userData.balance||0).toFixed(2)+" USD";
  document.getElementById("b_balance").textContent=Number(userData.balance||0).toFixed(2);
  if(tradeId) listenTrade();
- else { document.getElementById("finalMsg").textContent="No trade ID found"; }
 });
-
 function listenTrade(){
  onSnapshot(doc(db,"trades",tradeId), snap=>{
-  if(!snap.exists()) return;
-  trade=snap.data();
-  entryPrice=Number(trade.entryPrice||0);
-
-  // PINK & GREEN SECTIONS as you marked
-  document.getElementById("b_equity").textContent=Number(trade.amount).toFixed(2); // shows amount used, was 10,000
+  if(!snap.exists()) return; trade=snap.data(); entryPrice=Number(trade.entryPrice||0);
+  document.getElementById("b_equity").textContent=Number(trade.amount).toFixed(2);
   document.getElementById("b_free").textContent=Number(trade.takeProfitAmount).toFixed(2);
   document.getElementById("b_level").textContent=Number(trade.stopLossAmount).toFixed(2);
   document.getElementById("b_margin").textContent=trade.duration+"s";
   document.getElementById("coinPair").textContent=`${trade.coin}USD, ${trade.type} ${Number(trade.amount).toFixed(2)}`;
   document.getElementById("tpSlInfo").textContent=`TP: ${trade.takeProfitAmount} | SL: ${trade.stopLossAmount} | Time: ${trade.duration}s`;
-  
-  // If admin already set final verdict, settle immediately
-  if(trade.finalVerdict && !settled){
-    const isWin = trade.finalVerdict.includes("WIN");
-    settleTrade(isWin, trade.finalVerdict);
-    return;
-  }
-
-  if(!interval){
-    secLeft=Number(trade.duration||60);
-    startTimer();
-  }
+  if(trade.finalVerdict && !settled){ settleTrade(trade.finalVerdict.includes("WIN"), trade.finalVerdict); return; }
+  if(!interval){ secLeft=Number(trade.duration||60); startTimer(); }
  });
 }
-
 function startTimer(){
  interval=setInterval(()=>{
-  secLeft--;
-  if(secLeft<=0){
-    clearInterval(interval);
-    document.getElementById("timer").textContent="00:00";
-    document.getElementById("bar").style.width="100%";
-    document.getElementById("b_status").textContent="Time Up - Waiting Final Verdict";
-    document.getElementById("finalMsg").textContent="Time up. Waiting for admin final verdict in admin.html. If admin doesn't set, you can auto-settle below (for testing).";
-    // For testing without admin, auto settle after 3 seconds as LOSS/WIN randomly - REMOVE in production if you want only admin control
-    // setTimeout(()=>{ settleTrade(Math.random()>0.5, Math.random()>0.5 ? "WIN - Trade closed" : "LOSS - Trade closed"); }, 3000);
-    return;
-  }
+  secLeft--; if(secLeft<=0){ clearInterval(interval); document.getElementById("timer").textContent="00:00"; document.getElementById("bar").style.width="100%"; document.getElementById("b_status").textContent="Time Up - Waiting Final Verdict"; return; }
   const m=Math.floor(secLeft/60), s=secLeft%60;
   document.getElementById("timer").textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
   document.getElementById("bar").style.width=((trade.duration-secLeft)/trade.duration*100)+"%";
-
-  // YELLOW SECTION - coin price reducing/increasing
-  const current = entryPrice + (Math.random()*20-10);
+  const current=entryPrice+(Math.random()*20-10);
   document.getElementById("coinPrice").textContent=`${entryPrice.toFixed(5)} → ${current.toFixed(5)}`;
-
-  // GREEN SECTION - live profit adding/reducing
-  const diff = current - entryPrice;
-  let pnl = trade.type==="buy" ? diff*2 : -diff*2;
+  const diff=current-entryPrice; let pnl=trade.type==="buy"?diff*2:-diff*2;
   document.getElementById("livePnl").textContent=pnl.toFixed(2);
-  document.getElementById("livePnl").className="tradeRight "+(pnl>=0?"green":"red");
+  document.getElementById("livePnl").className="right "+(pnl>=0?"green":"red");
   document.getElementById("pnlLabel").textContent=`Profit: $${pnl.toFixed(2)}`;
-  document.getElementById("b_status").textContent=pnl>=0?"Profiting...":"Losing...";
  },1000);
 }
-
 async function settleTrade(isWin, verdictText){
- if(settled) return; settled=true;
- clearInterval(interval);
- document.getElementById("verdictLabel").textContent=verdictText;
- document.getElementById("b_status").textContent=verdictText;
-
+ if(settled) return; settled=true; clearInterval(interval);
+ document.getElementById("verdictLabel").textContent=verdictText; document.getElementById("b_status").textContent=verdictText;
  if(isWin){
-   // SUCCESS: Add Take Profit to main balance
-   const newBal = Number(userData.balance) + Number(trade.takeProfitAmount);
-   try{
-     await updateDoc(doc(db,"users",user.uid),{balance:newBal});
-     await addDoc(collection(db,"transactions"),{uid:user.uid,type:"trade_win",amount:Number(trade.takeProfitAmount),coin:trade.coin,description:`Trade WIN - ${trade.coin} ${trade.type} - Profit added`,status:"completed",createdAt:serverTimestamp()});
-     await updateDoc(doc(db,"trades",tradeId),{status:"won"});
-     document.getElementById("headerBal").textContent="$"+newBal.toFixed(2)+" USD";
-     document.getElementById("b_balance").textContent=newBal.toFixed(2);
-   }catch(e){console.log(e)}
-
-   document.getElementById("finalIcon").textContent="🥳";
-   document.getElementById("finalTitle").textContent="Congratulations your trade was successful 🥳";
-   document.getElementById("finalText").textContent=`You won $${trade.takeProfitAmount}! It has been added to your main balance. Check Transactions.`;
+   const newBal=Number(userData.balance)+Number(trade.takeProfitAmount);
+   await updateDoc(doc(db,"users",user.uid),{balance:newBal});
+   await addDoc(collection(db,"transactions"),{uid:user.uid,type:"trade_win",amount:Number(trade.takeProfitAmount),coin:trade.coin,description:`Trade WIN - ${trade.coin} ${trade.type} - Profit added`,status:"completed",createdAt:serverTimestamp()});
+   await updateDoc(doc(db,"trades",tradeId),{status:"won"});
+   document.getElementById("headerBal").textContent="$"+newBal.toFixed(2)+" USD";
+   document.getElementById("finalIcon").textContent="🥳"; document.getElementById("finalTitle").textContent="Congratulations your trade was successful 🥳";
+   document.getElementById("finalText").textContent=`You won $${trade.takeProfitAmount}! Added to main balance.`;
    document.getElementById("popupFinal").classList.add("show");
-
  }else{
-   // LOSS: Return Stop Loss to balance (CHANGE TO 0 IF YOU WANT NOTHING TO RETURN)
-   // If you want nothing to add on loss, change next line to: const returnAmount = 0;
-   const returnAmount = Number(trade.stopLossAmount); // <-- SET TO 0 IF YOU WANT NOTHING BACK ON LOSS
-   const newBal = Number(userData.balance) + returnAmount;
-   try{
-     if(returnAmount>0) await updateDoc(doc(db,"users",user.uid),{balance:newBal});
-     await addDoc(collection(db,"transactions"),{uid:user.uid,type:"trade_loss",amount: returnAmount>0 ? returnAmount : -Number(trade.amount),coin:trade.coin,description: returnAmount>0 ? `Trade LOSS - Returned SL $${returnAmount}` : `Trade LOSS - ${trade.coin} ${trade.type}`,status:"completed",createdAt:serverTimestamp()});
-     await updateDoc(doc(db,"trades",tradeId),{status:"lost"});
-     document.getElementById("headerBal").textContent="$"+newBal.toFixed(2)+" USD";
-     document.getElementById("b_balance").textContent=newBal.toFixed(2);
-   }catch(e){console.log(e)}
-
-   document.getElementById("finalIcon").textContent="❌";
-   document.getElementById("finalTitle").textContent="Trade Closed - Loss";
-   document.getElementById("finalText").textContent= returnAmount>0 ? `Trade lost. $${returnAmount} (Stop Loss) has been returned to your balance.` : `Trade lost. Nothing added. Check Transactions.`;
+   const returnAmount=Number(trade.stopLossAmount);
+   const newBal=Number(userData.balance)+returnAmount;
+   if(returnAmount>0) await updateDoc(doc(db,"users",user.uid),{balance:newBal});
+   await addDoc(collection(db,"transactions"),{uid:user.uid,type:"trade_loss",amount:returnAmount>0?returnAmount:-Number(trade.amount),coin:trade.coin,description:`Trade LOSS - ${trade.coin}`,status:"completed",createdAt:serverTimestamp()});
+   await updateDoc(doc(db,"trades",tradeId),{status:"lost"});
+   document.getElementById("finalIcon").textContent="❌"; document.getElementById("finalTitle").textContent="Trade Closed - Loss";
+   document.getElementById("finalText").textContent=returnAmount>0?`Trade lost. $${returnAmount} returned to balance.`:`Trade lost. Nothing added.`;
    document.getElementById("popupFinal").classList.add("show");
  }
 }

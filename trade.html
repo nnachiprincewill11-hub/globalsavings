@@ -2,13 +2,23 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Trade | Global Savings</title>
+<title>Trade | Global Savings - REAL ONLY</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#0a1220;color:white;font-family:Arial;padding-bottom:90px}
-.topBar{background:#132a48;padding:12px;display:flex;justify-content:space-between;align-items:center}
-.topBar select{background:#0f2340;color:white;border:1px solid #2a4a7a;padding:8px;border-radius:10px;font-weight:bold}
-.priceBox{padding:14px;background:#0f1e38} .priceBox h2{margin:0;font-size:26px}.up{color:#22c55e}.down{color:#ef4444}
-#chart{width:100%;height:200px;background:#081122;border-top:1px solid #1e355a;border-bottom:1px solid #1e355a}
+.topBar{background:#132a48;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px;position:sticky;top:0;z-index:10}
+.assetDrop{position:relative;flex:1;max-width:320px}
+.assetBtn{background:#0f2340;color:white;border:1px solid #2a4a7a;padding:8px 12px;border-radius:10px;font-weight:bold;width:100%;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.assetListDrop{position:absolute;top:42px;left:0;right:0;background:#0f1e38;border:1px solid #2a4a7a;border-radius:12px;max-height:340px;overflow:auto;display:none;z-index:20}
+.assetListDrop.show{display:block}
+.assetOpt{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;border-bottom:1px solid #1a3258;font-size:13px}
+.assetOpt:hover{background:#132a48}
+.logo{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:12px;color:white}
+.priceBox{padding:14px;background:#0f1e38;display:flex;justify-content:space-between;align-items:center} .priceBox h2{margin:0;font-size:22px}.up{color:#22c55e}.down{color:#ef4444}
+#chart{width:100%;height:220px;background:#081122;border-top:1px solid #1e355a;border-bottom:1px solid #1e355a}
+.layout{display:flex;flex-wrap:wrap}
+.mainTrade{flex:1;min-width:300px}
+.sideHistory{width:340px;background:#0f1e38;border-left:1px solid #1e355a;min-height:400px}
+@media(max-width:900px){.sideHistory{width:100%;border-left:0;border-top:1px solid #1e355a}}
 .card{background:#132a48;margin:12px;border-radius:16px;padding:16px}
 .label{font-size:11px;color:#8aa0c2;margin-bottom:4px;display:block}
 input,select.timeSel{width:100%;padding:12px;background:#0f2340;border:1px solid #2a4a7a;border-radius:10px;color:white;font-size:14px;margin-bottom:10px}
@@ -16,53 +26,61 @@ input,select.timeSel{width:100%;padding:12px;background:#0f2340;border:1px solid
 .btnSell{background:#ef4444;color:white}.btnBuy{background:#22c55e;color:white}
 .btnActivate{width:100%;padding:16px;background:#155eef;color:white;border:0;border-radius:12px;font-weight:bold;font-size:18px;margin-top:10px;cursor:pointer}
 .balShow{background:#0a3a7a;padding:10px;border-radius:10px;text-align:center;margin-bottom:10px}
+.historyTabs{display:flex;gap:6px;padding:12px}
+.hTab{flex:1;padding:8px;background:#0f2340;border:1px solid #2a4a7a;border-radius:8px;color:#8aa0c2;text-align:center;font-size:12px;cursor:pointer}
+.hTab.active{background:#22c55e;color:white;border-color:#22c55e;font-weight:bold}
+.hItem{padding:10px 12px;border-bottom:1px solid #1a3258;display:flex;justify-content:space-between;align-items:center;font-size:12px;cursor:pointer}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+.searchIn{width:100%;padding:8px;background:#081122;border:1px solid #2a4a7a;border-radius:8px;color:white;font-size:12px;margin-bottom:6px}
 </style>
 </head>
 <body>
 <div class="topBar">
 <b onclick="location.href='dashboard.html'">← Home</b>
-<select id="coinSelect" onchange="changeCoin()">
-<option value="BTC">BTC/USD</option><option value="ETH">ETH/USD</option><option value="SOL">SOL/USD</option><option value="BNB">BNB/USD</option><option value="XRP">XRP/USD</option><option value="ADA">ADA/USD</option><option value="DOGE">DOGE/USD</option><option value="AVAX">AVAX/USD</option><option value="LINK">LINK/USD</option><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDCHF">USDCHF</option><option value="USDJPY">USDJPY</option>
-</select><span>⭐</span>
+<div class="assetDrop">
+  <div class="assetBtn" onclick="toggleDrop()"><span id="assetBtnTxt">₿ BTC/USD</span><span>▼</span></div>
+  <div class="assetListDrop" id="assetDrop">
+    <div style="padding:8px"><input class="searchIn" id="assetSearch" placeholder="Search asset A-Z..." oninput="filterAssets()"></div>
+    <div id="assetOptions"></div>
+  </div>
 </div>
-<div class="priceBox"><h2 id="price">$61,342.80 USD</h2><span id="change" class="up">+1.87% Live</span></div>
+<div style="font-size:12px"><span id="realBalTop" style="background:#22c55e;padding:4px 8px;border-radius:20px;font-weight:bold">REAL $0.00</span></div>
+</div>
+<div class="priceBox"><div><h2 id="price">$61,342.80 USD</h2><span id="change" class="up">+1.87% Live • REAL Account</span></div><div style="font-size:11px;color:#8aa0c2">Balance: <b id="balSide">$0.00</b></div></div>
 <canvas id="chart"></canvas>
+<div class="layout">
+<div class="mainTrade">
 <div class="card">
-<div class="balShow">Your Main Balance: <b id="mainBal">$0.00</b><br><span style="font-size:10px;color:#8aa0c2">Will be removed when you activate</span></div>
-<label class="label">Amount to Trade (USD)</label><input id="tradeAmt" type="number" placeholder="100">
+<div class="balShow">Your REAL Main Balance: <b id="mainBal">$0.00</b><br><span style="font-size:10px;color:#8aa0c2">REAL ONLY • No DEMO</span></div>
+<label class="label">Amount to Trade (USD) - REAL</label><input id="tradeAmt" type="number" placeholder="100">
 <div class="row"><button class="btn btnSell" onclick="doTrade('sell')">↓ Sell</button><button class="btn btnBuy" onclick="doTrade('buy')">↑ Buy</button></div>
-<div class="row" style="margin-top:10px"><div style="flex:1"><label class="label">Stop Loss (Return if fail)</label><input id="stopLoss" type="number" placeholder="20"></div><div style="flex:1"><label class="label">Take Profit (Get if win)</label><input id="takeProfit" type="number" placeholder="180"></div></div>
+<div class="row" style="margin-top:10px"><div style="flex:1"><label class="label">Stop Loss</label><input id="stopLoss" type="number" placeholder="20"></div><div style="flex:1"><label class="label">Take Profit</label><input id="takeProfit" type="number" placeholder="180"></div></div>
 <label class="label">Time / Duration</label><select id="duration" class="timeSel"><option value="30">30 Seconds</option><option value="60" selected>1 Minute</option><option value="300">5 Minutes</option><option value="900">15 Minutes</option><option value="3600">1 Hour</option></select>
-<button class="btnActivate" onclick="activateTrade()">Activate Trade</button>
+<button class="btnActivate" onclick="activateTrade()">Activate REAL Trade</button>
 <div id="msg" style="font-size:12px;margin-top:8px;color:#f87171"></div>
 <button onclick="location.href='my-trades.html'" style="width:100%;margin-top:12px;padding:10px;background:white;color:#132a48;border:0;border-radius:10px;font-weight:bold">My Active Trades → Trade View</button>
 </div>
+</div>
+<div class="sideHistory">
+<div style="padding:12px 12px 0 12px;display:flex;justify-content:space-between;align-items:center"><b style="font-size:13px">📈 Trade History (REAL)</b><span style="font-size:10px;color:#22c55e;background:#dcfce7;padding:2px 6px;border-radius:10px">LIVE</span></div>
+<div class="historyTabs"><div class="hTab active" onclick="switchTab('live')" id="tabLive">Live Trades</div><div class="hTab" onclick="switchTab('ended')" id="tabEnded">Ended</div></div>
+<div id="historyList" style="max-height:380px;overflow:auto"><div style="padding:20px;text-align:center;color:#8aa0c2;font-size:12px">Loading REAL trades...</div></div>
+<div style="padding:10px;font-size:10px;color:#8aa0c2;text-align:center">Tap any trade to see full details → trade-view.html</div>
+</div>
+</div>
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-const firebaseConfig={apiKey:"AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",authDomain:"global-savings.firebaseapp.com",projectId:"global-savings",storageBucket:"global-savings.firebasestorage.app",messagingSenderId:"83435054105",appId:"1:83435054105:web:efac6cbd5a264a6892b688"};
-const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, serverTimestamp, query, where, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",authDomain:"global-savings.firebaseapp.com",projectId:"global-savings",storageBucket:"global-savings.firebasestorage.app",messagingSenderId:"83435054105",appId:"1:83435054105:web:efac6cbd5a264a6892b688"};const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
 let user=null,userData=null,currentPrice=61342,currentCoin="BTC",selectedType=null;
-const prices={BTC:61342,ETH:3210,BNB:612,XRP:0.62,ADA:0.45,DOGE:0.15,SOL:178,AVAX:35,LINK:18,EURUSD:1.1151,GBPUSD:1.3051,USDCHF:0.9784,USDJPY:119.71};
-onAuthStateChanged(auth, async u=>{ if(!u){location.href="login.html";return;} user=u; const s=await getDoc(doc(db,"users",u.uid)); userData=s.data(); document.getElementById("mainBal").textContent="$"+Number(userData.balance||0).toFixed(2); });
-window.changeCoin=()=>{ currentCoin=document.getElementById("coinSelect").value; currentPrice=prices[currentCoin]||60000; document.getElementById("price").textContent="$"+currentPrice.toLocaleString()+" USD"; drawChart(); };
-window.doTrade=(type)=>{ selectedType=type; const amt=Number(document.getElementById("tradeAmt").value); if(!amt){document.getElementById("msg").textContent="Enter trade amount";return;} if(amt>(userData?.balance||0)){document.getElementById("msg").textContent="Insufficient balance";return;} document.getElementById("msg").textContent="You selected "+type.toUpperCase()+" - Now click Activate"; document.getElementById("msg").style.color="#22c55e"; };
-window.activateTrade=async()=>{
- const amt=Number(document.getElementById("tradeAmt").value); const tp=Number(document.getElementById("takeProfit").value); const sl=Number(document.getElementById("stopLoss").value); const dur=document.getElementById("duration").value;
- if(!amt||!tp||!sl||!selectedType){document.getElementById("msg").textContent="Fill all and choose Buy/Sell";return;}
- if(amt>(userData?.balance||0)){document.getElementById("msg").textContent="Insufficient balance";return;}
- document.getElementById("msg").textContent="Activating...";
- try{
-  const tradeDoc=await addDoc(collection(db,"trades"),{uid:user.uid,coin:currentCoin,type:selectedType,amount:amt,entryPrice:currentPrice,takeProfitAmount:tp,stopLossAmount:sl,duration:Number(dur),status:"active",finalVerdict:"",createdAt:serverTimestamp()});
-  const newBal=Number(userData.balance)-amt;
-  await updateDoc(doc(db,"users",user.uid),{balance:newBal});
-  await addDoc(collection(db,"transactions"),{uid:user.uid,type:"trade_active",amount:-amt,coin:currentCoin,description:`${selectedType.toUpperCase()} ${currentCoin} trade activated - Amount deducted`,status:"completed",createdAt:serverTimestamp()});
-  location.href=`trade-view.html?id=${tradeDoc.id}`;
- }catch(e){document.getElementById("msg").textContent=e.message;}
-};
-function drawChart(){ const c=document.getElementById("chart"); const ctx=c.getContext("2d"); c.width=c.clientWidth; c.height=200; ctx.clearRect(0,0,c.width,c.height); let x=10,base=100; for(let i=0;i<35;i++){ const green=Math.random()>0.4; const h=20+Math.random()*50; const y=base+(Math.random()*40-20); ctx.fillStyle=green?"#22c55e":"#ef4444"; ctx.fillRect(x,y,6,h); x+=14; base+=Math.random()*10-5; } }
-drawChart();
-</script>
-</body>
-</html>
+const assets=[{sym:"ADA",name:"ADA/USD",price:0.45,color:"#0d47a1",logo:"A"},{sym:"AVAX",name:"AVAX/USD",price:35,color:"#e84142",logo:"AV"},{sym:"BNB",name:"BNB/USD",price:612,color:"#f3ba2f",logo:"B"},{sym:"BTC",name:"BTC/USD",price:61342,color:"#f7931a",logo:"₿"},{sym:"DOGE",name:"DOGE/USD",price:0.15,color:"#c2a633",logo:"D"},{sym:"ETH",name:"ETH/USD",price:3210,color:"#627eea",logo:"Ξ"},{sym:"EURUSD",name:"EUR/USD",price:1.1151,color:"#1e40af",logo:"€"},{sym:"GBPUSD",name:"GBP/USD",price:1.3051,color:"#7c3aed",logo:"£"},{sym:"LINK",name:"LINK/USD",price:18,color:"#2a5bd7",logo:"L"},{sym:"SOL",name:"SOL/USD",price:178,color:"#9945ff",logo:"S"},{sym:"USDCHF",name:"USD/CHF",price:0.9784,color:"#059669",logo:"$"},{sym:"USDJPY",name:"USD/JPY",price:119.71,color:"#dc2626",logo:"¥"},{sym:"XRP",name:"XRP/USD",price:0.62,color:"#23292f",logo:"X"},];
+let filteredAssets=[...assets];
+function renderAssets(){const box=document.getElementById("assetOptions");box.innerHTML="";filteredAssets.sort((a,b)=>a.sym.localeCompare(b.sym));filteredAssets.forEach(a=>{box.innerHTML+=`<div class="assetOpt" onclick="selectAsset('${a.sym}')"><div class="logo" style="background:${a.color}">${a.logo}</div><div><b>${a.sym}</b> <span style="color:#8aa0c2">/USD</span><div style="font-size:11px;color:#8aa0c2">$${a.price}</div></div><div style="margin-left:auto;color:#22c55e;font-size:11px">● Live</div></div>`;});}
+window.toggleDrop=()=>{document.getElementById("assetDrop").classList.toggle("show");};window.filterAssets=()=>{const q=document.getElementById("assetSearch").value.toUpperCase();filteredAssets=assets.filter(a=>a.sym.includes(q)||a.name.includes(q));renderAssets();};
+window.selectAsset=(sym)=>{const a=assets.find(x=>x.sym===sym);currentCoin=a.sym;currentPrice=a.price;document.getElementById("assetBtnTxt").textContent=a.logo+" "+a.name;document.getElementById("price").textContent="$"+a.price.toLocaleString()+" USD";document.getElementById("assetDrop").classList.remove("show");drawChart();};
+window.switchTab=(t)=>{document.getElementById("tabLive").classList.toggle("active",t==="live");document.getElementById("tabEnded").classList.toggle("active",t==="ended");loadHistory(t);};
+onAuthStateChanged(auth, async u=>{if(!u){location.href="login.html";return;}user=u;const s=await getDoc(doc(db,"users",u.uid));userData=s.data();document.getElementById("mainBal").textContent="$"+Number(userData.balance||0).toFixed(2);document.getElementById("balSide").textContent="$"+Number(userData.balance||0).toFixed(2);document.getElementById("realBalTop").textContent="REAL $"+Number(userData.balance||0).toFixed(2);renderAssets();loadHistory('live');});
+async function loadHistory(type){if(!user) return;const box=document.getElementById("historyList");try{const q=query(collection(db,"trades"), where("uid","==",user.uid), orderBy("createdAt","desc"));const snap=await getDocs(q);let arr=[];snap.forEach(d=>arr.push({id:d.id,...d.data()}));if(type==="live") arr=arr.filter(t=>t.status==="active");else arr=arr.filter(t=>t.status!=="active");if(arr.length===0){box.innerHTML="<div style='padding:20px;text-align:center;color:#8aa0c2;font-size:12px'>No "+type+" trades</div>";return;}box.innerHTML="";arr.slice(0,20).forEach(t=>{const isActive=t.status==="active";box.innerHTML+=`<div class="hItem" onclick="location.href='trade-view.html?id=${t.id}'"><div><span class="dot" style="background:${isActive?'#22c55e':'#64748b'}"></span><b>${t.coin} ${t.type?.toUpperCase()}</b><div style="color:#8aa0c2">$${t.amount} • Tap for details</div></div><div style="text-align:right"><div style="color:${isActive?'#22c55e':'#f59e0b'};font-weight:bold">${isActive?'LIVE':(t.finalVerdict||t.status).toUpperCase()}</div></div></div>`;});}catch(e){box.innerHTML="Error";}}
+window.doTrade=(type)=>{selectedType=type;const amt=Number(document.getElementById("tradeAmt").value);if(!amt){document.getElementById("msg").textContent="Enter amount";return}if(amt>(userData?.balance||0)){document.getElementById("msg").textContent="Insufficient REAL balance";return}document.getElementById("msg").textContent="You selected "+type.toUpperCase()+" - Click Activate";document.getElementById("msg").style.color="#22c55e";};
+window.activateTrade=async()=>{const amt=Number(document.getElementById("tradeAmt").value);const tp=Number(document.getElementById("takeProfit").value);const sl=Number(document.getElementById("stopLoss").value);const dur=document.getElementById("duration").value;if(!amt||!tp||!sl||!selectedType){document.getElementById("msg").textContent="Fill all";return}try{const tradeDoc=await addDoc(collection(db,"trades"),{uid:user.uid,coin:currentCoin,type:selectedType,amount:amt,entryPrice:currentPrice,takeProfitAmount:tp,stopLossAmount:sl,duration:Number(dur),status:"active",isReal:true,createdAt:serverTimestamp()});const newBal=Number(userData.balance)-amt;await updateDoc(doc(db,"users",user.uid),{balance:newBal});await addDoc(collection(db,"transactions"),{uid:user.uid,type:"trade_active",amount:-amt,coin:currentCoin,description:`REAL ${selectedType.toUpperCase()} ${currentCoin} trade`,status:"completed",createdAt:serverTimestamp()});location.href=`trade-view.html?id=${tradeDoc.id}`;}catch(e){document.getElementById("msg").textContent=e.message;}};
+function drawChart(){const c=document.getElementById("chart");const ctx=c.getContext("2d");c.width=c.clientWidth;c.height=220;ctx.clearRect(0,0,c.width,c.height);let x=10,base=100;for(let i=0;i<40;i++){const green=Math.random()>0.4;const h=20+Math.random()*50;const y=base+(Math.random()*40-20);ctx.fillStyle=green?"#22c55e":"#ef4444";ctx.fillRect(x,y,6,h);x+=14;base+=Math.random()*10-5;}}drawChart();renderAssets();
+</script></body></html>

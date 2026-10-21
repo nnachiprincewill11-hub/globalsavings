@@ -1,89 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Transfer</title>
-<style>
-*{box-sizing:border-box}body{margin:0;background:#eef4ff;font-family:Arial;padding-bottom:90px}
-.header{padding:16px;background:white;display:flex;justify-content:space-between}
-.card{margin:16px;background:white;border-radius:18px;padding:20px;box-shadow:0 6px 20px #123b7010}
-input{width:100%;padding:13px;border:1px solid #cbd7ea;border-radius:10px;margin-top:12px;font-size:15px}
-button{width:100%;padding:14px;background:#155eef;color:white;border:0;border-radius:10px;font-weight:bold;margin-top:14px;cursor:pointer;font-size:16px}
-#popup{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:99;padding:20px}
-#popup.show{display:flex}
-.popBox{background:white;border-radius:20px;padding:28px;text-align:center;max-width:340px;width:100%}
-.popBox h2{color:#155eef}
-.bottomNav{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #e2e8f0}
-.bottomNav a{text-decoration:none;color:#64748b;font-size:11px;text-align:center;display:flex;flex-direction:column}
-.msg{font-size:13px;margin-top:10px;color:red}
-</style>
-</head>
-<body>
-<div class="header"><b onclick="history.back()" style="cursor:pointer">← Back</b><b>Transfer</b><span></span></div>
-
-<div class="card">
-<h3>Transfer Funds</h3>
-<p style="font-size:12px;color:#64748b">Enter recipient and confirm with your signup password</p>
-<input id="toUser" placeholder="Recipient username or email">
-<input id="amount" type="number" placeholder="Amount (USD)">
-<input id="pass" type="password" placeholder="Enter your signup password">
-<button id="btn" onclick="doTransfer()">Transfer</button>
-<div id="msg" class="msg"></div>
-</div>
-
-<div id="popup"><div class="popBox"><div style="font-size:50px">⏳</div><h2>Transfer Processing</h2><p style="color:#64748b">Your transfer of <b id="popAmt"></b> to <b id="popTo"></b> is processing.<br>It will appear in Transactions as pending until admin approves.</p><button onclick="location.href='transactions.html'">View Transactions</button></div></div>
-
-<div class="bottomNav"><a href="dashboard.html">🏠<br>Home</a><a href="transactions.html">💳<br>Transactions</a><a href="trade.html">📊<br>Trade</a><a href="profile.html">👤<br>Profile</a></div>
-
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Transfer</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#eef4ff;font-family:Arial;padding-bottom:90px}.header{padding:16px;background:white;display:flex;justify-content:space-between}.card{margin:16px;background:white;border-radius:18px;padding:20px;box-shadow:0 6px 20px #123b7010}input{width:100%;padding:13px;border:1px solid #cbd7ea;border-radius:10px;margin-top:12px;font-size:15px}button{width:100%;padding:14px;background:#155eef;color:white;border:0;border-radius:10px;font-weight:bold;margin-top:14px;cursor:pointer;font-size:16px}#popup{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:99;padding:20px}#popup.show{display:flex}.popBox{background:white;border-radius:20px;padding:28px;text-align:center;max-width:340px;width:100%}.tick{width:80px;height:80px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto 12px;box-shadow:0 8px 20px #22c55e55}.popBox h2{color:#16a34a}</style></head><body>
+<div class="header"><b onclick="history.back()">← Back</b><b>Transfer</b><span></span></div>
+<div class="card"><h3>Transfer Funds</h3><input id="toUser" placeholder="Recipient username or email"><input id="amount" type="number" placeholder="Amount (USD)"><input id="pass" type="password" placeholder="Enter your signup password"><button id="btn" onclick="doTransfer()">Transfer</button><div id="msg" style="color:red;font-size:13px;margin-top:8px"></div></div>
+<div id="popup"><div class="popBox"><div class="tick">✓</div><h2>Transfer Successful</h2><p style="color:#64748b;font-size:13px">Your transfer of <b id="popAmt"></b> to <b id="popTo"></b> was successful!<br>✔ Verified</p><button onclick="location.href='transactions.html'" style="background:#16a34a">View Transactions ✓</button></div></div>
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAuth, onAuthStateChanged, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-const firebaseConfig={apiKey:"AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",authDomain:"global-savings.firebaseapp.com",projectId:"global-savings",storageBucket:"global-savings.firebasestorage.app",messagingSenderId:"83435054105",appId:"1:83435054105:web:efac6cbd5a264a6892b688"};
-const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
-let user=null, userData=null;
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";import { getAuth, onAuthStateChanged, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",authDomain:"global-savings.firebaseapp.com",projectId:"global-savings",storageBucket:"global-savings.firebasestorage.app",messagingSenderId:"83435054105",appId:"1:83435054105:web:efac6cbd5a264a6892b688"};const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);let user=null,userData=null;
 onAuthStateChanged(auth, async u=>{ if(!u) location.href="login.html"; else { user=u; const s=await getDoc(doc(db,"users",u.uid)); userData=s.data(); } });
-
-window.doTransfer=async()=>{
- const to=document.getElementById("toUser").value.trim();
- const amt=Number(document.getElementById("amount").value);
- const pass=document.getElementById("pass").value;
- const msg=document.getElementById("msg");
- if(!to||!amt||!pass){ msg.textContent="Fill all fields"; return; }
- if(amt<1){ msg.textContent="Amount too small"; return; }
- if(amt > (userData?.balance||0)){ msg.textContent=`Insufficient balance. You have $${userData.balance}`; return; }
-
- msg.textContent="Verifying password...";
- document.getElementById("btn").disabled=true;
-
- try{
-   const cred=EmailAuthProvider.credential(user.email, pass);
-   await reauthenticateWithCredential(user, cred);
-   
-   msg.textContent="Password correct! Creating transfer...";
-   await addDoc(collection(db,"transactions"),{
-     uid:user.uid,
-     type:"transfer",
-     to:to,
-     amount:amt,
-     status:"pending",
-     fromEmail:user.email,
-     fromUsername:userData.username,
-     balanceBefore:userData.balance,
-     createdAt:serverTimestamp()
-   });
-
-   document.getElementById("popAmt").textContent="$"+amt;
-   document.getElementById("popTo").textContent=to;
-   document.getElementById("popup").classList.add("show");
-
- }catch(e){
-   console.error(e);
-   if(e.code==="auth/wrong-password" || e.code==="auth/invalid-credential") msg.textContent="❌ Password incorrect! Transfer not allowed.";
-   else msg.textContent="Error: "+e.message;
-   document.getElementById("btn").disabled=false;
- }
-};
-</script>
-</body>
-</html>
+window.doTransfer=async()=>{ const to=document.getElementById("toUser").value.trim();const amt=Number(document.getElementById("amount").value);const pass=document.getElementById("pass").value;const msg=document.getElementById("msg");if(!to||!amt||!pass){msg.textContent="Fill all";return}if(amt>(userData?.balance||0)){msg.textContent="Insufficient balance";return}msg.textContent="Verifying...";try{const cred=EmailAuthProvider.credential(user.email,pass);await reauthenticateWithCredential(user,cred);await addDoc(collection(db,"transactions"),{uid:user.uid,type:"transfer",to:to,amount:amt,status:"pending",description:`Transfer to ${to} - $${amt}`,createdAt:serverTimestamp()});document.getElementById("popAmt").textContent="$"+amt;document.getElementById("popTo").textContent=to;document.getElementById("popup").classList.add("show");}catch(e){msg.textContent="❌ Password incorrect"}};
+</script></body></html>

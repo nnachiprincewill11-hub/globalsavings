@@ -32,7 +32,7 @@ body{margin:0;background:#eef4ff;font-family:Arial,sans-serif;color:#132a48;padd
 .assetHeader{display:flex;justify-content:space-between;align-items:center}
 .assetHeader h3{margin:0}
 .assetList{display:flex;gap:12px;overflow:auto;padding-top:12px}
-.asset{ min-width:150px;border:1px solid #e5eefb;border-radius:14px;padding:12px;background:#f8fbff}
+.asset{ min-width:150px;border:1px solid #e5eefb;border-radius:14px;padding:12px;background:#f8fbff;cursor:pointer}
 .asset .sym{font-weight:bold}
 .asset .price{font-size:13px;margin-top:4px}
 .asset .change.up{color:green}.change.down{color:red}
@@ -41,12 +41,17 @@ body{margin:0;background:#eef4ff;font-family:Arial,sans-serif;color:#132a48;padd
 
 .transList{display:flex;flex-direction:column;gap:10px;margin-top:12px}
 .transEmpty{text-align:center;padding:30px 10px;color:#94a3b8}
-.transItem{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid #e5eefb;border-radius:10px;background:#f8fbff}
+.transItem{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid #e5eefb;border-radius:10px;background:#f8fbff;cursor:pointer}
 
 .bottomNav{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #e2e8f0;z-index:10}
 .bottomNav a{text-decoration:none;color:#64748b;font-size:11px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
 .bottomNav a.active{color:#155eef;font-weight:bold}
 .bottomNav .ico{font-size:20px}
+
+/* NEW SMALL - Transaction details modal */
+#txModal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:99;padding:20px}
+#txModal.show{display:flex}.txBox{background:white;border-radius:16px;padding:20px;width:100%;max-width:380px;color:#132a48}
+.txRow{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #e5eefb;font-size:13px}
 </style>
 </head>
 <body>
@@ -63,11 +68,11 @@ body{margin:0;background:#eef4ff;font-family:Arial,sans-serif;color:#132a48;padd
 
 <div class="card balanceCard">
   <div class="balanceTop">
-    <div class="label">Total Balance</div>
+    <div class="label">Total Balance - REAL</div>
     <div class="eye" id="eyeBtn" onclick="toggleHide()">👁️</div>
   </div>
   <div id="bal">$0.00</div>
-  <div id="balSub" style="font-size:12px;color:#dbeafe">+2.4% this month ↑</div>
+  <div id="balSub" style="font-size:12px;color:#dbeafe">REAL Account • Live • No DEMO</div>
   
   <div class="convertRow">
     <select id="currencySelect" onchange="updateCurrency()">
@@ -88,25 +93,25 @@ body{margin:0;background:#eef4ff;font-family:Arial,sans-serif;color:#132a48;padd
 <div class="card">
   <div class="assetHeader">
     <h3>Markets</h3>
-    <a href="trade.html" style="color:#155eef;text-decoration:none;font-size:13px">See all ></a>
+    <a href="trade-pro.html" style="color:#155eef;text-decoration:none;font-size:13px">Pro Trade ></a>
   </div>
   <div class="assetList">
-    <div class="asset" onclick="location.href='trade.html'">
+    <div class="asset" onclick="location.href='trade-pro.html'">
       <div class="sym">BTC <span class="change up">+2.3%</span></div>
       <div class="price">$68,420.50</div>
       <div class="candle"><span style="height:10px;background:#22c55e"></span><span style="height:18px;background:#22c55e"></span><span style="height:14px;background:#ef4444"></span><span style="height:22px;background:#22c55e"></span></div>
     </div>
-    <div class="asset" onclick="location.href='trade.html'">
+    <div class="asset" onclick="location.href='trade-pro.html'">
       <div class="sym">ETH <span class="change down">-0.8%</span></div>
       <div class="price">$3,210.10</div>
       <div class="candle"><span style="height:12px;background:#ef4444"></span><span style="height:8px;background:#ef4444"></span><span style="height:16px;background:#22c55e"></span><span style="height:20px;background:#ef4444"></span></div>
     </div>
-    <div class="asset" onclick="location.href='trade.html'">
+    <div class="asset" onclick="location.href='trade-pro.html'">
       <div class="sym">SOL <span class="change up">+5.1%</span></div>
       <div class="price">$178.90</div>
       <div class="candle"><span style="height:16px;background:#22c55e"></span><span style="height:24px;background:#22c55e"></span><span style="height:12px;background:#22c55e"></span><span style="height:18px;background:#22c55e"></span></div>
     </div>
-    <div class="asset" onclick="location.href='trade.html'">
+    <div class="asset" onclick="location.href='trade-pro.html'">
       <div class="sym">GOLD <span class="change up">+0.4%</span></div>
       <div class="price">$2,340.00</div>
       <div class="candle"><span style="height:10px;background:#22c55e"></span><span style="height:10px;background:#22c55e"></span><span style="height:10px;background:#22c55e"></span><span style="height:12px;background:#22c55e"></span></div>
@@ -117,16 +122,26 @@ body{margin:0;background:#eef4ff;font-family:Arial,sans-serif;color:#132a48;padd
 <div class="card">
   <div class="assetHeader">
     <h3>Recent Transactions</h3>
-    <a href="transactions.html" style="color:#155eef;text-decoration:none;font-size:13px">See all ></a>
+    <a href="transactions-pro.html" style="color:#155eef;text-decoration:none;font-size:13px">See all ></a>
   </div>
   <div id="txList"><div class="transEmpty">No transactions yet<br><span style="font-size:24px">📭</span></div></div>
+  <div style="font-size:11px;color:#94a3b8;margin-top:8px;text-align:center">Tap any transaction to see full details</div>
 </div>
 
 <div class="bottomNav">
   <a href="dashboard.html" class="active"><span class="ico">🏠</span>Home</a>
-  <a href="transactions.html"><span class="ico">💳</span>Transactions</a>
-  <a href="trade.html"><span class="ico">📊</span>Trade</a>
+  <a href="transactions-pro.html"><span class="ico">💳</span>Transactions</a>
+  <a href="trade-pro.html"><span class="ico">📊</span>Pro Trade</a>
   <a href="profile.html"><span class="ico">👤</span>Profile</a>
+</div>
+
+<!-- Transaction Details Modal -->
+<div id="txModal" onclick="this.classList.remove('show')">
+  <div class="txBox" onclick="event.stopPropagation()">
+    <h3 style="margin:0 0 10px 0">Transaction Full Details</h3>
+    <div id="txDetail"></div>
+    <button onclick="document.getElementById('txModal').classList.remove('show')" style="width:100%;margin-top:14px;padding:12px;background:#132a48;color:white;border:0;border-radius:10px;font-weight:bold">Close</button>
+  </div>
 </div>
 
 <script type="module">
@@ -149,6 +164,7 @@ const db = getFirestore(app);
 let realBalanceUSD = 0;
 let isHidden = localStorage.getItem("hideBal") === "true";
 let currentCurrency = localStorage.getItem("currency") || "USD";
+let allTx = [];
 
 document.getElementById("currencySelect").value = currentCurrency;
 
@@ -178,6 +194,20 @@ window.updateCurrency=()=>{
   formatBal();
 };
 
+window.showTxDetail=(i)=>{
+  const v=allTx[i];
+  document.getElementById("txDetail").innerHTML=`
+    <div class="txRow"><span>Type</span><b>${v.type||""}</b></div>
+    <div class="txRow"><span>Amount</span><b>$${Number(v.amount||0).toFixed(2)}</b></div>
+    <div class="txRow"><span>Asset / Coin</span><b>${v.coin||"USD"}</b></div>
+    <div class="txRow"><span>Status</span><b>${v.status||"completed"}</b></div>
+    <div class="txRow"><span>Description</span><b style="max-width:60%;text-align:right">${v.description||v.type}</b></div>
+    <div class="txRow"><span>Date</span><b>${v.createdAt?.toDate?.()?.toLocaleString()||"Just now"}</b></div>
+    <div class="txRow"><span>ID</span><b style="font-size:10px">${v.id||""}</b></div>
+  `;
+  document.getElementById("txModal").classList.add("show");
+};
+
 onAuthStateChanged(auth, async user=>{
   if(!user){ location.href="login.html"; return; }
   const snap=await getDoc(doc(db,"users",user.uid));
@@ -188,19 +218,21 @@ onAuthStateChanged(auth, async user=>{
     document.getElementById("avatarBtn").textContent=(data.username||"A")[0].toUpperCase();
     formatBal();
   }
-  // Load transactions
+  // Load transactions - Now clickable for full details
   try{
     const q=query(collection(db,"transactions"), where("uid","==",user.uid));
     const qs=await getDocs(q);
     const box=document.getElementById("txList");
     if(qs.empty){
-      box.innerHTML=`<div class="transEmpty">No transactions yet<br><span style="font-size:24px">📭</span><div style="font-size:12px;margin-top:6px">Your transactions will appear here</div></div>`;
+      box.innerHTML=`<div class="transEmpty">No transactions yet<br><span style="font-size:24px">📭</span><div style="font-size:12px;margin-top:6px">Your transactions will appear here. Tap to see details after you trade.</div></div>`;
     } else {
+      let arr=[]; qs.forEach(d=>arr.push({id:d.id, ...d.data()}));
+      arr.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+      allTx=arr;
       box.innerHTML="";
-      qs.forEach(d=>{
-        const v=d.data();
-        const isNeg = v.type==="withdraw" || v.type==="transfer" || v.amount<0;
-        box.innerHTML+=`<div class="transItem"><div><div style="font-weight:bold">${v.type||"Transaction"}</div><div style="font-size:11px;color:#64748b">${v.createdAt?.toDate?.()?.toLocaleString()||"Just now"}</div></div><div style="font-weight:bold;color:${isNeg?"#ef4444":"#16a34a"}">${isNeg?"-":"+"}$${Math.abs(v.amount||0)}</div></div>`;
+      arr.slice(0,10).forEach((v,i)=>{
+        const isNeg = v.type==="withdraw" || v.type==="transfer" || v.amount<0 || v.type==="trade_active";
+        box.innerHTML+=`<div class="transItem" onclick="showTxDetail(${i})"><div><div style="font-weight:bold">${(v.description||v.type||"Transaction").substring(0,25)}</div><div style="font-size:11px;color:#64748b">${v.createdAt?.toDate?.()?.toLocaleString()||"Just now"}</div></div><div style="font-weight:bold;color:${isNeg?"#ef4444":"#16a34a"}">${isNeg?"":"+"}$${Number(Math.abs(v.amount||0)).toFixed(2)}</div></div>`;
       });
     }
   }catch(e){ console.log(e); }

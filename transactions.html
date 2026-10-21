@@ -1,30 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Transactions</title>
-<style>body{margin:0;background:#eef4ff;font-family:Arial;padding-bottom:90px}.header{padding:16px;background:white;display:flex;justify-content:space-between}.card{margin:16px;background:white;border-radius:18px;padding:16px}.item{display:flex;justify-content:space-between;padding:12px;border:1px solid #e5eefb;border-radius:10px;margin-top:10px}
-.bottomNav{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #e2e8f0}.bottomNav a{text-decoration:none;color:#64748b;font-size:11px;text-align:center;display:flex;flex-direction:column}.bottomNav a.active{color:#155eef}
-</style>
-</head>
-<body>
-<div class="header"><b onclick="history.back()" style="cursor:pointer">← Back</b><b>Transactions</b><span></span></div>
-<div class="card"><h3>All Transactions</h3><div id="list">Loading...</div></div>
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Transactions</title><style>body{margin:0;background:#eef4ff;font-family:Arial;padding-bottom:90px}.header{padding:16px;background:white;display:flex;justify-content:space-between}.card{margin:16px;background:white;border-radius:18px;padding:16px}.item{display:flex;justify-content:space-between;padding:12px;border:1px solid #e5eefb;border-radius:10px;margin-top:10px;cursor:pointer;background:#f8fbff}.bottomNav{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #e2e8f0}.bottomNav a{text-decoration:none;color:#64748b;font-size:11px;text-align:center;display:flex;flex-direction:column}.bottomNav a.active{color:#155eef}#txModal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:99;padding:20px}#txModal.show{display:flex}.txBox{background:white;border-radius:16px;padding:20px;width:100%;max-width:380px}.txRow{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #e5eefb;font-size:13px}</style></head><body>
+<div class="header"><b onclick="history.back()">← Back</b><b>Transactions - Tap for Full Details</b><span></span></div>
+<div class="card"><h3>All Transactions</h3><div style="font-size:11px;color:#94a3b8">Tap any transaction to see full details</div><div id="list">Loading...</div></div>
 <div class="bottomNav"><a href="dashboard.html">🏠<br>Home</a><a href="transactions.html" class="active">💳<br>Transactions</a><a href="trade.html">📊<br>Trade</a><a href="profile.html">👤<br>Profile</a></div>
+<div id="txModal" onclick="this.classList.remove('show')"><div class="txBox" onclick="event.stopPropagation()"><h3>Transaction Full Details</h3><div id="txDetail"></div><button onclick="document.getElementById('txModal').classList.remove('show')" style="width:100%;margin-top:14px;padding:12px;background:#132a48;color:white;border:0;border-radius:10px">Close</button></div></div>
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-const firebaseConfig={apiKey:"AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",authDomain:"global-savings.firebaseapp.com",projectId:"global-savings",storageBucket:"global-savings.firebasestorage.app",messagingSenderId:"83435054105",appId:"1:83435054105:web:efac6cbd5a264a6892b688"};
-const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
-onAuthStateChanged(auth, async u=>{
- if(!u){location.href="login.html";return;}
- const q=query(collection(db,"transactions"), where("uid","==",u.uid));
- const s=await getDocs(q);
- const box=document.getElementById("list");
- if(s.empty) box.innerHTML="<div style='text-align:center;padding:30px;color:#94a3b8'>📭<br>No transactions yet</div>";
- else{box.innerHTML=""; s.forEach(d=>{const v=d.data(); box.innerHTML+=`<div class='item'><div><b>${v.type||"Transaction"}</b><div style='font-size:11px;color:#64748b'>${v.createdAt?.toDate?.()?.toLocaleString()||""}</div></div><b>$${v.amount||0}</b></div>`})}
-});
-</script>
-</body>
-</html>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",authDomain:"global-savings.firebaseapp.com",projectId:"global-savings",storageBucket:"global-savings.firebasestorage.app",messagingSenderId:"83435054105",appId:"1:83435054105:web:efac6cbd5a264a6892b688"};const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);let allTx=[];
+window.showDetail=(i)=>{const v=allTx[i];document.getElementById("txDetail").innerHTML=`<div class="txRow"><span>Type</span><b>${v.type}</b></div><div class="txRow"><span>Amount</span><b>$${v.amount}</b></div><div class="txRow"><span>Coin</span><b>${v.coin||"USD"}</b></div><div class="txRow"><span>Status</span><b>${v.status}</b></div><div class="txRow"><span>Description</span><b>${v.description||v.type}</b></div><div class="txRow"><span>Date</span><b>${v.createdAt?.toDate?.()?.toLocaleString()||""}</b></div><div class="txRow"><span>ID</span><b style="font-size:10px">${v.id}</b></div>`;document.getElementById("txModal").classList.add("show");};
+onAuthStateChanged(auth, async u=>{if(!u)location.href="login.html";const q=query(collection(db,"transactions"), where("uid","==",u.uid));const s=await getDocs(q);const box=document.getElementById("list");if(s.empty)box.innerHTML="📭 No transactions yet";else{let arr=[];s.forEach(d=>arr.push({id:d.id,...d.data()}));arr.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));allTx=arr;box.innerHTML="";arr.forEach((v,i)=>{box.innerHTML+=`<div class='item' onclick='showDetail(${i})'><div><b>${v.description||v.type}</b><div style='font-size:11px;color:#64748b'>${v.createdAt?.toDate?.()?.toLocaleString()||""} - Tap for details</div></div><b style='color:${Number(v.amount)<0?"#ef4444":"#16a34a"}'>$${v.amount}</b></div>`})}});
+</script></body></html>

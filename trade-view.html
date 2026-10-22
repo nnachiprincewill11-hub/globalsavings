@@ -1,114 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Trade View | Global Savings</title>
-<style>
-*{box-sizing:border-box}body{margin:0;background:#f5f5f5;font-family:Arial;color:#111;padding-bottom:90px}
-.top{background:white;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #ddd;font-weight:bold;position:sticky;top:0;z-index:10}
-.cardTop{background:white;padding:12px 14px;border-bottom:1px solid #e5e7eb}
-.row{display:flex;justify-content:space-between;padding:7px 0;font-size:14px;border-bottom:1px dashed #f0f0f0}
-.right{text-align:right;font-weight:600;min-width:100px}.green{color:#16a34a}.red{color:#dc2626}.blue{color:#155eef}
-.progress{height:5px;background:#e5e7eb;width:100%}.progress div{height:100%;background:#155eef;width:0%;transition:width 1s}
-.timerBox{background:white;text-align:center;padding:10px;font-size:28px;font-weight:bold;border-bottom:1px solid #e5e7eb}
-.liveBox{background:white;margin-top:8px;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb}
-.tradeRow{padding:12px 14px;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center}
-.price{font-size:11px;color:#6b7280}
-.centerCard{background:white;margin:12px;border-radius:12px;padding:16px;text-align:center;box-shadow:0 2px 8px #0001}
-#popupFinal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;z-index:99;padding:20px}
-#popupFinal.show{display:flex}.pop{background:white;border-radius:18px;padding:22px;width:100%;max-width:380px;text-align:center}
-</style>
-</head>
-<body>
-<div class="top"><b onclick="location.href='dashboard.html'">☰</b><span id="headerBal">0.00 USD</span><b>⋮</b></div>
-<div class="cardTop">
-  <div class="row"><span>Balance:</span><span class="right" id="b_balance">0.00</span></div>
-  <div class="row"><span>Equity:</span><span class="right" id="b_equity">0.00</span></div>
-  <div class="row"><span>Free margin:</span><span class="right green" id="b_free">0.00</span></div>
-  <div class="row"><span>Margin Level (%):</span><span class="right" id="b_level">0.00</span></div>
-  <div class="row"><span>Margin:</span><span class="right" id="b_margin">0.00</span></div>
-  <div class="row"><span>Status:</span><span class="right blue" id="b_status">Running...</span></div>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Trade View - Live</title><style>*{box-sizing:border-box}body{margin:0;background:#0a1220;color:white;font-family:Arial;padding-bottom:90px}.header{padding:16px;background:#132a48;display:flex;justify-content:space-between;align-items:center}.card{background:#132a48;border-radius:16px;padding:16px;margin:16px}.statGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.stat{background:#0f1e38;border:1px solid #1e355a;border-radius:12px;padding:12px}.stat .lbl{font-size:11px;color:#8aa0c2}.stat .val{font-size:16px;font-weight:bold;margin-top:4px}.up{color:#22c55e}.down{color:#ef4444}#chartV{width:100%;height:180px;background:#081122;border-radius:12px;display:block;margin-top:10px}.btn{width:100%;padding:14px;border-radius:12px;border:0;font-weight:bold;cursor:pointer;margin-top:10px}.btnCancel{background:#1f2937;color:#fca5a5;border:1px solid #ef4444}.btnSuccess{background:#22c55e;color:white;font-size:18px}#successModal{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:100;padding:20px}#successModal.show{display:flex}.sBox{background:white;border-radius:20px;padding:30px 20px;text-align:center;max-width:380px;width:100%;color:#132a48}.bigTick{width:90px;height:90px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:60px;margin:0 auto 12px;font-weight:bold}#cancelModal{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:99;padding:20px}#cancelModal.show{display:flex}.cBox{background:#132a48;border-radius:16px;padding:20px;width:100%;max-width:360px}</style></head><body>
+<div class="header"><b onclick="location.href='trade.html'" style="cursor:pointer">← Back to Trade</b><b id="coinTitle">Trade View</b><span id="statusBadge" style="background:#22c55e;padding:4px 8px;border-radius:10px;font-size:11px">LIVE</span></div>
+<div class="card">
+<h3 id="tradeTitle">Loading REAL trade...</h3><div style="font-size:12px;color:#8aa0c2" id="predShow">Prediction: -</div><canvas id="chartV"></canvas>
+<div class="statGrid"><div class="stat"><div class="lbl">Amount Invested</div><div class="val" id="amt">$0.00</div></div><div class="stat"><div class="lbl">Current Price (Live)</div><div class="val" id="curPrice">$0.00</div></div><div class="stat"><div class="lbl">Entry Price</div><div class="val" id="entryPrice">$0.00</div></div><div class="stat"><div class="lbl">Balance + Frequency + Margin (Live)</div><div class="val up" id="liveProfit">+$0.00</div><div style="font-size:10px;color:#8aa0c2">Frequency: <span id="freq">0</span>Hz • Margin: <span id="margin">0</span>%</div></div><div class="stat"><div class="lbl">Duration Left (Active even after logout)</div><div class="val" id="countdown">00:00</div></div><div class="stat"><div class="lbl">Profit if Win</div><div class="val up" id="tpVal">+$0.00</div></div></div>
+<div id="adminNote" style="margin-top:12px;padding:10px;background:#0f1e38;border-radius:10px;font-size:11px;color:#f59e0b;display:none">Waiting for admin to type APPROVE</div>
+<button class="btn btnCancel" id="cancelBtn" onclick="showCancel()">Cancel Trade & Return Money ( $2 fee will be removed )</button><button class="btn btnSuccess" id="adminApproveDemo" onclick="adminApproveDemo()" style="background:#f59e0b;display:none">ADMIN: Type APPROVE to make successful (Demo)</button><div id="msg" style="font-size:12px;margin-top:10px;text-align:center"></div>
 </div>
-<div class="progress"><div id="bar"></div></div>
-<div class="timerBox" id="timer">00:00</div>
-<div class="liveBox">
-  <div class="tradeRow"><div><b id="coinPair">BPUSD, buy 1.00</b><br><span class="price" id="coinPrice">1.1151 → 1.13856</span><br><span class="price" id="pnlLabel">Profit: $0.00</span></div><div class="right" id="livePnl">0.00</div></div>
-  <div class="tradeRow"><div><b>Take Profit / Stop Loss</b><br><span class="price" id="tpSlInfo">TP: 0.00 | SL: 0.00</span></div><div class="right blue" id="verdictLabel">Pending</div></div>
-</div>
-<div class="centerCard">
-  <p style="font-size:12px;color:#6b7280">Trade amount removed automatically. If successful, Take Profit added to main balance. All shows in Transactions.</p>
-  <div id="finalMsg" style="font-weight:bold;margin-top:12px;font-size:13px"></div>
-  <button onclick="location.href='my-trades.html'" style="width:100%;padding:12px;background:#132a48;color:white;border:0;border-radius:10px;font-weight:bold;margin-top:12px">My Trades - Trade View</button>
-  <button onclick="location.href='transactions.html'" style="width:100%;padding:12px;background:white;color:#132a48;border:1px solid #132a48;border-radius:10px;font-weight:bold;margin-top:8px">View Transactions</button>
-</div>
-<div id="popupFinal"><div class="pop"><div style="font-size:64px" id="finalIcon">🥳</div><h2 id="finalTitle">Congratulations your trade was successful 🥳</h2><p id="finalText"></p><button onclick="location.href='dashboard.html'" style="width:100%;padding:14px;background:#155eef;color:white;border:0;border-radius:10px;font-weight:bold;margin-top:10px">Continue</button></div></div>
+<div id="successModal"><div class="sBox"><div class="bigTick">✓</div><h1 style="color:#22c55e;margin:0;font-size:28px;font-weight:900">TRADE SUCCESSFUL!</h1><p style="font-size:14px;margin-top:8px;font-weight:bold">BIG BOLD GREEN GOOD - Approved by admin</p><div id="succDetail" style="background:#f0fdf4;padding:12px;border-radius:10px;margin-top:12px;text-align:left;font-size:13px"></div><button onclick="location.href='transactions.html'" style="width:100%;margin-top:14px;padding:14px;background:#22c55e;color:white;border:0;border-radius:12px;font-weight:bold">View in Transactions → +Profit Added</button><button onclick="location.href='dashboard.html'" style="width:100%;margin-top:8px;padding:10px;background:#132a48;color:white;border:0;border-radius:10px">Go Home</button></div></div>
+<div id="cancelModal"><div class="cBox"><h3 style="margin:0">Cancel Trade?</h3><p style="font-size:13px;color:#cbd5e1">If you cancel, money will return to your main balance but a charge of <b style="color:#ef4444">$2</b> will be removed from your balance.<br><br>Example: You traded $50 → You get $48 back ( $50 - $2 fee ).<br><br>Continue?</p><div style="display:flex;gap:10px;margin-top:12px"><button onclick="document.getElementById('cancelModal').classList.remove('show')" style="flex:1;padding:12px;background:#1f2937;color:white;border:1px solid #334155;border-radius:10px">No, Keep Trade</button><button onclick="doCancel()" style="flex:1;padding:12px;background:#ef4444;color:white;border:0;border-radius:10px;font-weight:bold">Yes, Cancel & Return -$2</button></div></div></div>
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import { getFirestore, doc, getDoc, updateDoc, addDoc, collection, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-const firebaseConfig={apiKey:"AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",authDomain:"global-savings.firebaseapp.com",projectId:"global-savings",storageBucket:"global-savings.firebasestorage.app",messagingSenderId:"83435054105",appId:"1:83435054105:web:efac6cbd5a264a6892b688"};
-const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
-const tradeId=new URLSearchParams(location.search).get("id");
-let trade=null,user=null,userData=null,secLeft=0,interval=null,entryPrice=0,settled=false;
-onAuthStateChanged(auth, async u=>{
- if(!u){location.href="login.html";return;}
- user=u;
- const uDoc=await getDoc(doc(db,"users",u.uid)); userData=uDoc.data();
- document.getElementById("headerBal").textContent="$"+Number(userData.balance||0).toFixed(2)+" USD";
- document.getElementById("b_balance").textContent=Number(userData.balance||0).toFixed(2);
- if(tradeId) listenTrade();
-});
-function listenTrade(){
- onSnapshot(doc(db,"trades",tradeId), snap=>{
-  if(!snap.exists()) return; trade=snap.data(); entryPrice=Number(trade.entryPrice||0);
-  document.getElementById("b_equity").textContent=Number(trade.amount).toFixed(2);
-  document.getElementById("b_free").textContent=Number(trade.takeProfitAmount).toFixed(2);
-  document.getElementById("b_level").textContent=Number(trade.stopLossAmount).toFixed(2);
-  document.getElementById("b_margin").textContent=trade.duration+"s";
-  document.getElementById("coinPair").textContent=`${trade.coin}USD, ${trade.type} ${Number(trade.amount).toFixed(2)}`;
-  document.getElementById("tpSlInfo").textContent=`TP: ${trade.takeProfitAmount} | SL: ${trade.stopLossAmount} | Time: ${trade.duration}s`;
-  if(trade.finalVerdict && !settled){ settleTrade(trade.finalVerdict.includes("WIN"), trade.finalVerdict); return; }
-  if(!interval){ secLeft=Number(trade.duration||60); startTimer(); }
- });
-}
-function startTimer(){
- interval=setInterval(()=>{
-  secLeft--; if(secLeft<=0){ clearInterval(interval); document.getElementById("timer").textContent="00:00"; document.getElementById("bar").style.width="100%"; document.getElementById("b_status").textContent="Time Up - Waiting Final Verdict"; return; }
-  const m=Math.floor(secLeft/60), s=secLeft%60;
-  document.getElementById("timer").textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
-  document.getElementById("bar").style.width=((trade.duration-secLeft)/trade.duration*100)+"%";
-  const current=entryPrice+(Math.random()*20-10);
-  document.getElementById("coinPrice").textContent=`${entryPrice.toFixed(5)} → ${current.toFixed(5)}`;
-  const diff=current-entryPrice; let pnl=trade.type==="buy"?diff*2:-diff*2;
-  document.getElementById("livePnl").textContent=pnl.toFixed(2);
-  document.getElementById("livePnl").className="right "+(pnl>=0?"green":"red");
-  document.getElementById("pnlLabel").textContent=`Profit: $${pnl.toFixed(2)}`;
- },1000);
-}
-async function settleTrade(isWin, verdictText){
- if(settled) return; settled=true; clearInterval(interval);
- document.getElementById("verdictLabel").textContent=verdictText; document.getElementById("b_status").textContent=verdictText;
- if(isWin){
-   const newBal=Number(userData.balance)+Number(trade.takeProfitAmount);
-   await updateDoc(doc(db,"users",user.uid),{balance:newBal});
-   await addDoc(collection(db,"transactions"),{uid:user.uid,type:"trade_win",amount:Number(trade.takeProfitAmount),coin:trade.coin,description:`Trade WIN - ${trade.coin} ${trade.type} - Profit added`,status:"completed",createdAt:serverTimestamp()});
-   await updateDoc(doc(db,"trades",tradeId),{status:"won"});
-   document.getElementById("headerBal").textContent="$"+newBal.toFixed(2)+" USD";
-   document.getElementById("finalIcon").textContent="🥳"; document.getElementById("finalTitle").textContent="Congratulations your trade was successful 🥳";
-   document.getElementById("finalText").textContent=`You won $${trade.takeProfitAmount}! Added to main balance.`;
-   document.getElementById("popupFinal").classList.add("show");
- }else{
-   const returnAmount=Number(trade.stopLossAmount);
-   const newBal=Number(userData.balance)+returnAmount;
-   if(returnAmount>0) await updateDoc(doc(db,"users",user.uid),{balance:newBal});
-   await addDoc(collection(db,"transactions"),{uid:user.uid,type:"trade_loss",amount:returnAmount>0?returnAmount:-Number(trade.amount),coin:trade.coin,description:`Trade LOSS - ${trade.coin}`,status:"completed",createdAt:serverTimestamp()});
-   await updateDoc(doc(db,"trades",tradeId),{status:"lost"});
-   document.getElementById("finalIcon").textContent="❌"; document.getElementById("finalTitle").textContent="Trade Closed - Loss";
-   document.getElementById("finalText").textContent=returnAmount>0?`Trade lost. $${returnAmount} returned to balance.`:`Trade lost. Nothing added.`;
-   document.getElementById("popupFinal").classList.add("show");
- }
-}
-window.settleTrade=settleTrade;
-</script>
-</body>
-</html>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",authDomain:"global-savings.firebaseapp.com",projectId:"global-savings",storageBucket:"global-savings.firebasestorage.app",messagingSenderId:"83435054105",appId:"1:83435054105:web:efac6cbd5a264a6892b688"};const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
+let tradeId=new URLSearchParams(location.search).get("id");let tradeData=null,userData=null,user=null,currentPriceLive=0,interval=null;let freq=0,margin=0;
+onAuthStateChanged(auth, async u=>{if(!u){location.href="login.html";return;}user=u;const us=await getDoc(doc(db,"users",u.uid));userData=us.data();if(!tradeId){document.getElementById("tradeTitle").textContent="No ID";return;}onSnapshot(doc(db,"trades",tradeId), async (snap)=>{if(!snap.exists()){document.getElementById("tradeTitle").textContent="Trade not found";return;}tradeData=snap.data();renderTrade();if(tradeData.finalVerdict==="win" && tradeData.status==="completed"){showSuccess();}else if(tradeData.finalVerdict==="loss"){document.getElementById("statusBadge").textContent="LOSS";document.getElementById("statusBadge").style.background="#ef4444";document.getElementById("liveProfit").textContent="-$"+tradeData.amount;document.getElementById("liveProfit").className="val down";}});});
+function renderTrade(){if(!tradeData) return;document.getElementById("coinTitle").textContent=tradeData.coin+" Trade";document.getElementById("tradeTitle").textContent=`${tradeData.coin} ${tradeData.type?.toUpperCase()} • $${tradeData.amount} REAL • ${tradeData.status.toUpperCase()}`;document.getElementById("predShow").textContent="Prediction: "+(tradeData.prediction||"No prediction");document.getElementById("amt").textContent="$"+Number(tradeData.amount).toFixed(2);document.getElementById("entryPrice").textContent="$"+Number(tradeData.entryPrice).toFixed(2);document.getElementById("tpVal").textContent="+$"+Number(tradeData.takeProfitAmount).toFixed(2);document.getElementById("statusBadge").textContent=tradeData.status==="active"?"LIVE":tradeData.status.toUpperCase();if(tradeData.status!=="active"){document.getElementById("cancelBtn").style.display="none";}if(tradeData.status==="active" && !tradeData.finalVerdict){document.getElementById("adminNote").style.display="block";document.getElementById("adminNote").textContent="Trade ACTIVE and will keep running even after logout till expiry: "+(tradeData.expiryAt?.toDate?.()?.toLocaleString()|| tradeData.duration+"s")+" . Waiting for admin APPROVE → SUCCESS green.";if(auth.currentUser?.email==="emmanuelomelu@gmail.com"||location.hostname==="localhost"){document.getElementById("adminApproveDemo").style.display="block";}}const expiry=tradeData.expiryAt?.toDate?.()?.getTime()|| (tradeData.createdAt?.toDate?.()?.getTime()+tradeData.duration*1000)|| (Date.now()+tradeData.duration*1000);clearInterval(interval);interval=setInterval(()=>{const left=expiry-Date.now();if(left<=0){document.getElementById("countdown").textContent="EXPIRED - Waiting admin approval";clearInterval(interval);return;}const d=Math.floor(left/1000);const h=Math.floor(d/3600);const m=Math.floor((d%3600)/60);const s=d%60;document.getElementById("countdown").textContent=`${h>0?h+"h ":""}${m}m ${s}s left • Still active after logout`;},1000);}
+let chartCandles=[];function initV(){chartCandles=[];for(let i=0;i<40;i++){chartCandles.push({x:i*12, y:60+Math.random()*30, h:8+Math.random()*20, up:Math.random()>0.5});}}function drawV(){const c=document.getElementById("chartV");if(!c) return;const ctx=c.getContext("2d");c.width=c.clientWidth;c.height=180;ctx.clearRect(0,0,c.width,c.height);chartCandles.forEach(ca=>{ca.x-=0.5;ca.y+=(Math.random()-0.5)*0.8;if(ca.x<-12){ca.x=c.width;ca.up=Math.random()>0.45;}});chartCandles.forEach(ca=>{ctx.fillStyle=ca.up?"#22c55e":"#ef4444";ctx.fillRect(ca.x, ca.y, 4, ca.h);});if(tradeData && tradeData.status==="active"){currentPriceLive=Number(tradeData.entryPrice)+(Math.random()*40-20);freq+=Math.random()*2;margin=(Math.random()*15-5);document.getElementById("curPrice").textContent="$"+currentPriceLive.toFixed(2);document.getElementById("curPrice").className="val "+(currentPriceLive>=tradeData.entryPrice?"up":"down");document.getElementById("freq").textContent=freq.toFixed(1);document.getElementById("margin").textContent=margin.toFixed(2);let profit=0;if(tradeData.type==="buy"){profit=currentPriceLive-tradeData.entryPrice;}else{profit=tradeData.entryPrice-currentPriceLive;}const isUp=profit>=0;document.getElementById("liveProfit").textContent=(isUp?"+":"")+"$"+profit.toFixed(2);document.getElementById("liveProfit").className="val "+(isUp?"up":"down");}requestAnimationFrame(drawV);}initV();drawV();
+window.showCancel=()=>{document.getElementById("cancelModal").classList.add("show");};
+window.doCancel=async()=>{if(!tradeData || tradeData.status!=="active") return;document.getElementById("msg").textContent="Cancelling... $2 fee will be removed";try{const refund=Number(tradeData.amount)-2;const newBal=Number(userData.balance||0)+refund;await updateDoc(doc(db,"users",user.uid),{balance:newBal});await updateDoc(doc(db,"trades",tradeId),{status:"cancelled", finalVerdict:"cancelled", cancelledAt:serverTimestamp()});await addDoc(collection(db,"transactions"),{uid:user.uid,type:"trade_cancelled",amount:refund,coin:tradeData.coin,description:`Trade CANCELLED - $${tradeData.amount} - $2 fee = $${refund} returned to main balance`,status:"completed",tradeId:tradeId,createdAt:serverTimestamp()});await addDoc(collection(db,"transactions"),{uid:user.uid,type:"fee",amount:-2,coin:"USD",description:"Cancellation fee $2 removed",status:"completed",createdAt:serverTimestamp()});document.getElementById("cancelModal").classList.remove("show");document.getElementById("msg").textContent=`Cancelled! $${refund} returned to main balance. $2 fee removed.`;setTimeout(()=>location.href="dashboard.html",1500);}catch(e){document.getElementById("msg").textContent=e.message;}};
+function showSuccess(){document.getElementById("succDetail").innerHTML=`<b>${tradeData.coin} ${tradeData.type?.toUpperCase()}</b><br>Amount: $${tradeData.amount}<br>Prediction: ${tradeData.prediction||"-"}<br>Profit: +$${tradeData.takeProfitAmount}<br>Total Credited: $${(Number(tradeData.amount)+Number(tradeData.takeProfitAmount)).toFixed(2)}<br><br><b style="color:#22c55e">Transactions side: TRADE SUCCESSFUL +$${tradeData.takeProfitAmount}</b>`;document.getElementById("successModal").classList.add("show");document.getElementById("statusBadge").textContent="SUCCESS";document.getElementById("statusBadge").style.background="#22c55e";}
+window.adminApproveDemo=async()=>{if(!confirm("Admin: Type APPROVE to make successful?")) return;try{const totalReturn=Number(tradeData.amount)+Number(tradeData.takeProfitAmount);const newBal=Number(userData.balance||0)+totalReturn;await updateDoc(doc(db,"users",user.uid),{balance:newBal});await updateDoc(doc(db,"trades",tradeId),{status:"completed", finalVerdict:"win", approvedAt:serverTimestamp(), finalPrice:currentPriceLive});await addDoc(collection(db,"transactions"),{uid:user.uid,type:"trade_success",amount:totalReturn,coin:tradeData.coin,description:`TRADE SUCCESSFUL ${tradeData.coin} ${tradeData.type?.toUpperCase()} +$${tradeData.takeProfitAmount} profit - Total $${totalReturn}`,prediction:tradeData.prediction,status:"completed",tradeId:tradeId,createdAt:serverTimestamp()});showSuccess();}catch(e){alert(e.message);}};
+</script></body></html>

@@ -1,242 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Global Savings | Dashboard</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#eef4ff;font-family:Arial,sans-serif;color:#132a48;padding-bottom:90px}
-.top{padding:18px 16px 0}
-.headerBar{background:white;border-radius:16px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 20px #123b7010}
-.leftGreet{font-weight:bold;font-size:15px}
-.rightIcons{display:flex;gap:12px;align-items:center}
+*{box-sizing:border-box}body{margin:0;background:#eef4ff;font-family:Arial,sans-serif;color:#132a48;padding-bottom:90px}
+.top{padding:18px 16px 0}.headerBar{background:white;border-radius:16px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 20px #123b7010}
+.leftGreet{font-weight:bold;font-size:15px}.rightIcons{display:flex;gap:12px;align-items:center}
 .iconBtn{width:36px;height:36px;border-radius:50%;background:#eaf1ff;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;font-size:18px;border:0}
 .avatar{width:36px;height:36px;border-radius:50%;background:#155eef;color:white;display:flex;align-items:center;justify-content:center;font-weight:bold;text-decoration:none}
-
 .card{background:white;border-radius:18px;padding:16px;margin:16px;box-shadow:0 6px 20px #123b7010}
 .balanceCard{background:linear-gradient(135deg,#155eef,#3b82f6);color:white}
-.balanceTop{display:flex;justify-content:space-between;align-items:center}
-.balanceTop .label{color:#dbeafe;font-size:13px}
+.balanceTop{display:flex;justify-content:space-between;align-items:center}.balanceTop .label{color:#dbeafe;font-size:13px}
 .eye{cursor:pointer;font-size:20px;background:#ffffff20;padding:6px 8px;border-radius:8px}
 #bal{font-size:30px;margin:8px 0 4px;font-weight:bold}
 .convertRow{display:flex;gap:8px;align-items:center;margin-top:10px}
 .convertRow select{padding:8px;border-radius:8px;border:0;font-size:13px;background:white;color:#132a48}
 .convertRow .rate{font-size:11px;color:#dbeafe}
-
-.btns{display:flex;gap:12px;margin-top:14px}
-.btns a{flex:1;text-align:center;padding:12px;border-radius:12px;text-decoration:none;font-weight:bold;font-size:14px}
-.btnTransfer{background:#ffffff;color:#155eef}
-.btnDeposit{background:#eaf1ff;color:#155eef;border:1px solid #ffffff80}
-
-.assetHeader{display:flex;justify-content:space-between;align-items:center}
-.assetHeader h3{margin:0}
+.btns{display:flex;gap:12px;margin-top:14px}.btns a{flex:1;text-align:center;padding:12px;border-radius:12px;text-decoration:none;font-weight:bold;font-size:14px}
+.btnTransfer{background:#ffffff;color:#155eef}.btnDeposit{background:#eaf1ff;color:#155eef;border:1px solid #ffffff80}
+.assetHeader{display:flex;justify-content:space-between;align-items:center}.assetHeader h3{margin:0}
 .assetList{display:flex;gap:12px;overflow:auto;padding-top:12px}
 .asset{ min-width:150px;border:1px solid #e5eefb;border-radius:14px;padding:12px;background:#f8fbff;cursor:pointer}
-.asset .sym{font-weight:bold}
-.asset .price{font-size:13px;margin-top:4px}
-.asset .change.up{color:green}.change.down{color:red}
-.candle{height:28px;display:flex;align-items:end;gap:3px;margin-top:8px}
-.candle span{display:block;width:4px;border-radius:2px}
-
+.asset .sym{font-weight:bold}.asset .price{font-size:13px;margin-top:4px}.asset .change.up{color:green}.change.down{color:red}
+.candle{height:28px;display:flex;align-items:end;gap:3px;margin-top:8px}.candle span{display:block;width:4px;border-radius:2px}
 .transList{display:flex;flex-direction:column;gap:10px;margin-top:12px}
 .transEmpty{text-align:center;padding:30px 10px;color:#94a3b8}
 .transItem{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid #e5eefb;border-radius:10px;background:#f8fbff;cursor:pointer}
-
 .bottomNav{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #e2e8f0;z-index:10}
 .bottomNav a{text-decoration:none;color:#64748b;font-size:11px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
-.bottomNav a.active{color:#155eef;font-weight:bold}
-.bottomNav .ico{font-size:20px}
-
-/* NEW SMALL - Transaction details modal */
+.bottomNav a.active{color:#155eef;font-weight:bold}.bottomNav .ico{font-size:20px}
 #txModal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:99;padding:20px}
 #txModal.show{display:flex}.txBox{background:white;border-radius:16px;padding:20px;width:100%;max-width:380px;color:#132a48}
 .txRow{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #e5eefb;font-size:13px}
 </style>
 </head>
 <body>
-
-<div class="top">
-  <div class="headerBar">
-    <div class="leftGreet" id="greet">Good Morning, Alex</div>
-    <div class="rightIcons">
-      <a class="iconBtn" href="notification.html" title="Notifications">🔔</a>
-      <a class="avatar" id="avatarBtn" href="profile.html">A</a>
-    </div>
-  </div>
-</div>
-
-<div class="card balanceCard">
-  <div class="balanceTop">
-    <div class="label">Total Balance - REAL</div>
-    <div class="eye" id="eyeBtn" onclick="toggleHide()">👁️</div>
-  </div>
-  <div id="bal">$0.00</div>
-  <div id="balSub" style="font-size:12px;color:#dbeafe">REAL Account • Live • No DEMO</div>
-  
-  <div class="convertRow">
-    <select id="currencySelect" onchange="updateCurrency()">
-      <option value="USD">USD</option>
-      <option value="NGN">NGN (Rate 1370)</option>
-      <option value="EUR">EUR</option>
-      <option value="GBP">GBP</option>
-    </select>
-    <div class="rate" id="rateInfo">Rate: 1 USD = 1370 NGN</div>
-  </div>
-
-  <div class="btns">
-    <a class="btnTransfer" href="transfer.html">↑ Transfer</a>
-    <a class="btnDeposit" href="deposit.html">◫ Deposit</a>
-  </div>
-</div>
-
-<div class="card">
-  <div class="assetHeader">
-    <h3>Markets</h3>
-    <a href="trade-pro.html" style="color:#155eef;text-decoration:none;font-size:13px">Pro Trade ></a>
-  </div>
-  <div class="assetList">
-    <div class="asset" onclick="location.href='trade-pro.html'">
-      <div class="sym">BTC <span class="change up">+2.3%</span></div>
-      <div class="price">$68,420.50</div>
-      <div class="candle"><span style="height:10px;background:#22c55e"></span><span style="height:18px;background:#22c55e"></span><span style="height:14px;background:#ef4444"></span><span style="height:22px;background:#22c55e"></span></div>
-    </div>
-    <div class="asset" onclick="location.href='trade-pro.html'">
-      <div class="sym">ETH <span class="change down">-0.8%</span></div>
-      <div class="price">$3,210.10</div>
-      <div class="candle"><span style="height:12px;background:#ef4444"></span><span style="height:8px;background:#ef4444"></span><span style="height:16px;background:#22c55e"></span><span style="height:20px;background:#ef4444"></span></div>
-    </div>
-    <div class="asset" onclick="location.href='trade-pro.html'">
-      <div class="sym">SOL <span class="change up">+5.1%</span></div>
-      <div class="price">$178.90</div>
-      <div class="candle"><span style="height:16px;background:#22c55e"></span><span style="height:24px;background:#22c55e"></span><span style="height:12px;background:#22c55e"></span><span style="height:18px;background:#22c55e"></span></div>
-    </div>
-    <div class="asset" onclick="location.href='trade-pro.html'">
-      <div class="sym">GOLD <span class="change up">+0.4%</span></div>
-      <div class="price">$2,340.00</div>
-      <div class="candle"><span style="height:10px;background:#22c55e"></span><span style="height:10px;background:#22c55e"></span><span style="height:10px;background:#22c55e"></span><span style="height:12px;background:#22c55e"></span></div>
-    </div>
-  </div>
-</div>
-
-<div class="card">
-  <div class="assetHeader">
-    <h3>Recent Transactions</h3>
-    <a href="transactions-pro.html" style="color:#155eef;text-decoration:none;font-size:13px">See all ></a>
-  </div>
-  <div id="txList"><div class="transEmpty">No transactions yet<br><span style="font-size:24px">📭</span></div></div>
-  <div style="font-size:11px;color:#94a3b8;margin-top:8px;text-align:center">Tap any transaction to see full details</div>
-</div>
-
-<div class="bottomNav">
-  <a href="dashboard.html" class="active"><span class="ico">🏠</span>Home</a>
-  <a href="transactions-pro.html"><span class="ico">💳</span>Transactions</a>
-  <a href="trade-pro.html"><span class="ico">📊</span>Pro Trade</a>
-  <a href="profile.html"><span class="ico">👤</span>Profile</a>
-</div>
-
-<!-- Transaction Details Modal -->
-<div id="txModal" onclick="this.classList.remove('show')">
-  <div class="txBox" onclick="event.stopPropagation()">
-    <h3 style="margin:0 0 10px 0">Transaction Full Details</h3>
-    <div id="txDetail"></div>
-    <button onclick="document.getElementById('txModal').classList.remove('show')" style="width:100%;margin-top:14px;padding:12px;background:#132a48;color:white;border:0;border-radius:10px;font-weight:bold">Close</button>
-  </div>
-</div>
-
+<div class="top"><div class="headerBar"><div class="leftGreet" id="greet">Good Morning, Alex</div><div class="rightIcons"><a class="iconBtn" href="notification.html">🔔</a><a class="avatar" id="avatarBtn" href="profile.html">A</a></div></div></div>
+<div class="card balanceCard"><div class="balanceTop"><div class="label">Total Balance - REAL</div><div class="eye" id="eyeBtn" onclick="toggleHide()">👁️</div></div><div id="bal">$0.00</div><div id="balSub" style="font-size:12px;color:#dbeafe">REAL Account • Live • No DEMO</div><div class="convertRow"><select id="currencySelect" onchange="updateCurrency()"><option value="USD">USD</option><option value="NGN">NGN (Rate 1370)</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select><div class="rate" id="rateInfo">Rate: 1 USD = 1370 NGN</div></div><div class="btns"><a class="btnTransfer" href="transfer.html">↑ Transfer</a><a class="btnDeposit" href="deposit.html">◫ Deposit</a></div></div>
+<div class="card"><div class="assetHeader"><h3>Markets</h3><a href="trade.html" style="color:#155eef;text-decoration:none;font-size:13px">Pro Trade ></a></div><div class="assetList"><div class="asset" onclick="location.href='trade.html'"><div class="sym">BTC <span class="change up">+2.3%</span></div><div class="price">$68,420.50</div><div class="candle"><span style="height:10px;background:#22c55e"></span><span style="height:18px;background:#22c55e"></span><span style="height:14px;background:#ef4444"></span><span style="height:22px;background:#22c55e"></span></div></div><div class="asset" onclick="location.href='trade.html'"><div class="sym">ETH <span class="change down">-0.8%</span></div><div class="price">$3,210.10</div></div><div class="asset" onclick="location.href='trade.html'"><div class="sym">SOL <span class="change up">+5.1%</span></div><div class="price">$178.90</div></div><div class="asset" onclick="location.href='trade.html'"><div class="sym">GOLD <span class="change up">+0.4%</span></div><div class="price">$2,340.00</div></div></div></div>
+<div class="card"><div class="assetHeader"><h3>Recent Transactions</h3><a href="transactions.html" style="color:#155eef;text-decoration:none;font-size:13px">See all ></a></div><div id="txList"><div class="transEmpty">No transactions yet<br><span style="font-size:24px">📭</span></div></div><div style="font-size:11px;color:#94a3b8;margin-top:8px;text-align:center">Tap any transaction to see full details</div></div>
+<div class="bottomNav"><a href="dashboard.html" class="active"><span class="ico">🏠</span>Home</a><a href="transactions.html"><span class="ico">💳</span>Transactions</a><a href="trade.html"><span class="ico">📊</span>Pro Trade</a><a href="profile.html"><span class="ico">👤</span>Profile</a></div>
+<div id="txModal" onclick="this.classList.remove('show')"><div class="txBox" onclick="event.stopPropagation()"><h3 style="margin:0 0 10px 0">Transaction Full Details</h3><div id="txDetail"></div><button onclick="document.getElementById('txModal').classList.remove('show')" style="width:100%;margin-top:14px;padding:12px;background:#132a48;color:white;border:0;border-radius:10px;font-weight:bold">Close</button></div></div>
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",
-  authDomain: "global-savings.firebaseapp.com",
-  projectId: "global-savings",
-  storageBucket: "global-savings.firebasestorage.app",
-  messagingSenderId: "83435054105",
-  appId: "1:83435054105:web:efac6cbd5a264a6892b688"
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-let realBalanceUSD = 0;
-let isHidden = localStorage.getItem("hideBal") === "true";
-let currentCurrency = localStorage.getItem("currency") || "USD";
-let allTx = [];
-
-document.getElementById("currencySelect").value = currentCurrency;
-
-function formatBal(){
-  const eye=document.getElementById("eyeBtn");
-  eye.textContent = isHidden ? "🙈" : "👁️";
-  if(isHidden){
-    document.getElementById("bal").textContent="****";
-    return;
-  }
-  let display=realBalanceUSD;
-  let symbol="$";
-  if(currentCurrency==="NGN"){ display=realBalanceUSD*1370; symbol="₦"; }
-  else if(currentCurrency==="EUR"){ display=realBalanceUSD*0.92; symbol="€"; }
-  else if(currentCurrency==="GBP"){ display=realBalanceUSD*0.79; symbol="£"; }
-  document.getElementById("bal").textContent = `${symbol}${display.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}`;
-}
-
-window.toggleHide=()=>{
-  isHidden=!isHidden;
-  localStorage.setItem("hideBal", isHidden);
-  formatBal();
-};
-window.updateCurrency=()=>{
-  currentCurrency=document.getElementById("currencySelect").value;
-  localStorage.setItem("currency", currentCurrency);
-  formatBal();
-};
-
-window.showTxDetail=(i)=>{
-  const v=allTx[i];
-  document.getElementById("txDetail").innerHTML=`
-    <div class="txRow"><span>Type</span><b>${v.type||""}</b></div>
-    <div class="txRow"><span>Amount</span><b>$${Number(v.amount||0).toFixed(2)}</b></div>
-    <div class="txRow"><span>Asset / Coin</span><b>${v.coin||"USD"}</b></div>
-    <div class="txRow"><span>Status</span><b>${v.status||"completed"}</b></div>
-    <div class="txRow"><span>Description</span><b style="max-width:60%;text-align:right">${v.description||v.type}</b></div>
-    <div class="txRow"><span>Date</span><b>${v.createdAt?.toDate?.()?.toLocaleString()||"Just now"}</b></div>
-    <div class="txRow"><span>ID</span><b style="font-size:10px">${v.id||""}</b></div>
-  `;
-  document.getElementById("txModal").classList.add("show");
-};
-
-onAuthStateChanged(auth, async user=>{
-  if(!user){ location.href="login.html"; return; }
-  const snap=await getDoc(doc(db,"users",user.uid));
-  if(snap.exists()){
-    const data=snap.data();
-    realBalanceUSD=Number(data.balance||0);
-    document.getElementById("greet").textContent=`Good Morning, ${data.username || data.fullName?.split(" ")[0] || "User"}`;
-    document.getElementById("avatarBtn").textContent=(data.username||"A")[0].toUpperCase();
-    formatBal();
-  }
-  // Load transactions - Now clickable for full details
-  try{
-    const q=query(collection(db,"transactions"), where("uid","==",user.uid));
-    const qs=await getDocs(q);
-    const box=document.getElementById("txList");
-    if(qs.empty){
-      box.innerHTML=`<div class="transEmpty">No transactions yet<br><span style="font-size:24px">📭</span><div style="font-size:12px;margin-top:6px">Your transactions will appear here. Tap to see details after you trade.</div></div>`;
-    } else {
-      let arr=[]; qs.forEach(d=>arr.push({id:d.id, ...d.data()}));
-      arr.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
-      allTx=arr;
-      box.innerHTML="";
-      arr.slice(0,10).forEach((v,i)=>{
-        const isNeg = v.type==="withdraw" || v.type==="transfer" || v.amount<0 || v.type==="trade_active";
-        box.innerHTML+=`<div class="transItem" onclick="showTxDetail(${i})"><div><div style="font-weight:bold">${(v.description||v.type||"Transaction").substring(0,25)}</div><div style="font-size:11px;color:#64748b">${v.createdAt?.toDate?.()?.toLocaleString()||"Just now"}</div></div><div style="font-weight:bold;color:${isNeg?"#ef4444":"#16a34a"}">${isNeg?"":"+"}$${Number(Math.abs(v.amount||0)).toFixed(2)}</div></div>`;
-      });
-    }
-  }catch(e){ console.log(e); }
-});
-</script>
-</body>
-</html>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",authDomain:"global-savings.firebaseapp.com",projectId:"global-savings",storageBucket:"global-savings.firebasestorage.app",messagingSenderId:"83435054105",appId:"1:83435054105:web:efac6cbd5a264a6892b688"};const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
+let realBalanceUSD=0;let isHidden=localStorage.getItem("hideBal")==="true";let currentCurrency=localStorage.getItem("currency")||"USD";let allTx=[];document.getElementById("currencySelect").value=currentCurrency;
+function formatBal(){const eye=document.getElementById("eyeBtn");eye.textContent=isHidden?"🙈":"👁️";if(isHidden){document.getElementById("bal").textContent="****";return;}let display=realBalanceUSD;let symbol="$";if(currentCurrency==="NGN"){display=realBalanceUSD*1370;symbol="₦";}else if(currentCurrency==="EUR"){display=realBalanceUSD*0.92;symbol="€";}else if(currentCurrency==="GBP"){display=realBalanceUSD*0.79;symbol="£";}document.getElementById("bal").textContent=`${symbol}${display.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}`;}
+window.toggleHide=()=>{isHidden=!isHidden;localStorage.setItem("hideBal",isHidden);formatBal();};window.updateCurrency=()=>{currentCurrency=document.getElementById("currencySelect").value;localStorage.setItem("currency",currentCurrency);formatBal();};
+window.showTxDetail=(i)=>{const v=allTx[i];document.getElementById("txDetail").innerHTML=`<div class="txRow"><span>Type</span><b>${v.type||""}</b></div><div class="txRow"><span>Amount</span><b>$${Number(v.amount||0).toFixed(2)}</b></div><div class="txRow"><span>Asset / Coin</span><b>${v.coin||"USD"}</b></div><div class="txRow"><span>Status</span><b>${v.status||"completed"}</b></div><div class="txRow"><span>Description</span><b style="max-width:60%;text-align:right">${v.description||v.type}</b></div><div class="txRow"><span>Date</span><b>${v.createdAt?.toDate?.()?.toLocaleString()||"Just now"}</b></div><div class="txRow"><span>ID</span><b style="font-size:10px">${v.id||""}</b></div>`;document.getElementById("txModal").classList.add("show");};
+onAuthStateChanged(auth, async user=>{if(!user){location.href="login.html";return;}const snap=await getDoc(doc(db,"users",user.uid));if(snap.exists()){const data=snap.data();realBalanceUSD=Number(data.balance||0);document.getElementById("greet").textContent=`Good Morning, ${data.username||data.fullName?.split(" ")[0]||"User"}`;document.getElementById("avatarBtn").textContent=(data.username||"A")[0].toUpperCase();formatBal();}try{const q=query(collection(db,"transactions"), where("uid","==",user.uid));const qs=await getDocs(q);const box=document.getElementById("txList");if(qs.empty){box.innerHTML=`<div class="transEmpty">No transactions yet<br><span style="font-size:24px">📭</span><div style="font-size:12px;margin-top:6px">Your transactions will appear here. Tap to see details after you trade.</div></div>`;}else{let arr=[];qs.forEach(d=>arr.push({id:d.id,...d.data()}));arr.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));allTx=arr;box.innerHTML="";arr.slice(0,10).forEach((v,i)=>{const isNeg=v.type==="withdraw"||v.type==="transfer"||v.amount<0||v.type==="trade_active";box.innerHTML+=`<div class="transItem" onclick="showTxDetail(${i})"><div><div style="font-weight:bold">${(v.description||v.type||"Transaction").substring(0,25)}</div><div style="font-size:11px;color:#64748b">${v.createdAt?.toDate?.()?.toLocaleString()||"Just now"}</div></div><div style="font-weight:bold;color:${isNeg?"#ef4444":"#16a34a"}">${isNeg?"":"+"}$${Number(Math.abs(v.amount||0)).toFixed(2)}</div></div>`;});}}catch(e){console.log(e);}});
+</script></body></html>

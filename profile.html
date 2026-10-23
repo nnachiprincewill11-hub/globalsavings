@@ -53,7 +53,6 @@
   <h3>🔓 Account Tier Upgrade</h3>
   <p style="font-size:12px;color:#64748b">Upgrade your tier to hold more money. Your NIN is already verified from signup.</p>
   
-  <!-- TIER 1 - NIN already done from signup = green ticked good -->
   <div class="tier done" id="tier1Box">
     <div class="tierHead">
       <div><b>Tier 1 - NIN Verified</b><div class="limit">Limit: $10 to $300</div></div>
@@ -62,7 +61,6 @@
     <div style="margin-top:8px"><span class="badgeTier done">✓ Completed - Green Good</span> <span id="ninShow" style="font-size:12px;margin-left:6px"></span></div>
   </div>
 
-  <!-- TIER 2 - BVN -->
   <div class="tier" id="tier2Box">
     <div class="tierHead">
       <div><b>Tier 2 - BVN Verification</b><div class="limit">Limit: $500 to $800</div></div>
@@ -72,10 +70,9 @@
     <div id="tier2Status"><span class="badgeTier lock">Locked - Verify BVN</span></div>
     <input id="bvnInput" placeholder="Enter your 11-digit BVN">
     <button class="tierBtn" id="bvnBtn" onclick="submitTier2()">Submit BVN for Approval</button>
-    <div style="font-size:11px;color:#64748b;margin-top:6px">Will show in admin Firebase collection tierVerifications. After you approve, user sees green tick.</div>
+    <div style="font-size:11px;color:#64748b;margin-top:6px">Will show in admin Firebase collection tierVerifications.</div>
   </div>
 
-  <!-- TIER 3 - Drivers License -->
   <div class="tier" id="tier3Box">
     <div class="tierHead">
       <div><b>Tier 3 - Driver's License</b><div class="limit">Limit: $10,000 to $1,000,000</div></div>
@@ -85,15 +82,16 @@
     <div id="tier3Status"><span class="badgeTier lock">Locked - Verify License</span></div>
     <input id="licenseInput" placeholder="Enter Driver's License Number">
     <button class="tierBtn" id="licenseBtn" onclick="submitTier3()">Submit License for Approval</button>
-    <div style="font-size:11px;color:#64748b;margin-top:6px">Upload goes to Firebase. Admin approves → green good ticked in profile.</div>
+    <div style="font-size:11px;color:#64748b;margin-top:6px">Upload goes to Firebase. Admin approves → green tick.</div>
   </div>
-
 </div>
 
-<div class="support">
-  <div style="font-size:14px;opacity:.9">Need Help? Contact Customer Support</div>
-  <div style="margin-top:8px;font-size:20px;font-weight:bold">📧 emmanuelomelu@gmail.com</div>
-  <a href="mailto:emmanuelomelu@gmail.com" style="display:block;margin-top:12px;background:white;color:#155eef;padding:10px;border-radius:10px;text-decoration:none">Send Email Now</a>
+<!-- ONLY THIS BOX CHANGED - EMAIL REMOVED, NOW WHATSAPP WITH MESSAGE -->
+<div class="support" style="margin:16px;background:#132a48;border-radius:18px;padding:18px;color:white">
+  <div style="font-size:14px;font-weight:bold;text-align:center">💬 Need Help? Contact Customer Support</div>
+  <div style="margin-top:10px"><input id="helpMsg" placeholder="Type your message here..." style="width:100%;padding:12px;border-radius:10px;border:0;font-size:14px;color:#132a48"></div>
+  <a id="waSendBtn" href="https://wa.me/2349134538841?text=Hello%20Admin,%20I%20need%20help%20with%20my%20account" target="_blank" style="display:block;margin-top:12px;background:#25D366;color:white;padding:12px;border-radius:10px;text-decoration:none;text-align:center;font-weight:bold">💬 Chat on WhatsApp: +2349134538841</a>
+  <div style="font-size:11px;margin-top:8px;text-align:center;opacity:.8">After 56 hours if deposit not reflected, message us here</div>
 </div>
 
 <div class="card"><button class="btn btnLogout" onclick="logout()">Logout</button></div>
@@ -127,7 +125,6 @@ onAuthStateChanged(auth, async u=>{
  document.getElementById("country").textContent=d.countryCode||"-";
  document.getElementById("balance").textContent=`$${Number(d.balance||0).toFixed(2)} REAL`;
 
- // Tier logic - check approval
  if(d.tier2Verified){
    document.getElementById("tier2Box").classList.add("done");
    document.getElementById("tier2Tick").style.display="flex";
@@ -157,7 +154,7 @@ window.submitTier2=async()=>{
  if(bvn.length<10){alert("Enter valid BVN");return;}
  await addDoc(collection(db,"tierVerifications"),{uid:user.uid,tier:2,type:"BVN",bvn:bvn,status:"pending",email:user.email,createdAt:serverTimestamp()});
  await updateDoc(doc(db,"users",user.uid),{bvn:bvn,tier2Status:"pending"});
- alert("BVN submitted! It will show in your Firebase for you to approve. User will see pending until you approve.");
+ alert("BVN submitted! It will show in your Firebase for you to approve.");
  location.reload();
 };
 window.submitTier3=async()=>{
@@ -165,10 +162,16 @@ window.submitTier3=async()=>{
  if(lic.length<5){alert("Enter valid License");return;}
  await addDoc(collection(db,"tierVerifications"),{uid:user.uid,tier:3,type:"DRIVERS_LICENSE",license:lic,status:"pending",email:user.email,createdAt:serverTimestamp()});
  await updateDoc(doc(db,"users",user.uid),{driversLicense:lic,tier3Status:"pending"});
- alert("License submitted! It will show in Firebase. Approve to show green tick.");
+ alert("License submitted! It will show in Firebase.");
  location.reload();
 };
 window.logout=()=>{signOut(auth).then(()=>location.href="index.html")};
+document.getElementById("helpMsg")?.addEventListener("input",(e)=>{
+  const t=e.target.value.trim()||"Hello Admin, I need help with my account";
+  const u=document.getElementById("username")?.textContent||"";
+  const full=`Hello Admin, My username is ${u} - ${t}`;
+  document.getElementById("waSendBtn").href=`https://wa.me/2349134538841?text=${encodeURIComponent(full)}`;
+});
 </script>
 </body>
 </html>

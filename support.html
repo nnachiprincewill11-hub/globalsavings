@@ -1,6 +1,30 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Support | Global Savings</title><link rel="stylesheet" href="styles.css"><script src="site.js" defer></script></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Support | Global Savings</title><link rel="stylesheet" href="styles.css"><script src="site.js" defer></script>
+<style>.waBtn{background:#25D366;color:white;padding:14px 20px;border-radius:12px;text-decoration:none;font-weight:bold;display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer}.form-card input,.form-card textarea{width:100%;padding:14px;border-radius:10px;border:1px solid #cbd5e1;margin-top:6px}.field{margin-top:14px;display:block}.form-card{padding:20px;background:white;border-radius:16px;box-shadow:0 6px 20px #123b7010}</style>
+</head>
 <body><header class="site-header"><a class="brand" href="index.html"><span class="brand-mark">↗</span><span><strong>Global Savings</strong><small>Save Today · Build Tomorrow</small></span></a><button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button><nav class="nav-links"><a href="index.html">Home</a><a href="about.html">About</a><a href="testimonials.html">Testimonials</a><a href="news.html">News</a><a class="active" href="support.html">Support</a><a class="button button-small nav-cta" href="get-started.html">Get Started</a></nav></header>
-<main><section class="page-hero"><span class="eyebrow">Support</span><h1>How can we help?</h1><p>Find basic guidance below or prepare a message for your site administrator.</p></section><section class="content-section"><div class="content-grid"><article class="info-card"><h3>Account help</h3><p>For login issues, confirm that you are using the email address associated with your account. Use the password reset feature once it has been configured.</p></article><article class="info-card"><h3>Security</h3><p>Never send passwords, one-time codes, or private credentials in a support request.</p></article></div><form class="form-card" id="support-form" style="margin-top:24px"><h2>Send a message</h2><p>This demo form validates your message in the browser; it does not send or store it yet.</p><label class="field"><span>Your name</span><input name="name" required maxlength="100" autocomplete="name"></label><label class="field"><span>Email address</span><input name="email" type="email" required autocomplete="email"></label><label class="field"><span>How can we help?</span><textarea name="message" rows="4" required maxlength="2000"></textarea></label><button class="button" type="submit">Prepare message</button><p id="support-result" class="form-message" role="status"></p></form></section></main>
-<footer class="site-footer"><a class="brand brand-footer" href="index.html"><span class="brand-mark">↗</span><span><strong>Global Savings</strong><small>Save Today · Build Tomorrow</small></span></a><div class="footer-links"><a href="index.html">Home</a><a href="about.html">About</a><a href="testimonials.html">Testimonials</a><a href="news.html">News</a><a href="support.html">Support</a></div><p>© <span data-year></span> Global Savings. Demo website; not a bank or financial institution.</p></footer>
-<script>document.getElementById("support-form")?.addEventListener("submit",e=>{e.preventDefault();const result=document.getElementById("support-result");result.textContent="Your message is ready, but this demo has not sent it. Connect a trusted backend or Firebase service to receive support requests.";result.classList.add("show");});</script></body></html>
+<main><section class="page-hero"><span class="eyebrow">Support</span><h1>How can we help?</h1><p>Chat directly with admin on WhatsApp - We reply fast: +2349134538841</p></section><section class="content-section"><div class="content-grid"><article class="info-card"><h3>Account help</h3><p>For login issues or deposit not reflecting after 56 hours, message us on WhatsApp below.</p></article><article class="info-card"><h3>Security</h3><p>Never send passwords. Only send username and issue.</p></article></div>
+<form class="form-card" id="support-form" style="margin-top:24px"><h2>Send a message to WhatsApp</h2><p style="font-size:13px;color:#64748b">Your message will be sent directly to admin WhatsApp: <b style="color:#25D366">+2349134538841</b></p>
+<label class="field"><span>Your name *</span><input id="name" required maxlength="100" placeholder="Enter your full name"></label>
+<label class="field"><span>Your app username *</span><input id="username2" required placeholder="Enter your app username"></label>
+<label class="field"><span>How can we help? *</span><textarea id="message" rows="4" required maxlength="2000" placeholder="Type your message here - e.g. My deposit has not reflected, my username is..."></textarea></label>
+<button class="button waBtn" type="submit" style="width:100%;justify-content:center;margin-top:16px;background:#25D366">💬 Send Message to WhatsApp +2349134538841</button>
+<p id="support-result" class="form-message" role="status" style="margin-top:12px;font-size:13px"></p>
+<div style="margin-top:16px;text-align:center"><a href="https://wa.me/2349134538841?text=Hello%20Admin,%20I%20need%20help%20with%20my%20account" target="_blank" class="waBtn">💬 Direct WhatsApp Chat: +2349134538841</a></div>
+</form></section></main>
+<footer class="site-footer"><a class="brand brand-footer" href="index.html"><span class="brand-mark">↗</span><span><strong>Global Savings</strong><small>Save Today · Build Tomorrow</small></span></a><div class="footer-links"><a href="index.html">Home</a><a href="about.html">About</a><a href="testimonials.html">Testimonials</a><a href="news.html">News</a><a href="support.html">Support</a></div><p>© <span data-year></span> Global Savings. Support: WhatsApp +2349134538841</p></footer>
+<script>
+document.getElementById("support-form")?.addEventListener("submit",e=>{
+ e.preventDefault();
+ const name=document.getElementById("name").value.trim();
+ const username=document.getElementById("username2").value.trim();
+ const msg=document.getElementById("message").value.trim();
+ if(!name||!username||!msg){document.getElementById("support-result").textContent="Please fill all fields";return;}
+ const fullText=`Hello Admin, I need help%0A%0AName: ${encodeURIComponent(name)}%0AUsername: ${encodeURIComponent(username)}%0AMessage: ${encodeURIComponent(msg)}%0A%0ASent from Global Savings Support Page`;
+ const waUrl=`https://wa.me/2349134538841?text=${fullText}`;
+ window.open(waUrl, '_blank');
+ document.getElementById("support-result").textContent="Opening WhatsApp... Your message is ready to send to +2349134538841";
+ document.getElementById("support-result").classList.add("show");
+});
+</script>
+</body></html>

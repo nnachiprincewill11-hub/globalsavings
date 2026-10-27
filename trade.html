@@ -1,237 +1,49 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Trade - REAL +89.7% Profit</title>
-<style>
-*{box-sizing:border-box}body{margin:0;background:#0a1220;color:white;font-family:Arial;padding-bottom:90px}
-.topBar{background:#132a48;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:20}
-.assetDrop{position:relative;flex:1;max-width:380px;margin:0 8px}.assetBtn{background:#0f2340;color:white;border:1px solid #2a4a7a;padding:10px 12px;border-radius:10px;font-weight:bold;width:100%;display:flex;justify-content:space-between;cursor:pointer;font-size:13px}
-.assetListDrop{position:absolute;top:44px;left:0;right:0;background:#0f1e38;border:1px solid #2a4a7a;border-radius:12px;max-height:400px;overflow:auto;display:none;z-index:30}.assetListDrop.show{display:block}
-.assetOpt{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;border-bottom:1px solid #1a3258;font-size:13px}.assetOpt:hover{background:#132a48}
-.logo{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:12px;color:white}
-.profitBadge{margin-left:auto;background:#22c55e;color:white;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:bold}
-.movementUp{color:#22c55e;font-size:11px;margin-left:4px}
-#chart{width:100%;height:220px;background:#081122;border-top:1px solid #1e355a;border-bottom:1px solid #1e355a;display:block}
-.statsBar{display:flex;justify-content:space-around;background:#0f1e38;padding:10px 8px;border-bottom:1px solid #1e355a;flex-wrap:wrap;gap:6px}
-.statBox{text-align:center;flex:1;min-width:90px}
-.statNum{font-size:13px;font-weight:900;color:#22c55e;display:block}.statLabel{font-size:9px;color:#8aa0c2;text-transform:uppercase}
-.liveDot{width:8px;height:8px;background:#22c55e;border-radius:50%;display:inline-block;animation:blink 1s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.tickerWrap{background:#08162e;overflow:hidden;white-space:nowrap;border-bottom:1px solid #1e355a;padding:6px 0}
-.ticker{display:inline-block;animation:tickerMove 120s linear infinite}
-.tickerItem{display:inline-block;margin-right:24px;font-size:11px}.tickerItem b{color:white}.tickerItem .up{color:#22c55e}
-@keyframes tickerMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.layout{display:flex;flex-wrap:wrap}.mainTrade{flex:1;min-width:320px}.sideHistory{width:360px;background:#0f1e38;border-left:1px solid #1e355a}
-.card{background:#132a48;margin:12px;border-radius:16px;padding:16px}.label{font-size:11px;color:#8aa0c2;margin-bottom:4px;display:block;margin-top:8px}
-input,select,textarea{width:100%;padding:12px;background:#0f2340;border:1px solid #2a4a7a;border-radius:10px;color:white;font-size:14px;margin-bottom:8px}
-.row{display:flex;gap:10px}.btn{flex:1;padding:14px;border-radius:12px;border:0;font-weight:bold;cursor:pointer}.btnSell{background:#ef4444}.btnBuy{background:#22c55e}
-.btnActivate{width:100%;padding:16px;background:#155eef;color:white;border:0;border-radius:12px;font-weight:bold;font-size:17px;margin-top:12px;cursor:pointer}
-.balShow{background:#0a3a7a;padding:10px;border-radius:10px;text-align:center;margin-bottom:10px;font-size:13px}
-.hTab{flex:1;padding:8px;background:#0f2340;border:1px solid #2a4a7a;border-radius:8px;color:#8aa0c2;text-align:center;font-size:12px;cursor:pointer}.hTab.active{background:#22c55e;color:white;font-weight:bold}
-.hItem{padding:10px 12px;border-bottom:1px solid #1a3258;display:flex;justify-content:space-between;font-size:12px;cursor:pointer}
-.searchIn{width:100%;padding:8px;background:#081122;border:1px solid #2a4a7a;border-radius:8px;color:white;font-size:12px;margin-bottom:6px}
-</style></head><body>
-
-<div class="topBar"><b onclick="location.href='dashboard.html'" style="cursor:pointer">← Home</b>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trade - REAL +89.7%</title>
+<link rel="stylesheet" href="trade.css">
+</head><body>
+<div class="topBar"><b onclick="location.href='dashboard.html'">← Home</b>
 <div class="assetDrop"><div class="assetBtn" onclick="toggleDrop()"><span id="assetBtnTxt">₿ BTC/USD +83.7% 📈</span><span>▼</span></div>
-<div class="assetListDrop" id="assetDrop"><div style="padding:8px"><input class="searchIn" id="assetSearch" placeholder="Search A-Z... BTC, ETH... +89.7%" oninput="filterAssets()"></div><div id="assetOptions"></div></div></div>
-<div style="font-size:12px"><span id="realBalTop" style="background:#22c55e;padding:4px 8px;border-radius:20px;font-weight:bold">REAL $0.00</span></div></div>
+<div class="assetListDrop" id="assetDrop"><div style="padding:8px"><input class="searchIn" id="assetSearch" placeholder="Search A-Z..." oninput="filterAssets()"></div><div id="assetOptions"></div></div></div>
+<div><span id="realBalTop">REAL $0.00</span></div></div>
 
-<!-- LIVE STATS - START FROM 10 MILLION+ -->
 <div class="statsBar">
 <div class="statBox"><span class="statNum" id="totalTraders">10,284,391</span><span class="statLabel"><span class="liveDot"></span> Total Traders</span></div>
-<div class="statBox"><span class="statNum" id="totalVolume">$10,847,392,104</span><span class="statLabel">Total Traded Volume</span></div>
-<div class="statBox"><span class="statNum" id="onlineNow">10,452,187</span><span class="statLabel"><span class="liveDot"></span> Online Trading Now</span></div>
+<div class="statBox"><span class="statNum" id="totalVolume">$10,847,392,104</span><span class="statLabel">Total Volume</span></div>
+<div class="statBox"><span class="statNum" id="onlineNow">10,452,187</span><span class="statLabel"><span class="liveDot"></span> Online Now</span></div>
 <div class="statBox"><span class="statNum" id="todayProfit">+$2,847,392</span><span class="statLabel">Profit Paid Today</span></div>
 </div>
-
-<!-- MOVING TICKER - ALL COINS GOING UP -->
 <div class="tickerWrap"><div class="ticker" id="ticker"></div></div>
 
 <div style="padding:12px 14px;background:#0f1e38;display:flex;justify-content:space-between;align-items:center">
-<div><h2 id="price" style="margin:0">$68,420.50 USD <span id="priceMove" style="color:#22c55e;font-size:13px">↗ +2.41%</span></h2>
-<span style="color:#22c55e;font-size:12px">Profit <span id="profitPctShow">+83.7%</span> • <span id="signalText">📈 BTC is INCREASING - SELL signal</span></span>
-<div id="liveOthers" style="font-size:10px;color:#8aa0c2;margin-top:4px"><span class="liveDot"></span> Live: All coins movement UP 📈 • Last update: <span id="lastUpdate">now</span></div></div>
+<div><h2 id="price" style="margin:0">$68,420.50 USD <span id="priceMove">↗ +2.41%</span></h2>
+<span style="color:#22c55e;font-size:12px">Profit <span id="profitPctShow">+83.7%</span> • <span id="signalText">📈 BTC is INCREASING</span></span>
+<div style="font-size:10px;color:#8aa0c2;margin-top:4px"><span class="liveDot"></span> Live: All coins UP 📈 • Last: <span id="lastUpdate">now</span></div></div>
 <div style="font-size:11px;color:#8aa0c2;text-align:right">Balance:<br><b id="balSide">$0.00</b></div></div>
 
 <canvas id="chart"></canvas>
 
 <div class="layout"><div class="mainTrade"><div class="card">
-<div class="balShow">Your REAL Main Balance: <b id="mainBal">$0.00</b><br><span style="font-size:10px;color:#8aa0c2">REAL ONLY • All coins increasing A-Z: +75% to +98.7% • Live Movement</span></div>
+<div class="balShow">Your REAL Main Balance: <b id="mainBal">$0.00</b></div>
+<label class="label">Amount to Trade (USD) - REAL</label><input id="tradeAmt" type="number" placeholder="700" oninput="calcProfit()">
+<div class="profitBox"><div>Selected: <b id="selectedProfit">+83.7%</b> <span id="movementIcon">↗ UP</span></div><div>Will get: <b id="willGet">$0.00</b> (<span id="profitAmt">+$0.00</span>)</div></div>
+<label class="label">Your Prediction</label><textarea id="prediction" placeholder="I think BTC will go up..."></textarea>
+<div class="row"><button class="btn btnSell" id="sellBtn" onclick="selectType('sell')">↓ Sell</button><button class="btn btnBuy" id="buyBtn" onclick="selectType('buy')">↑ Buy</button></div>
+<div class="row"><div style="flex:1"><label class="label">Stop Loss - $200</label><input id="stopLoss" type="number" value="200"></div><div style="flex:1"><label class="label">Take Profit</label><input id="takeProfit" readonly></div></div>
+<label class="label">Duration - 1 WEEK</label><select id="duration"><option value="30">30s</option><option value="60">1 Min</option><option value="300">5 Min</option><option value="900">15 Min</option><option value="3600">1 Hour</option><option value="86400">1 Day</option><option value="604800" selected>1 Week</option><option value="2592000">1 Month</option><option value="31536000">1 Year</option></select>
+<button class="btnActivate" id="activateBtn" onclick="activateTrade()">Activate REAL Trade</button><div id="msg"></div>
+</div></div>
+<div class="sideHistory"><div style="padding:12px"><b>📈 Live Movement - All UP</b></div><div id="historyList" style="max-height:420px;overflow:auto"></div><div style="padding:12px"><b>🔥 Top Movers</b><div id="topMovers"></div></div></div></div>
 
-<label class="label">Amount to Trade (USD) - REAL</label><input id="tradeAmt" type="number" placeholder="Example 700" oninput="calcProfit()">
-
-<div style="background:#0f1e38;padding:10px;border-radius:10px;margin-bottom:8px;border:1px solid #22c55e">
-<div style="font-size:11px;color:#8aa0c2">Selected Coin Profit: <b id="selectedProfit" style="color:#22c55e">+83.7%</b> <span id="movementIcon" style="color:#22c55e">↗ UP</span></div>
-<div style="font-size:12px;margin-top:4px">If win you will get: <b id="willGet" style="color:#22c55e">$0.00</b> (Amount + <span id="profitAmt">+$0.00</span> profit)</div>
-<div style="font-size:10px;color:#8aa0c2;margin-top:4px">Example: $700 at +83.7% = $1,285.90 total return</div>
+<div id="liveTradeOverlay">
+<div class="liveHeader"><div><b id="liveCoin">BTC/USD LIVE</b></div><div><div id="liveBadge" class="buyLineBadge buyBadge">BUY ↑</div><button onclick="closeLiveOverlay()" style="margin-top:6px;padding:6px 10px;background:#1e355a;color:white;border:0;border-radius:8px">✕ Close</button></div></div>
+<div class="entryLineInfo"><span>Entry: <b id="entryPrice">$0</b></span><span>Now: <b id="nowPrice">$0</b></span><span>P/L: <b id="livePL">$0</b></span></div>
+<div class="countdown">⏳ Time Left: <span id="countdown">00:00</span></div>
+<div style="position:relative"><canvas id="liveChart"></canvas><div id="arrowDot"></div><div id="arrowTri"></div></div>
+<div class="profitLive" id="profitLiveCenter">+$0.00</div>
+<div style="padding:12px;background:#0f1e38;text-align:center"><div id="liveStatus" style="font-size:13px"></div><div style="margin-top:10px"><span id="liveStake" style="background:#22c55e;padding:6px 14px;border-radius:20px;font-weight:bold">Stake $700</span></div></div>
 </div>
 
-<label class="label">Your Prediction - Why will asset increase or reduce?</label><textarea id="prediction" placeholder="I think BTC will go up because..."></textarea>
-
-<div class="row"><button class="btn btnSell" id="sellBtn" onclick="selectType('sell')">↓ Sell - DOWN</button><button class="btn btnBuy" id="buyBtn" onclick="selectType('buy')">↑ Buy - UP</button></div>
-
-<div class="row" style="margin-top:8px"><div style="flex:1"><label class="label">Stop Loss - $200</label><input id="stopLoss" type="number" value="200"></div><div style="flex:1"><label class="label">Take Profit Auto</label><input id="takeProfit" type="number" placeholder="Auto" readonly style="background:#132a48;color:#22c55e;font-weight:bold"></div></div>
-
-<label class="label">Trade Duration - 1 WEEK</label><select id="duration"><option value="30">30 Seconds</option><option value="60">1 Minute</option><option value="300">5 Minutes</option><option value="900">15 Minutes</option><option value="3600">1 Hour</option><option value="86400">1 Day</option><option value="604800" selected>1 Week</option><option value="2592000">1 Month</option><option value="31536000">1 Year</option></select>
-
-<button class="btnActivate" id="activateBtn" onclick="activateTrade()">Activate REAL Trade</button>
-<div id="msg" style="font-size:12px;margin-top:10px;color:#22c55e;text-align:center"></div>
-<button onclick="location.href='my-trades.html'" style="width:100%;margin-top:12px;padding:10px;background:white;color:#132a48;border:0;border-radius:10px;font-weight:bold">My Live Trades → Live Page</button>
-</div></div>
-
-<div class="sideHistory"><div style="padding:12px 12px 0 12px;display:flex;justify-content:space-between"><b style="font-size:13px">📈 Live Movement - All Coins UP</b><span style="font-size:10px;color:#22c55e;background:#dcfce7;padding:2px 6px;border-radius:10px"><span class="liveDot"></span> LIVE</span></div>
-<div style="display:flex;gap:6px;padding:12px"><div class="hTab active" onclick="switchTab('live')" id="tabLive">Live ↑</div><div class="hTab" onclick="switchTab('ended')" id="tabEnded">Ended</div></div>
-<div id="historyList" style="max-height:420px;overflow:auto"></div>
-<div style="padding:12px"><b style="font-size:12px">🔥 Top Movers (All UP)</b><div id="topMovers" style="margin-top:8px"></div></div>
-</div></div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp, query, where, orderBy, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-const firebaseConfig={apiKey:"AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",authDomain:"global-savings.firebaseapp.com",projectId:"global-savings",storageBucket:"global-savings.firebasestorage.app",messagingSenderId:"83435054105",appId:"1:83435054105:web:efac6cbd5a264a6892b688"};const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
-let user=null,userData=null,currentPrice=68420,currentCoin="BTC",selectedType=null,currentProfit=83.7;
-
-// ALL COINS - PROFIT INCREASING - ALL SHOWING UP MOVEMENT
-const assets=[
- {sym:"ADA",name:"ADA/USD",price:0.45,color:"#0d47a1",logo:"A",profit:75.2,mov:"↗ +2.1%"},
- {sym:"AVAX",name:"AVAX/USD",price:35,color:"#e84142",logo:"AV",profit:78.5,mov:"↗ +3.4%"},
- {sym:"BNB",name:"BNB/USD",price:612,color:"#f3ba2f",logo:"B",profit:81.3,mov:"↗ +1.8%"},
- {sym:"BTC",name:"BTC/USD",price:68420,color:"#f7931a",logo:"₿",profit:83.7,mov:"↗ +2.41%"},
- {sym:"DOGE",name:"DOGE/USD",price:0.15,color:"#c2a633",logo:"D",profit:85.4,mov:"↗ +5.2%"},
- {sym:"ETH",name:"ETH/USD",price:3210,color:"#627eea",logo:"Ξ",profit:87.1,mov:"↗ +2.9%"},
- {sym:"EURUSD",name:"EUR/USD",price:1.1151,color:"#1e40af",logo:"€",profit:89.7,mov:"↗ +0.8%"},
- {sym:"GBPUSD",name:"GBP/USD",price:1.3051,color:"#7c3aed",logo:"£",profit:91.2,mov:"↗ +1.2%"},
- {sym:"LINK",name:"LINK/USD",price:18,color:"#2a5bd7",logo:"L",profit:93.5,mov:"↗ +4.1%"},
- {sym:"SOL",name:"SOL/USD",price:178,color:"#9945ff",logo:"S",profit:95.1,mov:"↗ +6.3%"},
- {sym:"USDCHF",name:"USD/CHF",price:0.9784,color:"#059669",logo:"$",profit:96.8,mov:"↗ +0.5%"},
- {sym:"USDJPY",name:"USD/JPY",price:119.71,color:"#dc2626",logo:"¥",profit:97.9,mov:"↗ +0.9%"},
- {sym:"XRP",name:"XRP/USD",price:0.62,color:"#23292f",logo:"X",profit:98.7,mov:"↗ +7.1%"},
-];
-let filtered=[...assets];
-
-// RENDER ASSET LIST WITH UP MOVEMENT
-function renderAssets(){const box=document.getElementById("assetOptions");box.innerHTML="";filtered.sort((a,b)=>a.sym.localeCompare(b.sym));filtered.forEach(a=>{box.innerHTML+=`<div class="assetOpt" onclick="selectAsset('${a.sym}')"><div class="logo" style="background:${a.color}">${a.logo}</div><div><b>${a.sym}</b> /USD <span class="movementUp">${a.mov} 📈</span><div style="font-size:11px;color:#8aa0c2">$${a.price} <span style="color:#22c55e">UP</span></div></div><span class="profitBadge">+${a.profit}%</span></div>`});}
-
-// TICKER - ALL COINS UP
-function renderTicker(){
- const ticker=document.getElementById("ticker");
- let html="";
- const all=[...assets,...assets]; // double for infinite scroll
- all.forEach(a=>{
-   html+=`<span class="tickerItem"><b>${a.sym}</b> $${a.price} <span class="up">${a.mov} 📈</span> <span style="background:#22c55e;color:white;padding:1px 6px;border-radius:10px;font-size:10px">+${a.profit}%</span></span>`;
- });
- ticker.innerHTML=html;
-}
-function renderTopMovers(){
- const box=document.getElementById("topMovers");
- let html="";
- assets.slice(-6).reverse().forEach(a=>{
-   html+=`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1a3258;font-size:11px"><span><b>${a.sym}</b> $${a.price}</span><span style="color:#22c55e">${a.mov} ↗</span></div>`;
- });
- box.innerHTML=html;
-}
-
-window.toggleDrop=()=>document.getElementById("assetDrop").classList.toggle("show");
-window.filterAssets=()=>{const q=document.getElementById("assetSearch").value.toUpperCase();filtered=assets.filter(a=>a.sym.includes(q)||a.name.includes(q));renderAssets();};
-window.selectAsset=(sym)=>{
- const a=assets.find(x=>x.sym===sym);currentCoin=a.sym;currentPrice=a.price;currentProfit=a.profit;
- document.getElementById("assetBtnTxt").textContent=a.logo+" "+a.name+" +"+a.profit+"% 📈";
- document.getElementById("price").innerHTML="$"+a.price.toLocaleString()+" USD <span style='color:#22c55e;font-size:13px'>"+a.mov+"</span>";
- document.getElementById("profitPctShow").textContent="+"+a.profit+"%";
- document.getElementById("selectedProfit").textContent="+"+a.profit+"%";
- document.getElementById("signalText").textContent=`📈 ${a.sym} is INCREASING - ${a.mov} - ${selectedType?selectedType.toUpperCase():"SELL"} signal`;
- document.getElementById("movementIcon").textContent="↗ UP "+a.mov;
- document.getElementById("assetDrop").classList.remove("show");calcProfit();drawChart();
-};
-window.calcProfit=()=>{const amt=Number(document.getElementById("tradeAmt").value||0);const profitAmt=amt*currentProfit/100;document.getElementById("profitAmt").textContent="+$"+profitAmt.toFixed(2);document.getElementById("willGet").textContent="$"+(amt+profitAmt).toFixed(2);document.getElementById("takeProfit").value=profitAmt.toFixed(2);};
-window.switchTab=(t)=>{document.getElementById("tabLive").classList.toggle("active",t==="live");document.getElementById("tabEnded").classList.toggle("active",t==="ended");loadHistory(t);};
-
-// CHART - SHOWING INCREASING & REDUCING LIVE
-let chartData=[];function initChartData(){chartData=[];let p=currentPrice;for(let i=0;i<100;i++){p+= (Math.random()-0.48)*currentPrice*0.01;chartData.push(p);} }
-function drawChart(){
- const canvas=document.getElementById("chart");const ctx=canvas.getContext("2d");
- canvas.width=canvas.offsetWidth;canvas.height=220;
- const w=canvas.width,h=canvas.height;
- ctx.clearRect(0,0,w,h);
- ctx.fillStyle="#081122";ctx.fillRect(0,0,w,h);
- // grid
- ctx.strokeStyle="#1a3258";ctx.lineWidth=0.5;
- for(let i=0;i<5;i++){ctx.beginPath();ctx.moveTo(0,h/5*i);ctx.lineTo(w,h/5*i);ctx.stroke();}
- // line - green up trend with small downs
- ctx.beginPath();ctx.strokeStyle="#22c55e";ctx.lineWidth=2;
- const min=Math.min(...chartData),max=Math.max(...chartData);
- chartData.forEach((v,i)=>{
-   const x=i/(chartData.length-1)*w;
-   const y=h - ((v-min)/(max-min||1))*h*0.8 - h*0.1;
-   if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
- });
- ctx.stroke();
- // fill
- ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.closePath();ctx.fillStyle="rgba(34,197,94,0.15)";ctx.fill();
- // last price dot
- const lastY=h - ((chartData[chartData.length-1]-min)/(max-min||1))*h*0.8 - h*0.1;
- ctx.beginPath();ctx.arc(w-4,lastY,5,0,Math.PI*2);ctx.fillStyle="#22c55e";ctx.fill();
-}
-function animateChart(){
- // simulate increasing & reducing but overall UP
- let last=chartData[chartData.length-1];
- const change=(Math.random()-0.42)*last*0.005; // bias up
- last+=change;
- chartData.shift();chartData.push(last);
- currentPrice=last;
- document.getElementById("price").innerHTML="$"+last.toLocaleString(undefined,{maximumFractionDigits:2})+" USD <span style='color:"+(change>=0?"#22c55e":"#ef4444")+"'>"+(change>=0?"↗":"↘")+" "+(change>=0?"+":"")+((change/last)*100).toFixed(2)+"%</span>";
- document.getElementById("lastUpdate").textContent=new Date().toLocaleTimeString();
- drawChart();
-}
-function startStatsCounters(){
- // Start from 10 million+ and increase live
- let traders=10284391, volume=10847392104, online=10452187, profit=2847392;
- setInterval(()=>{
-   traders+=Math.floor(Math.random()*23)+5;
-   volume+=Math.floor(Math.random()*5000)+1000;
-   online+=Math.floor(Math.random()*15)-5;
-   profit+=Math.floor(Math.random()*100)+10;
-   document.getElementById("totalTraders").textContent=traders.toLocaleString();
-   document.getElementById("totalVolume").textContent="$"+volume.toLocaleString();
-   document.getElementById("onlineNow").textContent=online.toLocaleString();
-   document.getElementById("todayProfit").textContent="+$"+profit.toLocaleString();
- }, 1200);
-}
-
-onAuthStateChanged(auth, async u=>{if(!u){location.href="login.html";return;}user=u;const s=await getDoc(doc(db,"users",u.uid));userData=s.data();document.getElementById("mainBal").textContent="$"+Number(userData.balance||0).toFixed(2);document.getElementById("balSide").textContent="$"+Number(userData.balance||0).toFixed(2);document.getElementById("realBalTop").textContent="REAL $"+Number(userData.balance||0).toFixed(2);
-renderAssets();renderTicker();renderTopMovers();initChartData();drawChart();calcProfit();loadHistory('live');startStatsCounters();
-setInterval(animateChart, 800);
-});
-
-async function loadHistory(type){if(!user) return;const box=document.getElementById("historyList");try{const q=query(collection(db,"trades"), where("uid","==",user.uid), orderBy("createdAt","desc"));const snap=await getDocs(q);let arr=[];snap.forEach(d=>arr.push({id:d.id,...d.data()}));if(type==="live") arr=arr.filter(t=>t.status==="active");else arr=arr.filter(t=>t.status!=="active");if(arr.length===0){ box.innerHTML="<div style='padding:20px;text-align:center;color:#8aa0c2'>No trades yet - Activate to see live</div>"; return; }box.innerHTML="";arr.slice(0,30).forEach(t=>{box.innerHTML+=`<div class="hItem" onclick="location.href='my-trades.html?id=${t.id}'"><div><b>${t.coin} +${t.profitPct||""}% ${t.type?.toUpperCase()} <span style="color:#22c55e">↗</span></b><div style="color:#8aa0c2">$${t.amount} → +$${t.takeProfitAmount||0} • ${t.status}</div></div><div style="color:${t.status==="active"?'#22c55e':'#f59e0b'};font-weight:bold">${t.status==="active"?'PROCESSING':(t.finalVerdict||t.status).toUpperCase()}</div></div>`;});}catch(e){box.innerHTML="Error";}}
-
-window.selectType=(type)=>{selectedType=type;document.getElementById("sellBtn").style.opacity=type==="sell"?"1":"0.5";document.getElementById("buyBtn").style.opacity=type==="buy"?"1":"0.5";document.getElementById("msg").textContent="Selected "+type.toUpperCase()+" - Movement "+(type==="sell"?"DOWN 📉":"UP 📈");document.getElementById("msg").style.color="#22c55e";document.getElementById("signalText").textContent=`${type==="sell"?"📉 DOWN - SELL":"📈 UP - BUY"} signal - ${currentCoin} ${assets.find(a=>a.sym===currentCoin)?.mov||""}`;};
-
-window.activateTrade=async()=>{
- const amt=Number(document.getElementById("tradeAmt").value);
- const sl=Number(document.getElementById("stopLoss").value||200);
- const tp=Number(document.getElementById("takeProfit").value||0);
- const duration=document.getElementById("duration").value;
- const prediction=document.getElementById("prediction").value.trim();
- if(!amt||amt<=0){document.getElementById("msg").textContent="Enter amount";return;}
- if(!selectedType){document.getElementById("msg").textContent="Select Buy or Sell";return;}
- if(amt>Number(userData.balance||0)){document.getElementById("msg").textContent="Insufficient balance";return;}
- const btn=document.getElementById("activateBtn");btn.textContent="Processing...";btn.disabled=true;
- try{
-  const newBal=Number(userData.balance||0)-amt;
-  await updateDoc(doc(db,"users",user.uid),{balance:newBal});
-  const tradeDoc=await addDoc(collection(db,"trades"),{
-   uid:user.uid,username:userData.username||"",coin:currentCoin,amount:amt,type:selectedType,
-   profitPct:currentProfit,stopLossAmount:sl,stopLoss:sl,takeProfitAmount:tp,duration:duration,
-   prediction:prediction,description:prediction||currentCoin+" "+selectedType+" - DOWN movement SELL - $700 Stake",
-   status:"active",finalVerdict:"processing",createdAt:serverTimestamp()
-  });
-  await addDoc(collection(db,"transactions"),{
-   uid:user.uid,type:"trade_active",amount:amt,
-   description:`Trade Activated ${currentCoin} ${selectedType.toUpperCase()} $${amt} - Processing - Duration ${duration}`,
-   status:"pending",tradeId:tradeDoc.id,createdAt:serverTimestamp()
-  });
-  document.getElementById("msg").textContent="Processing... Redirecting to Live Trades...";
-  // REDIRECT TO LIVE TRADE PAGE
-  setTimeout(()=>{location.href="my-trades.html?id="+tradeDoc.id;}, 1500);
- }catch(e){document.getElementById("msg").textContent=e.message;btn.textContent="Activate REAL Trade";btn.disabled=false;}
-};
-</script></body></html>
+<script type="module" src="trade.js"></script>
+</body></html>

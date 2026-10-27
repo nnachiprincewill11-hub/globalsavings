@@ -1,0 +1,17 @@
+*{box-sizing:border-box}body{margin:0;background:#08111f;color:white;font-family:Arial;padding:12px}
+input,textarea,select{padding:11px;border-radius:8px;border:1px solid #28456e;background:#11264a;color:white;width:100%;margin:5px 0;font-size:13px}
+.btn{padding:9px 13px;border-radius:8px;border:0;font-weight:bold;cursor:pointer;font-size:11px;margin:3px}
+.btnG{background:#22c55e;color:white}.btnR{background:#ef4444;color:white}.btnB{background:#155eef;color:white}.btnY{background:#f59e0b;color:black}.btnGray{background:#334155;color:white}
+.card{background:#132a48;border-radius:14px;padding:14px;margin:12px 0;border:1px solid #1e3a5f}
+.tab{padding:9px 12px;background:#11264a;border-radius:10px;cursor:pointer;display:inline-block;margin:4px;font-size:11px}.tab.active{background:#22c55e;color:white;font-weight:bold}
+.item{background:#0d1d38;padding:12px;border-radius:12px;margin:10px 0;border:1px solid #223a5e}
+.detailBox{background:#08162e;padding:12px;border-radius:10px;margin-top:10px;border:1px solid #1a3357;display:none}
+.detailBox.show{display:block}
+.rowD{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #1a3357;font-size:12px}
+.rowD b{color:#8aa0c2;font-weight:normal}.rowD span{font-weight:bold;color:#e2e8f0}
+.editGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.statusBadge{padding:3px 8px;border-radius:20px;font-size:10px;font-weight:bold}
+.disabled{background:#ef4444;color:white}.paused{background:#f59e0b;color:black}.activeS{background:#22c55e;color:white}
+.wa{background:#25D366;color:white;padding:5px 10px;border-radius:6px;text-decoration:none;font-size:11px;font-weight:bold}
+.indicatorUp{color:#22c55e;font-weight:bold}.indicatorDown{color:#ef4444;font-weight:bold}
+.liveLine{height:3px;background:linear-gradient(90deg,#22c55e,#ef4444);margin:6px 0;border-radius:3px}

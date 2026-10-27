@@ -1,0 +1,40 @@
+*{box-sizing:border-box}body{margin:0;background:#0a1220;color:white;font-family:Arial;padding-bottom:90px}
+.topBar{background:#132a48;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:20}
+.assetDrop{position:relative;flex:1;max-width:380px;margin:0 8px}.assetBtn{background:#0f2340;color:white;border:1px solid #2a4a7a;padding:10px 12px;border-radius:10px;font-weight:bold;width:100%;display:flex;justify-content:space-between;cursor:pointer;font-size:13px}
+.assetListDrop{position:absolute;top:44px;left:0;right:0;background:#0f1e38;border:1px solid #2a4a7a;border-radius:12px;max-height:400px;overflow:auto;display:none;z-index:30}.assetListDrop.show{display:block}
+.assetOpt{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;border-bottom:1px solid #1a3258;font-size:13px}.assetOpt:hover{background:#132a48}
+.logo{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:12px;color:white}
+.profitBadge{margin-left:auto;background:#22c55e;color:white;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:bold}
+.movementUp{color:#22c55e;font-size:11px;margin-left:4px}
+#chart,#liveChart{width:100%;height:220px;background:#081122;border-top:1px solid #1e355a;border-bottom:1px solid #1e355a;display:block}
+.statsBar{display:flex;justify-content:space-around;background:#0f1e38;padding:10px 8px;border-bottom:1px solid #1e355a;flex-wrap:wrap;gap:6px}
+.statBox{text-align:center;flex:1;min-width:90px}.statNum{font-size:13px;font-weight:900;color:#22c55e;display:block}.statLabel{font-size:9px;color:#8aa0c2;text-transform:uppercase}
+.liveDot{width:8px;height:8px;background:#22c55e;border-radius:50%;display:inline-block;animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.tickerWrap{background:#08162e;overflow:hidden;white-space:nowrap;border-bottom:1px solid #1e355a;padding:6px 0}
+.ticker{display:inline-block;animation:tickerMove 120s linear infinite}
+.tickerItem{display:inline-block;margin-right:24px;font-size:11px}.tickerItem b{color:white}.tickerItem .up{color:#22c55e}
+@keyframes tickerMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.layout{display:flex;flex-wrap:wrap}.mainTrade{flex:1;min-width:320px}.sideHistory{width:360px;background:#0f1e38;border-left:1px solid #1e355a}
+.card{background:#132a48;margin:12px;border-radius:16px;padding:16px}.label{font-size:11px;color:#8aa0c2;margin-bottom:4px;display:block;margin-top:8px}
+input,select,textarea{width:100%;padding:12px;background:#0f2340;border:1px solid #2a4a7a;border-radius:10px;color:white;font-size:14px;margin-bottom:8px}
+.profitBox{background:#0f1e38;padding:10px;border-radius:10px;margin-bottom:8px;border:1px solid #22c55e;font-size:12px}
+.row{display:flex;gap:10px}.btn{flex:1;padding:14px;border-radius:12px;border:0;font-weight:bold;cursor:pointer}.btnSell{background:#ef4444}.btnBuy{background:#22c55e}
+.btnActivate{width:100%;padding:16px;background:#155eef;color:white;border:0;border-radius:12px;font-weight:bold;font-size:17px;margin-top:12px;cursor:pointer}
+.balShow{background:#0a3a7a;padding:10px;border-radius:10px;text-align:center;margin-bottom:10px;font-size:13px}
+.hTab{flex:1;padding:8px;background:#0f2340;border:1px solid #2a4a7a;border-radius:8px;color:#8aa0c2;text-align:center;font-size:12px;cursor:pointer}.hTab.active{background:#22c55e;color:white;font-weight:bold}
+.hItem{padding:10px 12px;border-bottom:1px solid #1a3258;display:flex;justify-content:space-between;font-size:12px;cursor:pointer}
+.searchIn{width:100%;padding:8px;background:#081122;border:1px solid #2a4a7a;border-radius:8px;color:white;font-size:12px;margin-bottom:6px}
+#realBalTop{background:#22c55e;padding:4px 8px;border-radius:20px;font-weight:bold;font-size:12px}
+#msg{font-size:12px;margin-top:10px;color:#22c55e;text-align:center}
+#priceMove{color:#22c55e;font-size:13px}
+#liveTradeOverlay{position:fixed;inset:0;background:#070d1a;z-index:200;display:none;flex-direction:column;overflow:auto}
+#liveTradeOverlay.show{display:flex}
+.liveHeader{padding:12px;background:#132a48;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1e355a}
+.buyLineBadge{padding:6px 12px;border-radius:20px;font-weight:900;font-size:13px}
+.buyBadge{background:#22c55e;color:white}.sellBadge{background:#ef4444;color:white}
+.profitLive{font-size:28px;font-weight:900;text-align:center;padding:10px}
+.entryLineInfo{display:flex;justify-content:space-between;background:#0f1e38;padding:10px 12px;font-size:12px;border-bottom:1px solid #1e355a}
+.countdown{font-size:18px;font-weight:900;color:#f59e0b;text-align:center;padding:8px;background:#1a1a0a}
+#arrowDot{position:absolute;width:14px;height:14px;border-radius:50%;background:white;border:3px solid #22c55e;transform:translate(-50%,-50%);box-shadow:0 0 10px #22c55e;z-index:10}
+#arrowTri{position:absolute;width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:10px solid white;transform:translateX(-50%);z-index:11}

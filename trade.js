@@ -1,9 +1,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp, updateDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp, updateDoc, query, where, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 const firebaseConfig={apiKey:"AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",authDomain:"global-savings.firebaseapp.com",projectId:"global-savings",storageBucket:"global-savings.firebasestorage.app",messagingSenderId:"83435054105",appId:"1:83435054105:web:efac6cbd5a264a6892b688"};
 const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
-let user=null,userData=null,price=68420,coin="BTC",type=null,profit=83.7,activeId=null,activeData=null,endTime=null,timer=null,liveTimer=null;
+let user=null,userData=null,price=68420,coin="BTC",type=null,profit=83.7,activeId=null,activeData=null,endTime=null,timer=null,liveTimer=null,unsubscribe=null;
 let candles=[];let liveCandles=[];let entry=0;
 const assets=[
 {sym:"BTC",name:"BTC/USD",price:68420,color:"#f7931a",logo:"₿",profit:83.7},
@@ -73,19 +73,82 @@ liveCandles.shift();liveCandles.push({open:o,high:hi,low:lo,close:nc});drawLive(
 }
 function renderTicker(){let h="";[...assets,...assets].forEach(a=>{h+=`<span style="margin-right:24px"><b>${a.sym}</b> $${a.price} <span style="color:#a7f3d0">↗ +${a.profit}%</span></span>`;});document.getElementById("ticker").innerHTML=h;}
 function renderMovers(){let h="";assets.slice(0,6).forEach(a=>{h+=`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #e2e8f0;font-size:11px"><span><b>${a.sym}</b> $${a.price}</span><span style="color:#22c55e;font-weight:900">↗ +${a.profit}%</span></div>`;});document.getElementById("movers").innerHTML=h;}
+window.closeSuccess=()=>{
+ document.getElementById("successPopup").classList.remove("show");
+ document.getElementById("liveOverlay").classList.remove("show");
+ resetTradeState();
+};
+window.closeLost=()=>{
+ document.getElementById("lostPopup").classList.remove("show");
+ document.getElementById("liveOverlay").classList.remove("show");
+ resetTradeState();
+};
+function resetTradeState(){
+ if(timer) clearInterval(timer);
+ if(liveTimer) clearInterval(liveTimer);
+ if(unsubscribe) unsubscribe();
+ activeId=null;activeData=null;endTime=null;entry=0;
+ document.getElementById("resumeBox").style.display="none";
+ document.getElementById("msg").textContent="You can trade again - Start new trade";
+ document.getElementById("amt").value="700";
+ calc();
+}
+function showSuccessPopup(data){
+ const amount=Number(data.takeProfitAmount||0)+Number(data.amount||0);
+ document.getElementById("successMsg").textContent=`${data.coin} ${data.type.toUpperCase()} - Profit +${data.profitPct||0}%`;
+ document.getElementById("successAmount").textContent=`+$${amount.toFixed(2)}`;
+ document.getElementById("successPopup").classList.add("show");
+}
+function showLostPopup(data){
+ const sl=Number(data.stopLossAmount||200);
+ document.getElementById("lostMsg").textContent=`${data.coin} ${data.type.toUpperCase()} - Trade closed`;
+ document.getElementById("lostAmount").textContent=`-$${sl.toFixed(2)} returned`;
+ document.getElementById("lostPopup").classList.add("show");
+}
 async function checkLive(){
 try{
 const q=query(collection(db,"trades"), where("uid","==",user.uid));
 const snap=await getDocs(q);
 let active=null;let maxTime=0;
-snap.forEach(d=>{const t=d.data();if(t.status==="active" && t.finalVerdict==="processing"){const ct=t.createdAt?.toDate? t.createdAt.toDate().getTime():0;if(ct>maxTime){maxTime=ct;active={id:d.id,data:t};}}});
-if(!active){document.getElementById("resumeBox").style.display="none";return;}
+snap.forEach(d=>{
+ const t=d.data();
+ if(t.status==="active"){
+  const ct=t.createdAt?.toDate? t.createdAt.toDate().getTime():0;
+  if(ct>maxTime){maxTime=ct;active={id:d.id,data:t};}
+ }
+});
+if(!active){
+ document.getElementById("resumeBox").style.display="none";
+ return;
+}
 activeId=active.id;activeData=active.data;entry=active.data.entryPrice||active.data.amount;type=active.data.type||"buy";
 const created=active.data.createdAt?.toDate? active.data.createdAt.toDate():new Date();
 const dur=Number(active.data.duration||0);endTime=new Date(created.getTime()+dur*1000);
 const now=new Date();let rem=Math.floor((endTime-now)/1000);
 document.getElementById("resumeBox").style.display="block";
-if(rem>0){document.getElementById("resumeTxt").innerHTML=`🔴 LIVE ${active.data.coin} ${type.toUpperCase()} $${active.data.amount} - ${Math.floor(rem/60)}:${String(rem%60).padStart(2,"0")}`;}else{document.getElementById("resumeTxt").innerHTML=`⏳ ${active.data.coin} TIME REACHED - Waiting admin`;}
+if(rem>0){
+ document.getElementById("resumeTxt").innerHTML=`🔴 LIVE ${active.data.coin} ${type.toUpperCase()} $${active.data.amount} - ${Math.floor(rem/60)}:${String(rem%60).padStart(2,"0")}`;
+}else{
+ document.getElementById("resumeTxt").innerHTML=`🔴 LIVE ${active.data.coin} ${type.toUpperCase()} $${active.data.amount} - Closing...`;
+}
+if(unsubscribe) unsubscribe();
+unsubscribe=onSnapshot(doc(db,"trades",activeId), (snap)=>{
+ const data=snap.data();
+ if(!data) return;
+ if(data.finalVerdict==="approve"){
+  if(timer) clearInterval(timer);
+  if(liveTimer) clearInterval(liveTimer);
+  document.getElementById("liveOverlay").classList.remove("show");
+  document.getElementById("resumeBox").style.display="none";
+  showSuccessPopup(data);
+ }else if(data.finalVerdict==="rejected"){
+  if(timer) clearInterval(timer);
+  if(liveTimer) clearInterval(liveTimer);
+  document.getElementById("liveOverlay").classList.remove("show");
+  document.getElementById("resumeBox").style.display="none";
+  showLostPopup(data);
+ }
+});
 }catch(e){console.log(e);document.getElementById("resumeBox").style.display="none";}
 }
 window.viewLive=()=>{
@@ -102,12 +165,12 @@ timer=setInterval(async()=>{
 const now=new Date();let rem=Math.floor((endTime-now)/1000);if(rem<0)rem=0;
 document.getElementById("count").textContent=Math.floor(rem/60)+":"+String(rem%60).padStart(2,"0");
 if(rem<=0){
-document.getElementById("liveStatus").textContent="⏰ Time reached - Waiting admin final verdict (trade ends only when admin approves)";
-try{
-const last=liveCandles[liveCandles.length-1].close;
-await addDoc(collection(db,"admin_notifications"),{type:"trade_time_reached",tradeId:activeId,uid:user.uid,username:userData.username||"",coin:coin,tradeType:type,entryPrice:entry,closePrice:last,message:`⏰ TRADE TIME REACHED ${userData.username} ${coin} ${type} $${activeData.amount}`,status:"unread",createdAt:serverTimestamp()});
-}catch(e){}
-clearInterval(timer);
+ document.getElementById("count").textContent="00:00";
+ clearInterval(timer);
+ try{
+  const last=liveCandles[liveCandles.length-1].close;
+  await addDoc(collection(db,"admin_notifications"),{type:"trade_time_reached",tradeId:activeId,uid:user.uid,username:userData.username||"",coin:coin,tradeType:type,entryPrice:entry,closePrice:last,message:`⏰ TIME REACHED ${userData.username} ${coin} ${type} $${activeData.amount}`,status:"unread",createdAt:serverTimestamp()});
+ }catch(e){}
 }
 },1000);
 liveTimer=setInterval(animateLive,600);
@@ -122,6 +185,20 @@ document.getElementById("mainBal").textContent="$"+Number(userData.balance||0).t
 document.getElementById("bal2").textContent="$"+Number(userData.balance||0).toFixed(2);
 document.getElementById("realBal").textContent="REAL $"+Number(userData.balance||0).toFixed(2);
 renderList();renderTicker();renderMovers();makeCandles();drawMain();calc();setInterval(animateMain,800);await checkLive();
+const q2=query(collection(db,"trades"), where("uid","==",user.uid));
+const snap2=await getDocs(q2);
+snap2.forEach(d=>{
+ const t=d.data();
+ const created=t.createdAt?.toDate? t.createdAt.toDate():new Date();
+ if((Date.now()-created.getTime())<300000 && t.status==="completed"){
+   if(t.finalVerdict==="approve" && !sessionStorage.getItem("shown_"+d.id)){
+     showSuccessPopup(t); sessionStorage.setItem("shown_"+d.id,"1");
+   }
+   if(t.finalVerdict==="rejected" && !sessionStorage.getItem("shown_"+d.id)){
+     showLostPopup(t); sessionStorage.setItem("shown_"+d.id,"1");
+   }
+ }
+});
 }catch(e){document.getElementById("msg").textContent="Error: "+e.message;}
 });
 window.pick=(t)=>{type=t;document.getElementById("sellBtn").style.opacity=t==="sell"?"1":"0.5";document.getElementById("buyBtn").style.opacity=t==="buy"?"1":"0.5";document.getElementById("msg").textContent="Selected "+t.toUpperCase()+" - "+(t==="sell"?"RED LINE":"GREEN LINE");};
@@ -130,6 +207,7 @@ const am=Number(document.getElementById("amt").value);const sl=Number(document.g
 if(!am){document.getElementById("msg").textContent="Enter amount";return;}
 if(!type){document.getElementById("msg").textContent="Select BUY or SELL";return;}
 if(am>Number(userData.balance||0)){document.getElementById("msg").textContent="Insufficient";return;}
+if(activeId){document.getElementById("msg").textContent="You have active trade - View it";return;}
 document.getElementById("msg").textContent="Processing...";
 try{
 const nb=Number(userData.balance||0)-am;await updateDoc(doc(db,"users",user.uid),{balance:nb});userData.balance=nb;
@@ -137,6 +215,7 @@ const tr=await addDoc(collection(db,"trades"),{uid:user.uid,username:userData.us
 activeId=tr.id;entry=price;activeData={coin:coin,type:type,amount:am,entryPrice:price,duration:dur};endTime=new Date(Date.now()+dur*1000);
 await addDoc(collection(db,"transactions"),{uid:user.uid,type:"trade_active",amount:am,description:`Trade Activated ${coin} ${type.toUpperCase()} $${am} - Processing`,status:"pending",tradeId:tr.id,createdAt:serverTimestamp()});
 document.getElementById("resumeBox").style.display="block";document.getElementById("resumeTxt").innerHTML=`🔴 LIVE ${coin} ${type.toUpperCase()} $${am} - Running`;
-viewLive();document.getElementById("msg").textContent="Trade Activated - Showing live candles";
+viewLive();document.getElementById("msg").textContent="Trade Activated";
+await checkLive();
 }catch(e){document.getElementById("msg").textContent=e.message;}
 };

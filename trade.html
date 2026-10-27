@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Trade - Working Candles - White & Blue</title>
+<title>Trade - Candles - Success/Lost Popup</title>
 <link rel="stylesheet" href="trade.css">
 </head>
 <body>
@@ -29,7 +29,7 @@
 <div id="resumeBox">
 <div id="resumeTxt" style="font-weight:900;margin-bottom:10px">🔴 LIVE TRADE RUNNING</div>
 <button onclick="viewLive()" style="width:100%;padding:14px;background:#fff;color:#155eef;border:0;border-radius:12px;font-weight:900">VIEW LIVE TRADE</button>
-<div style="font-size:10px;margin-top:6px">Persists after logout/login - Ends only when admin approves</div>
+<div style="font-size:10px;margin-top:6px">Click to see your live candles</div>
 </div>
 <div style="background:#edf4ff;padding:10px;border-radius:10px;border:2px solid #155eef;text-align:center;margin-bottom:10px">REAL Balance: <b id="mainBal" style="color:#155eef">$0.00</b></div>
 <label class="label">Amount USD</label><input id="amt" type="number" placeholder="700" value="700" oninput="calc()">
@@ -52,10 +52,30 @@
 <div style="display:flex;justify-content:space-between;padding:10px;background:#edf4ff;margin:10px;border-radius:10px;border:2px solid #155eef;font-size:12px">
 <span>Entry: <b id="entryP">$0</b></span><span>Now: <b id="nowP">$0</b></span><span>PL: <b id="pl">$0</b></span>
 </div>
-<div style="text-align:center;background:#fef3c7;padding:10px;margin:0 10px;border-radius:10px;font-weight:900">⏳ <span id="count">00:00</span> - Till admin verdict</div>
+<div style="text-align:center;background:#dbeafe;padding:10px;margin:0 10px;border-radius:10px;font-weight:900;color:#155eef">⏳ <span id="count">00:00</span></div>
 <div style="position:relative;margin:10px"><canvas id="liveChart"></canvas></div>
 <div style="text-align:center;font-size:28px;font-weight:900;padding:10px" id="liveProfit">+$0.00</div>
 <div style="padding:12px;text-align:center;background:#fff;border-top:2px solid #dbeafe"><div id="liveStatus" style="color:#155eef;font-weight:900"></div><div style="margin-top:10px"><span id="liveStake" style="background:#155eef;color:#fff;padding:8px 16px;border-radius:20px;font-weight:900">Stake $700</span></div></div>
+</div>
+
+<div id="successPopup" class="popupOverlay">
+<div class="popupCard success">
+<div style="font-size:50px">✅</div>
+<h2 style="color:#22c55e;margin:10px 0">TRADE SUCCESSFUL!</h2>
+<div id="successMsg" style="font-size:14px;color:#142b49;margin-bottom:12px">You won $0.00</div>
+<div id="successAmount" style="font-size:26px;font-weight:900;color:#22c55e;margin-bottom:16px">+$0.00</div>
+<button onclick="closeSuccess()" style="width:100%;padding:14px;background:#22c55e;color:#fff;border:0;border-radius:12px;font-weight:900">CONTINUE TRADING</button>
+</div>
+</div>
+
+<div id="lostPopup" class="popupOverlay">
+<div class="popupCard lost">
+<div style="font-size:50px">❌</div>
+<h2 style="color:#ef4444;margin:10px 0">TRADE LOST!</h2>
+<div id="lostMsg" style="font-size:14px;color:#142b49;margin-bottom:12px">You lost $0.00</div>
+<div id="lostAmount" style="font-size:26px;font-weight:900;color:#ef4444;margin-bottom:16px">-$0.00</div>
+<button onclick="closeLost()" style="width:100%;padding:14px;background:#ef4444;color:#fff;border:0;border-radius:12px;font-weight:900">TRY AGAIN</button>
+</div>
 </div>
 
 <script type="module" src="trade.js"></script>

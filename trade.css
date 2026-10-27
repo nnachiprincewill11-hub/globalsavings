@@ -1,46 +1,29 @@
-*{box-sizing:border-box}body{margin:0;background:#edf4ff;color:#142b49;font-family:Arial,sans-serif}
-.topBar{background:white;border-bottom:2px solid #155eef;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:30;box-shadow:0 2px 10px #155eef15}
-.assetDrop{position:relative;flex:1;max-width:420px;margin:0 10px}
-.assetBtn{background:#edf4ff;color:#142b49;border:2px solid #155eef;padding:11px 12px;border-radius:12px;font-weight:bold;width:100%;display:flex;justify-content:space-between;cursor:pointer}
-.assetListDrop{position:absolute;top:46px;left:0;right:0;background:white;border:2px solid #155eef;border-radius:14px;max-height:420px;overflow:auto;display:none;z-index:40;box-shadow:0 8px 30px #123b7020}
-.assetListDrop.show{display:block}
-.assetOpt{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;border-bottom:1px solid #e2e8f0;font-size:13px;color:#142b49}
-.assetOpt:hover{background:#edf4ff}
-.logo{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:12px;color:white}
-.profitBadge{margin-left:auto;background:#22c55e;color:white;padding:4px 9px;border-radius:20px;font-size:11px;font-weight:bold}
-#chart,#liveChart{width:100%;height:280px;background:white;border:2px solid #155eef;border-radius:12px;display:block}
-.statsBar{display:flex;justify-content:space-around;background:white;padding:12px 8px;border-bottom:1px solid #dbeafe;flex-wrap:wrap;gap:8px}
-.statBox{text-align:center;min-width:70px}.statNum{font-size:13px;font-weight:900;color:#155eef;display:block}.statLabel{font-size:9px;color:#64748b}
-.liveDot{width:8px;height:8px;background:#22c55e;border-radius:50%;display:inline-block;animation:blink 1s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.tickerWrap{background:#155eef;color:white;overflow:hidden;white-space:nowrap;padding:7px 0}
-.ticker{display:inline-block;animation:tickerMove 120s linear infinite}
-.tickerItem{display:inline-block;margin-right:26px;font-size:11px}
-@keyframes tickerMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.layout{display:flex;flex-wrap:wrap;gap:0;max-width:1400px;margin:0 auto}
-.mainTrade{flex:1;min-width:320px;max-width:800px}
-.sideHistory{width:360px;background:white;border-left:2px solid #dbeafe;min-height:400px}
-.card{background:white;margin:14px;border-radius:18px;padding:18px;box-shadow:0 8px 30px #123b7012;border:1px solid #e2e8f0}
-.label{font-size:11px;color:#155eef;font-weight:bold;margin-bottom:4px;display:block;margin-top:10px}
-input,select,textarea{width:100%;padding:12px;background:#f8fbff;border:2px solid #cbd5e1;border-radius:10px;color:#142b49;font-size:14px;margin-bottom:8px}
-input:focus,select:focus,textarea:focus{border-color:#155eef;outline:none}
-.profitBox{background:#edf4ff;padding:12px;border-radius:12px;margin-bottom:10px;border:2px solid #155eef;font-size:12px;color:#142b49}
-.row{display:flex;gap:10px}
-.btn{flex:1;padding:14px;border-radius:12px;border:0;font-weight:bold;cursor:pointer;color:white}
+*{box-sizing:border-box}body{margin:0;background:#f0f7ff;color:#142b49;font-family:Arial}
+.topBar{background:#fff;border-bottom:3px solid #155eef;padding:10px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:99}
+.assetDrop{flex:1;max-width:400px;margin:0 10px;position:relative}
+.assetBtn{background:#edf4ff;border:2px solid #155eef;padding:12px;border-radius:12px;width:100%;font-weight:900;display:flex;justify-content:space-between;cursor:pointer}
+.assetList{position:absolute;top:48px;left:0;right:0;background:#fff;border:2px solid #155eef;border-radius:14px;max-height:400px;overflow:auto;display:none;z-index:100}
+.assetList.show{display:block}
+.assetItem{padding:11px 12px;border-bottom:1px solid #e2e8f0;cursor:pointer;display:flex;align-items:center;gap:10px}
+.assetItem:hover{background:#edf4ff}
+.logo{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:12px}
+#chart{width:100%;height:320px;background:#fff;border:2px solid #155eef;display:block}
+#liveChart{width:100%;height:300px;background:#fff;border:2px solid #155eef;display:block}
+.stats{display:flex;justify-content:space-around;background:#fff;padding:10px;border-bottom:2px solid #dbeafe;flex-wrap:wrap}
+.stat{font-size:12px;text-align:center}.stat b{display:block;color:#155eef;font-size:13px}
+.tickerWrap{background:#155eef;color:#fff;overflow:hidden;white-space:nowrap;padding:7px 0}
+.ticker{display:inline-block;animation:move 120s linear infinite}
+@keyframes move{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.layout{display:flex;flex-wrap:wrap;max-width:1300px;margin:auto}
+.main{flex:1;min-width:320px;max-width:800px}
+.side{width:350px;background:#fff;border-left:2px solid #dbeafe}
+.card{background:#fff;margin:12px;border-radius:16px;padding:16px;box-shadow:0 4px 20px #00000012;border:1px solid #e2e8f0}
+.label{font-size:11px;color:#155eef;font-weight:900;margin-top:10px;display:block}
+input,select,textarea{width:100%;padding:12px;border:2px solid #cbd5e1;border-radius:10px;background:#f8fbff;color:#142b49;margin:6px 0}
+.btn{flex:1;padding:14px;border-radius:12px;border:0;font-weight:900;color:#fff;cursor:pointer}
 .btnSell{background:#ef4444}.btnBuy{background:#22c55e}
-.btnActivate{width:100%;padding:16px;background:#155eef;color:white;border:0;border-radius:12px;font-weight:bold;font-size:17px;margin-top:12px;cursor:pointer;box-shadow:0 4px 12px #155eef40}
-#liveTradeOverlay{position:fixed;inset:0;background:#f0f6ff;z-index:200;display:none;flex-direction:column;overflow:auto}
-#liveTradeOverlay.show{display:flex}
-.liveHeader{padding:14px;background:white;border-bottom:2px solid #155eef;display:flex;justify-content:space-between;align-items:center}
-.buyLineBadge{padding:7px 14px;border-radius:20px;font-weight:900;font-size:13px;color:white}
-.buyBadge{background:#22c55e}.sellBadge{background:#ef4444}
-.profitLive{font-size:30px;font-weight:900;text-align:center;padding:14px;color:#142b49}
-.entryLineInfo{display:flex;justify-content:space-between;background:#edf4ff;padding:12px;font-size:12px;border:2px solid #155eef;border-radius:10px;margin:10px}
-.countdown{font-size:18px;font-weight:900;color:#b45309;text-align:center;padding:10px;background:#fef3c7;border-radius:10px;margin:10px}
-#arrowDot{position:absolute;width:16px;height:16px;border-radius:50%;background:white;border:3px solid #155eef;transform:translate(-50%,-50%);box-shadow:0 0 10px #155eef;z-index:10}
-#arrowTri{position:absolute;width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:10px solid #155eef;transform:translateX(-50%);z-index:11}
-.searchIn{width:100%;padding:9px;background:#f8fbff;border:2px solid #cbd5e1;border-radius:8px;color:#142b49;font-size:12px;margin-bottom:6px}
-#realBalTop{background:#155eef;color:white;padding:6px 12px;border-radius:20px;font-weight:bold;font-size:12px}
-#resumeLiveBox{background:linear-gradient(135deg,#155eef,#3b82f6);color:white;border:2px solid #1e40af;padding:16px;border-radius:16px;margin-bottom:14px;text-align:center;box-shadow:0 8px 20px #155eef30}
-@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
-@media(max-width:900px){.layout{flex-direction:column}.sideHistory{width:100%;border-left:0;border-top:2px solid #dbeafe}.topBar{flex-wrap:wrap;gap:8px}.assetDrop{max-width:100%;order:3;width:100%;margin:8px 0 0 0}#chart,#liveChart{height:220px}}
+.btnBlue{width:100%;padding:16px;background:#155eef;color:#fff;border:0;border-radius:12px;font-weight:900;font-size:16px;margin-top:10px;cursor:pointer}
+#resumeBox{display:none;background:linear-gradient(135deg,#155eef,#3b82f6);color:#fff;padding:16px;border-radius:16px;margin-bottom:12px;text-align:center;border:2px solid #1e40af}
+#liveOverlay{position:fixed;inset:0;background:#f0f7ff;z-index:200;display:none;flex-direction:column;overflow:auto}
+#liveOverlay.show{display:flex}
+@media(max-width:900px){.layout{flex-direction:column}.side{width:100%}#chart{height:260px}}

@@ -2,68 +2,62 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Trade - Global Savings - White & Blue</title>
+<title>Trade - Working Candles - White & Blue</title>
 <link rel="stylesheet" href="trade.css">
 </head>
 <body>
 <div class="topBar">
-<b onclick="location.href='dashboard.html'" style="color:#155eef;cursor:pointer">← Home</b>
-<div class="assetDrop">
-<div class="assetBtn" onclick="toggleDrop()"><span id="assetBtnTxt">₿ BTC/USD +83.7% 📈</span><span>▼</span></div>
-<div class="assetListDrop" id="assetDrop"><div style="padding:8px"><input class="searchIn" id="assetSearch" placeholder="Search A-Z..." oninput="filterAssets()"></div><div id="assetOptions"></div></div>
+<b onclick="location.href='dashboard.html'" style="color:#155eef">← Home</b>
+<div class="assetDrop"><div class="assetBtn" onclick="toggleList()"><span id="btnTxt">₿ BTC/USD +83.7%</span><span>▼</span></div><div class="assetList" id="assetList"><div style="padding:8px"><input id="search" placeholder="Search..." oninput="filterList()" style="width:100%;padding:9px;border:2px solid #cbd5e1;border-radius:8px"></div><div id="options"></div></div></div>
+<div style="background:#155eef;color:#fff;padding:6px 12px;border-radius:20px;font-weight:900;font-size:12px" id="realBal">REAL $0.00</div>
 </div>
-<div><span id="realBalTop">REAL $0.00</span></div>
-</div>
-<div class="statsBar">
-<div class="statBox"><span class="statNum">10,284,391</span><span class="statLabel"><span class="liveDot"></span> Traders</span></div>
-<div class="statBox"><span class="statNum">$10,847,392,104</span><span class="statLabel">Volume</span></div>
-<div class="statBox"><span class="statNum">10,452,187</span><span class="statLabel"><span class="liveDot"></span> Online</span></div>
-<div class="statBox"><span class="statNum">+$2,847,392</span><span class="statLabel">Profit Today</span></div>
+<div class="stats">
+<div class="stat"><b>10,284,391</b>Traders</div>
+<div class="stat"><b>$10B+</b>Volume</div>
+<div class="stat"><b>10M</b>Online</div>
+<div class="stat"><b style="color:#22c55e">+$2.8M</b>Today</div>
 </div>
 <div class="tickerWrap"><div class="ticker" id="ticker"></div></div>
-<div style="padding:14px;background:white;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;border-bottom:2px solid #dbeafe">
-<div><h2 id="price" style="margin:0;color:#142b49">$68,420.50 USD <span id="priceMove" style="color:#22c55e">↗ +2.41%</span></h2>
-<span style="color:#155eef;font-size:12px;font-weight:bold">Profit <span id="profitPctShow">+83.7%</span> • <span id="signalText">📈 BTC is INCREASING</span></span>
-<div style="font-size:10px;color:#64748b;margin-top:4px"><span class="liveDot"></span> Live: All coins UP 📈 • Last: <span id="lastUpdate">now</span></div>
-</div><div style="font-size:11px;color:#64748b;text-align:right">Balance:<br><b id="balSide" style="color:#155eef">$0.00</b></div>
+<div style="padding:12px;background:#fff;display:flex;justify-content:space-between;border-bottom:2px solid #dbeafe">
+<div><h2 id="priceText" style="margin:0">$68,420.50 <span style="color:#22c55e">↗ +2.41%</span></h2><small id="profitShow" style="color:#155eef;font-weight:900">+83.7% • BTC INCREASING 📈 • <span id="lastU">now</span></small></div>
+<div><small>Balance</small><br><b id="bal2" style="color:#155eef">$0.00</b></div>
 </div>
 <canvas id="chart"></canvas>
 <div class="layout">
-<div class="mainTrade">
+<div class="main">
 <div class="card">
-<div id="resumeLiveBox" style="display:none;animation:pulse 2s infinite">
-<div id="resumeLiveText" style="font-weight:900;font-size:13px;margin-bottom:10px">🔴 LIVE TRADE RUNNING</div>
-<button id="resumeLiveBtn" onclick="viewLiveTrade()" style="width:100%;padding:14px;background:white;color:#155eef;border:0;border-radius:12px;font-weight:900;font-size:14px;cursor:pointer">VIEW LIVE TRADE</button>
-<div style="font-size:10px;margin-top:8px;opacity:.9">Trade continues even if you logout/login - Ends only when admin gives final verdict</div>
+<div id="resumeBox">
+<div id="resumeTxt" style="font-weight:900;margin-bottom:10px">🔴 LIVE TRADE RUNNING</div>
+<button onclick="viewLive()" style="width:100%;padding:14px;background:#fff;color:#155eef;border:0;border-radius:12px;font-weight:900">VIEW LIVE TRADE</button>
+<div style="font-size:10px;margin-top:6px">Persists after logout/login - Ends only when admin approves</div>
 </div>
-<div style="background:#edf4ff;padding:12px;border-radius:12px;text-align:center;margin-bottom:12px;border:2px solid #155eef;color:#142b49">Your REAL Main Balance: <b id="mainBal" style="color:#155eef">$0.00</b></div>
-<label class="label">Amount to Trade (USD) - REAL</label>
-<input id="tradeAmt" type="number" placeholder="700" oninput="calcProfit()">
-<div class="profitBox"><div>Selected: <b id="selectedProfit" style="color:#155eef">+83.7%</b> <span id="movementIcon">↗ UP</span></div><div>Will get: <b id="willGet" style="color:#22c55e">$0.00</b> (<span id="profitAmt">+$0.00</span>)</div></div>
-<label class="label">Your Prediction</label>
-<textarea id="prediction" placeholder="I think BTC will go up..."></textarea>
-<div class="row"><button class="btn btnSell" id="sellBtn" onclick="selectType('sell')">↓ Sell</button><button class="btn btnBuy" id="buyBtn" onclick="selectType('buy')">↑ Buy</button></div>
-<div class="row"><div style="flex:1"><label class="label">Stop Loss - $200</label><input id="stopLoss" type="number" value="200"></div><div style="flex:1"><label class="label">Take Profit</label><input id="takeProfit" readonly></div></div>
-<label class="label">Duration - 1 WEEK</label>
-<select id="duration"><option value="30">30s</option><option value="60">1 Min</option><option value="300">5 Min</option><option value="900">15 Min</option><option value="3600">1 Hour</option><option value="86400">1 Day</option><option value="604800" selected>1 Week</option><option value="2592000">1 Month</option><option value="31536000">1 Year</option></select>
-<button class="btnActivate" id="activateBtn" onclick="activateTrade()">Activate REAL Trade</button>
-<div id="msg" style="font-size:12px;margin-top:10px;color:#155eef;text-align:center;font-weight:bold"></div>
+<div style="background:#edf4ff;padding:10px;border-radius:10px;border:2px solid #155eef;text-align:center;margin-bottom:10px">REAL Balance: <b id="mainBal" style="color:#155eef">$0.00</b></div>
+<label class="label">Amount USD</label><input id="amt" type="number" placeholder="700" value="700" oninput="calc()">
+<div style="background:#edf4ff;padding:10px;border-radius:10px;border:2px solid #155eef;margin:8px 0">Will get: <b id="willGet">$0</b> (<span id="profitAmt">+$0</span>) - <b id="selProfit">+83.7%</b></div>
+<label class="label">Prediction</label><textarea id="pred" placeholder="I think BTC will go up..."></textarea>
+<div style="display:flex;gap:10px"><button class="btn btnSell" id="sellBtn" onclick="pick('sell')">↓ SELL</button><button class="btn btnBuy" id="buyBtn" onclick="pick('buy')">↑ BUY</button></div>
+<div style="display:flex;gap:10px"><div style="flex:1"><label class="label">Stop Loss $200</label><input id="sl" value="200" type="number"></div><div style="flex:1"><label class="label">Take Profit</label><input id="tp" readonly></div></div>
+<label class="label">Duration</label><select id="dur"><option value="30">30 Secs</option><option value="60">1 Min</option><option value="300">5 Min</option><option value="3600">1 Hour</option><option value="86400">1 Day</option><option value="604800" selected>1 Week</option><option value="2592000">1 Month</option></select>
+<button class="btnBlue" onclick="activate()">Activate REAL Trade</button>
+<div id="msg" style="text-align:center;color:#155eef;font-weight:900;margin-top:10px"></div>
 </div>
 </div>
-<div class="sideHistory">
-<div style="padding:14px;background:#edf4ff;border-bottom:2px solid #155eef;font-weight:bold;color:#155eef">📈 Live Movement - All UP</div>
-<div id="topMovers" style="padding:12px"></div>
-<div style="padding:12px;font-size:11px;color:#64748b">White & Blue Theme • Mobile & Desktop Responsive</div>
+<div class="side"><div style="padding:12px;font-weight:900;color:#155eef;background:#edf4ff;border-bottom:2px solid #155eef">📈 Top Movers - All UP</div><div id="movers" style="padding:10px"></div></div>
 </div>
+
+<div id="liveOverlay">
+<div style="padding:12px;background:#fff;border-bottom:3px solid #155eef;display:flex;justify-content:space-between;align-items:center">
+<b id="liveCoin" style="color:#155eef">BTC/USD LIVE</b><div><span id="liveBadge" style="padding:6px 12px;border-radius:20px;background:#22c55e;color:#fff;font-weight:900">BUY</span><button onclick="closeLive()" style="margin-left:8px;padding:6px 10px;border:0;background:#e2e8f0;border-radius:8px">✕</button></div>
 </div>
-<div id="liveTradeOverlay">
-<div class="liveHeader"><div><b id="liveCoin" style="color:#155eef">BTC/USD LIVE</b></div><div><div id="liveBadge" class="buyLineBadge buyBadge">BUY ↑</div><button onclick="closeLiveOverlay()" style="margin-top:8px;padding:8px 12px;background:#e2e8f0;color:#142b49;border:0;border-radius:8px;cursor:pointer">✕ Close</button></div></div>
-<div class="entryLineInfo"><span>Entry: <b id="entryPrice">$0</b></span><span>Now: <b id="nowPrice">$0</b></span><span>P/L: <b id="livePL">$0</b></span></div>
-<div class="countdown">⏳ Time Left: <span id="countdown">00:00</span></div>
-<div style="position:relative;margin:10px"><canvas id="liveChart"></canvas><div id="arrowDot"></div><div id="arrowTri"></div></div>
-<div class="profitLive" id="profitLiveCenter">+$0.00</div>
-<div style="padding:14px;background:white;text-align:center;border-top:2px solid #dbeafe"><div id="liveStatus" style="font-size:13px;color:#155eef;font-weight:bold"></div><div style="margin-top:12px"><span id="liveStake" style="background:#155eef;color:white;padding:8px 16px;border-radius:20px;font-weight:bold">Stake $700</span></div></div>
+<div style="display:flex;justify-content:space-between;padding:10px;background:#edf4ff;margin:10px;border-radius:10px;border:2px solid #155eef;font-size:12px">
+<span>Entry: <b id="entryP">$0</b></span><span>Now: <b id="nowP">$0</b></span><span>PL: <b id="pl">$0</b></span>
 </div>
+<div style="text-align:center;background:#fef3c7;padding:10px;margin:0 10px;border-radius:10px;font-weight:900">⏳ <span id="count">00:00</span> - Till admin verdict</div>
+<div style="position:relative;margin:10px"><canvas id="liveChart"></canvas></div>
+<div style="text-align:center;font-size:28px;font-weight:900;padding:10px" id="liveProfit">+$0.00</div>
+<div style="padding:12px;text-align:center;background:#fff;border-top:2px solid #dbeafe"><div id="liveStatus" style="color:#155eef;font-weight:900"></div><div style="margin-top:10px"><span id="liveStake" style="background:#155eef;color:#fff;padding:8px 16px;border-radius:20px;font-weight:900">Stake $700</span></div></div>
+</div>
+
 <script type="module" src="trade.js"></script>
 </body>
 </html>

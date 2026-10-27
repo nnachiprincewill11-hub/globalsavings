@@ -1,135 +1,142 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp, updateDoc, query, where, orderBy, getDocs, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp, updateDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 const firebaseConfig={apiKey:"AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",authDomain:"global-savings.firebaseapp.com",projectId:"global-savings",storageBucket:"global-savings.firebasestorage.app",messagingSenderId:"83435054105",appId:"1:83435054105:web:efac6cbd5a264a6892b688"};
 const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
-let user=null,userData=null,currentPrice=68420,currentCoin="BTC",selectedType=null,currentProfit=83.7;
-let liveChartData=[],entryPrice=0,activeTradeId=null,countdownTimer=null,liveChartTimer=null;
-let activeTradeData=null, tradeEndTime=null, tradeUnsubscribe=null;
+let user=null,userData=null,price=68420,coin="BTC",type=null,profit=83.7,activeId=null,activeData=null,endTime=null,timer=null,liveTimer=null;
+let candles=[];let liveCandles=[];let entry=0;
 const assets=[
- {sym:"ADA",name:"ADA/USD",price:0.45,color:"#0d47a1",logo:"A",profit:75.2,mov:"↗ +2.1%"},
- {sym:"AVAX",name:"AVAX/USD",price:35,color:"#e84142",logo:"AV",profit:78.5,mov:"↗ +3.4%"},
- {sym:"BNB",name:"BNB/USD",price:612,color:"#f3ba2f",logo:"B",profit:81.3,mov:"↗ +1.8%"},
- {sym:"BTC",name:"BTC/USD",price:68420,color:"#f7931a",logo:"₿",profit:83.7,mov:"↗ +2.41%"},
- {sym:"DOGE",name:"DOGE/USD",price:0.15,color:"#c2a633",logo:"D",profit:85.4,mov:"↗ +5.2%"},
- {sym:"ETH",name:"ETH/USD",price:3210,color:"#627eea",logo:"Ξ",profit:87.1,mov:"↗ +2.9%"},
- {sym:"EURUSD",name:"EUR/USD",price:1.1151,color:"#1e40af",logo:"€",profit:89.7,mov:"↗ +0.8%"},
- {sym:"GBPUSD",name:"GBP/USD",price:1.3051,color:"#7c3aed",logo:"£",profit:91.2,mov:"↗ +1.2%"},
- {sym:"LINK",name:"LINK/USD",price:18,color:"#2a5bd7",logo:"L",profit:93.5,mov:"↗ +4.1%"},
- {sym:"SOL",name:"SOL/USD",price:178,color:"#9945ff",logo:"S",profit:95.1,mov:"↗ +6.3%"},
- {sym:"USDCHF",name:"USD/CHF",price:0.9784,color:"#059669",logo:"$",profit:96.8,mov:"↗ +0.5%"},
- {sym:"USDJPY",name:"USD/JPY",price:119.71,color:"#dc2626",logo:"¥",profit:97.9,mov:"↗ +0.9%"},
- {sym:"XRP",name:"XRP/USD",price:0.62,color:"#23292f",logo:"X",profit:98.7,mov:"↗ +7.1%"},
+{sym:"BTC",name:"BTC/USD",price:68420,color:"#f7931a",logo:"₿",profit:83.7},
+{sym:"ETH",name:"ETH/USD",price:3210,color:"#627eea",logo:"Ξ",profit:87.1},
+{sym:"SOL",name:"SOL/USD",price:178,color:"#9945ff",logo:"S",profit:95.1},
+{sym:"BNB",name:"BNB/USD",price:612,color:"#f3ba2f",logo:"B",profit:81.3},
+{sym:"XRP",name:"XRP/USD",price:0.62,color:"#23292f",logo:"X",profit:98.7},
+{sym:"ADA",name:"ADA/USD",price:0.45,color:"#0d47a1",logo:"A",profit:75.2},
+{sym:"DOGE",name:"DOGE/USD",price:0.15,color:"#c2a633",logo:"D",profit:85.4},
+{sym:"AVAX",name:"AVAX/USD",price:35,color:"#e84142",logo:"AV",profit:78.5},
+{sym:"LINK",name:"LINK/USD",price:18,color:"#2a5bd7",logo:"L",profit:93.5},
+{sym:"EURUSD",name:"EUR/USD",price:1.1151,color:"#1e40af",logo:"€",profit:89.7},
+{sym:"GBPUSD",name:"GBP/USD",price:1.3051,color:"#7c3aed",logo:"£",profit:91.2},
 ];
 let filtered=[...assets];
-function renderAssets(){const box=document.getElementById("assetOptions");box.innerHTML="";filtered.sort((a,b)=>a.sym.localeCompare(b.sym));filtered.forEach(a=>{box.innerHTML+=`<div class="assetOpt" onclick="selectAsset('${a.sym}')"><div class="logo" style="background:${a.color}">${a.logo}</div><div><b>${a.sym}</b> /USD <span style="color:#22c55e;font-size:11px">${a.mov} 📈</span><div style="font-size:11px;color:#8aa0c2">$${a.price}</div></div><span class="profitBadge">+${a.profit}%</span></div>`});}
-function renderTicker(){const t=document.getElementById("ticker");let h="";[...assets,...assets].forEach(a=>{h+=`<span class="tickerItem"><b>${a.sym}</b> $${a.price} <span style="color:#a7f3d0">${a.mov} 📈</span></span>`;});t.innerHTML=h;}
-function renderTopMovers(){const box=document.getElementById("topMovers");let h="";assets.slice(-6).reverse().forEach(a=>{h+=`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e2e8f0;font-size:11px"><span><b>${a.sym}</b> $${a.price}</span><span style="color:#22c55e;font-weight:bold">${a.mov} ↗</span></div>`;});box.innerHTML=h;}
-window.toggleDrop=()=>document.getElementById("assetDrop").classList.toggle("show");
-window.filterAssets=()=>{const q=document.getElementById("assetSearch").value.toUpperCase();filtered=assets.filter(a=>a.sym.includes(q)||a.name.includes(q));renderAssets();};
-window.selectAsset=(sym)=>{const a=assets.find(x=>x.sym===sym);currentCoin=a.sym;currentPrice=a.price;currentProfit=a.profit;document.getElementById("assetBtnTxt").textContent=a.logo+" "+a.name+" +"+a.profit+"% 📈";document.getElementById("price").innerHTML="$"+a.price.toLocaleString()+" USD <span style='color:#22c55e'>"+a.mov+"</span>";document.getElementById("profitPctShow").textContent="+"+a.profit+"%";document.getElementById("selectedProfit").textContent="+"+a.profit+"%";document.getElementById("assetDrop").classList.remove("show");calcProfit();initChartData();drawChart();};
-window.calcProfit=()=>{const amt=Number(document.getElementById("tradeAmt").value||0);const profitAmt=amt*currentProfit/100;document.getElementById("profitAmt").textContent="+$"+profitAmt.toFixed(2);document.getElementById("willGet").textContent="$"+(amt+profitAmt).toFixed(2);document.getElementById("takeProfit").value=profitAmt.toFixed(2);};
-let chartData=[];function initChartData(){chartData=[];let p=currentPrice;for(let i=0;i<100;i++){p+=(Math.random()-0.48)*p*0.015;if(p<0.01)p=0.01+Math.random()*5;chartData.push(p);}}
-function drawChart(){const canvas=document.getElementById("chart");const ctx=canvas.getContext("2d");canvas.width=canvas.offsetWidth;canvas.height=220;const w=canvas.width,h=canvas.height;ctx.clearRect(0,0,w,h);ctx.fillStyle="white";ctx.fillRect(0,0,w,h);ctx.strokeStyle="#e2e8f0";ctx.lineWidth=0.5;for(let i=0;i<5;i++){ctx.beginPath();ctx.moveTo(0,h/5*i);ctx.lineTo(w,h/5*i);ctx.stroke();}ctx.beginPath();ctx.strokeStyle="#155eef";ctx.lineWidth=2.5;const min=Math.min(...chartData),max=Math.max(...chartData);chartData.forEach((v,i)=>{const x=i/(chartData.length-1)*w;const y=h - ((v-min)/(max-min||1))*h*0.8 - h*0.1;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.closePath();ctx.fillStyle="rgba(21,94,239,0.12)";ctx.fill();}
-function animateChart(){let last=chartData[chartData.length-1];let change=(Math.random()-0.45)*last*0.02;if(Math.random()<0.05){change=-last*0.7+Math.random()*5;}last+=change;if(last<0.01)last=0.01+Math.random()*2;chartData.shift();chartData.push(last);currentPrice=last;document.getElementById("price").innerHTML="$"+last.toFixed(2)+" USD <span style='color:"+(change>=0?"#22c55e":"#ef4444")+"'>"+(change>=0?"↗":"↘")+" "+((change/last)*100).toFixed(2)+"%</span>";document.getElementById("lastUpdate").textContent=new Date().toLocaleTimeString();drawChart();}
-function initLiveChart(){liveChartData=[];let p=entryPrice;for(let i=0;i<80;i++){p+=(Math.random()-0.5)*p*0.01;if(p<0.01)p=0.5+Math.random()*3;liveChartData.push(p);}}
-function drawLiveChart(){
- const canvas=document.getElementById("liveChart");if(!canvas)return;const ctx=canvas.getContext("2d");canvas.width=canvas.offsetWidth;canvas.height=260;const w=canvas.width,h=canvas.height;
- ctx.clearRect(0,0,w,h);ctx.fillStyle="white";ctx.fillRect(0,0,w,h);
- const min=Math.min(...liveChartData,entryPrice),max=Math.max(...liveChartData,entryPrice);
- const entryY=h - ((entryPrice-min)/(max-min||1))*h*0.8 - h*0.1;
- ctx.beginPath();ctx.strokeStyle=selectedType==="buy"?"#22c55e":"#ef4444";ctx.lineWidth=3;ctx.setLineDash([8,6]);ctx.moveTo(0,entryY);ctx.lineTo(w,entryY);ctx.stroke();ctx.setLineDash([]);
- ctx.fillStyle=selectedType==="buy"?"#22c55e":"#ef4444";ctx.fillRect(0,entryY-14,w,20);ctx.fillStyle="white";ctx.font="bold 12px Arial";ctx.fillText((selectedType==="buy"?"BUY ":"SELL ")+entryPrice.toFixed(2)+" ← ENTRY",10,entryY);
- ctx.beginPath();ctx.strokeStyle="#155eef";ctx.lineWidth=2.5;
- liveChartData.forEach((v,i)=>{const x=i/(liveChartData.length-1)*w;const y=h - ((v-min)/(max-min||1))*h*0.8 - h*0.1;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();
- const last=liveChartData[liveChartData.length-1];const lastY=h - ((last-min)/(max-min||1))*h*0.8 - h*0.1;
- const dot=document.getElementById("arrowDot");const tri=document.getElementById("arrowTri");
- if(dot){dot.style.left=(w-10)+"px";dot.style.top=lastY+"px";dot.style.background=last>=entryPrice?"#22c55e":"#ef4444";}
- if(tri){tri.style.left=(w-10)+"px";tri.style.top=(lastY+12)+"px";tri.style.borderTopColor=last>=entryPrice?"#22c55e":"#ef4444";}
- document.getElementById("nowPrice").textContent="$"+last.toFixed(2);
- const pl= selectedType==="buy"? (last-entryPrice) : (entryPrice-last);
- const plPct=(pl/entryPrice)*100;const amt=Number(activeTradeData?.amount || document.getElementById("tradeAmt").value || 700);
- const profitUSD= amt * (plPct/100);
- document.getElementById("livePL").textContent=(profitUSD>=0?"+$":"-$")+Math.abs(profitUSD).toFixed(2);
- document.getElementById("profitLiveCenter").textContent=(profitUSD>=0?"+$":"-$")+Math.abs(profitUSD).toFixed(2);
- document.getElementById("profitLiveCenter").style.color=profitUSD>=0?"#22c55e":"#ef4444";
-}
-function animateLiveChart(){let last=liveChartData[liveChartData.length-1];let change=(Math.random()-0.46)*last*0.018;if(Math.random()<0.07){change=-last*0.6+Math.random()*3;}last+=change;if(last<0.01)last=0.01+Math.random()*2;liveChartData.shift();liveChartData.push(last);drawLiveChart();}
-async function checkActiveTrade(){
- try{
-  const q=query(collection(db,"trades"), where("uid","==",user.uid), where("status","==","active"), orderBy("createdAt","desc"), limit(1));
-  const snap=await getDocs(q);
-  if(snap.empty){document.getElementById("resumeLiveBox").style.display="none";return;}
-  const d=snap.docs[0];const t=d.data();
-  if(t.finalVerdict==="approve" || t.finalVerdict==="rejected"){document.getElementById("resumeLiveBox").style.display="none";return;}
-  activeTradeId=d.id;activeTradeData=t;entryPrice=t.entryPrice||t.amount||currentPrice;selectedType=t.type||"buy";
-  const createdAt=t.createdAt?.toDate ? t.createdAt.toDate() : new Date();
-  const durationSec=Number(t.duration||0);
-  const endTime=new Date(createdAt.getTime()+durationSec*1000);
-  tradeEndTime=endTime;const now=new Date();let remaining=Math.floor((endTime-now)/1000);
-  const box=document.getElementById("resumeLiveBox");box.style.display="block";
-  if(remaining>0){
-   const m=Math.floor(remaining/60);const s=remaining%60;
-   document.getElementById("resumeLiveText").innerHTML=`🔴 LIVE TRADE RUNNING<br>${t.coin} ${t.type.toUpperCase()} $${t.amount} | Ends in ${m}:${String(s).padStart(2,"0")}`;
-   document.getElementById("resumeLiveBtn").textContent=`VIEW LIVE TRADE (${m}:${String(s).padStart(2,"0")})`;
-  }else{
-   document.getElementById("resumeLiveText").innerHTML=`⏳ TRADE TIME REACHED<br>${t.coin} ${t.type.toUpperCase()} $${t.amount} | Waiting admin verification`;
-   document.getElementById("resumeLiveBtn").textContent=`VIEW LIVE - WAITING ADMIN`;
-  }
-  if(tradeUnsubscribe) tradeUnsubscribe();
-  tradeUnsubscribe=onSnapshot(doc(db,"trades",activeTradeId), (docSnap)=>{
-   const data=docSnap.data();if(!data) return;
-   if(data.status==="completed" || data.finalVerdict==="approve" || data.finalVerdict==="rejected"){
-    document.getElementById("resumeLiveBox").style.display="none";
-    document.getElementById("liveTradeOverlay").classList.remove("show");
-    if(countdownTimer) clearInterval(countdownTimer);
-    if(liveChartTimer) clearInterval(liveChartTimer);
-    alert("✅ Trade finished by admin: "+(data.finalVerdict||data.status));
-    location.href="my-trades.html";
-   }
-  });
- }catch(e){console.log(e);}
-}
-window.viewLiveTrade=()=>{
- if(!activeTradeData) return;
- currentCoin=activeTradeData.coin||"BTC";entryPrice=activeTradeData.entryPrice||activeTradeData.amount||0;selectedType=activeTradeData.type||"buy";
- document.getElementById("liveTradeOverlay").classList.add("show");
- document.getElementById("liveCoin").textContent=currentCoin+"/USD LIVE - "+selectedType.toUpperCase();
- document.getElementById("entryPrice").textContent="$"+entryPrice.toFixed(2);
- document.getElementById("liveBadge").textContent=selectedType==="buy"?"BUY ↑ GREEN":"SELL ↓ RED";
- document.getElementById("liveBadge").className="buyLineBadge "+(selectedType==="buy"?"buyBadge":"sellBadge");
- document.getElementById("liveStake").textContent="Stake $"+activeTradeData.amount;
- initLiveChart();drawLiveChart();
- if(countdownTimer) clearInterval(countdownTimer);
- if(liveChartTimer) clearInterval(liveChartTimer);
- countdownTimer=setInterval(async()=>{
-  const now=new Date();let remaining=Math.floor((tradeEndTime-now)/1000);if(remaining<0) remaining=0;
-  document.getElementById("countdown").textContent=Math.floor(remaining/60)+":"+String(remaining%60).padStart(2,"0");
-  document.getElementById("resumeLiveBtn").textContent=remaining>0?`VIEW LIVE TRADE (${Math.floor(remaining/60)}:${String(remaining%60).padStart(2,"0")})`:`VIEW LIVE - WAITING ADMIN`;
-  if(remaining<=0){
-   document.getElementById("liveStatus").textContent="⏰ Time reached - Waiting admin final verdict";
-   if(!activeTradeData.notified){
-    try{
-     const lastPrice=liveChartData[liveChartData.length-1];
-     await addDoc(collection(db,"admin_notifications"),{type:"trade_time_reached",tradeId:activeTradeId,uid:user.uid,username:userData.username||"",coin:currentCoin,tradeType:selectedType,entryPrice:entryPrice,closePrice:lastPrice,duration:activeTradeData.duration,message:`⏰ TRADE TIME REACHED - User ${userData.username}`,status:"unread",createdAt:serverTimestamp()});
-     activeTradeData.notified=true;await updateDoc(doc(db,"trades",activeTradeId),{notified:true, closePrice:lastPrice});
-    }catch(e){}
-   }
-   clearInterval(countdownTimer);
-  }
- },1000);
- liveChartTimer=setInterval(animateLiveChart,600);
-};
-onAuthStateChanged(auth, async u=>{
- if(!u){location.href="login.html";return;}
- user=u;const s=await getDoc(doc(db,"users",u.uid));if(!s.exists()){location.href="login.html";return;}userData=s.data();
- if(userData.accountStatus==="disabled"||userData.accountStatus==="paused"){alert("ACCOUNT "+userData.accountStatus.toUpperCase());location.href="login.html";return;}
- document.getElementById("mainBal").textContent="$"+Number(userData.balance||0).toFixed(2);
- document.getElementById("balSide").textContent="$"+Number(userData.balance||0).toFixed(2);
- document.getElementById("realBalTop").textContent="REAL $"+Number(userData.balance||0).toFixed(2);
- renderAssets();renderTicker();renderTopMovers();initChartData();drawChart();calcProfit();setInterval(animateChart,700);
- await checkActiveTrade();
+function renderList(){const o=document.getElementById("options");o.innerHTML="";filtered.sort((a,b)=>a.sym.localeCompare(b.sym)).forEach(a=>{o.innerHTML+=`<div class="assetItem" onclick="selectAsset('${a.sym}')"><div class="logo" style="background:${a.color}">${a.logo}</div><b>${a.sym}</b> $${a.price} <span style="margin-left:auto;background:#22c55e;color:#fff;padding:3px 8px;border-radius:20px;font-size:11px">+${a.profit}%</span></div>`});}
+window.toggleList=()=>document.getElementById("assetList").classList.toggle("show");
+window.filterList=()=>{const q=document.getElementById("search").value.toUpperCase();filtered=assets.filter(a=>a.sym.includes(q));renderList();}
+window.selectAsset=(s)=>{const a=assets.find(x=>x.sym===s);coin=a.sym;price=a.price;profit=a.profit;document.getElementById("btnTxt").textContent=a.logo+" "+a.name+" +"+a.profit+"%";document.getElementById("assetList").classList.remove("show");calc();makeCandles();drawMain();};
+window.calc=()=>{const am=Number(document.getElementById("amt").value||0);const pa=am*profit/100;document.getElementById("profitAmt").textContent="+$"+pa.toFixed(2);document.getElementById("willGet").textContent="$"+(am+pa).toFixed(2);document.getElementById("tp").value=pa.toFixed(2);document.getElementById("selProfit").textContent="+"+profit+"%";};
+function makeCandles(){candles=[];let p=price;for(let i=0;i<60;i++){const open=p;const change=(Math.random()-0.48)*p*0.02;let close=open+change;const high=Math.max(open,close)+Math.random()*p*0.01;const low=Math.min(open,close)-Math.random()*p*0.01;p=close;if(p<1)p=1+Math.random()*2;candles.push({open,high,low,close});}}
+function drawMain(){
+const c=document.getElementById("chart");const ctx=c.getContext("2d");c.width=c.offsetWidth;c.height=320;const W=c.width,H=c.height;ctx.clearRect(0,0,W,H);ctx.fillStyle="#fff";ctx.fillRect(0,0,W,H);
+let min=Math.min(...candles.map(x=>x.low));let max=Math.max(...candles.map(x=>x.high));let range=max-min||1;
+const candleW=W/candles.length*0.7;
+candles.forEach((cd,i)=>{
+const x=i*W/candles.length+2;
+const oY=H-((cd.open-min)/range)*H*0.8-H*0.1;
+const cY=H-((cd.close-min)/range)*H*0.8-H*0.1;
+const hY=H-((cd.high-min)/range)*H*0.8-H*0.1;
+const lY=H-((cd.low-min)/range)*H*0.8-H*0.1;
+ctx.strokeStyle=cd.close>=cd.open?"#22c55e":"#ef4444";ctx.lineWidth=1.2;
+ctx.beginPath();ctx.moveTo(x+candleW/2,hY);ctx.lineTo(x+candleW/2,lY);ctx.stroke();
+ctx.fillStyle=cd.close>=cd.open?"#22c55e":"#ef4444";
+ctx.fillRect(x,Math.min(oY,cY),candleW,Math.abs(cY-oY)||2);
 });
-window.selectType=(type)=>{selectedType=type;document.getElementById("sellBtn").style.opacity=type==="sell"?"1":"0.5";document.getElementById("buyBtn").style.opacity=type==="buy"?"1":"0.5";document.getElementById("msg").textContent="Selected "+type.toUpperCase();};
-window.activateTrade=async()=>{
- const amt=Number(document.getElementById("tradeAmt").value);const sl=Number
+if(activeData){const eY=H-((entry-min)/range)*H*0.8-H*0.1;ctx.strokeStyle=type==="buy"?"#22c55e":"#ef4444";ctx.setLineDash([6,4]);ctx.beginPath();ctx.moveTo(0,eY);ctx.lineTo(W,eY);ctx.stroke();ctx.setLineDash([]);}
+}
+function animateMain(){
+let last=candles[candles.length-1];let ch=(Math.random()-0.48)*last.close*0.02;if(Math.random()<0.06)ch=-last.close*0.6+Math.random()*3;
+let newClose=last.close+ch;if(newClose<0.5)newClose=0.5+Math.random();const open=last.close;const high=Math.max(open,newClose)+Math.random()*newClose*0.01;const low=Math.min(open,newClose)-Math.random()*newClose*0.01;
+candles.shift();candles.push({open,high,low,close:newClose});price=newClose;document.getElementById("priceText").innerHTML="$"+newClose.toFixed(2)+" <span style='color:"+(ch>=0?"#22c55e":"#ef4444")+"'>"+(ch>=0?"↗":"↘")+" "+(Math.abs(ch/newClose*100)).toFixed(2)+"%</span>";drawMain();
+}
+function makeLive(){liveCandles=[];let p=entry;for(let i=0;i<50;i++){const o=p;const ch=(Math.random()-0.5)*p*0.015;let cl=o+ch;const hi=Math.max(o,cl)+Math.random()*p*0.01;const lo=Math.min(o,cl)-Math.random()*p*0.01;p=cl;liveCandles.push({open:o,high:hi,low:lo,close:cl});}}
+function drawLive(){
+const c=document.getElementById("liveChart");if(!c)return;const ctx=c.getContext("2d");c.width=c.offsetWidth;c.height=300;const W=c.width,H=c.height;ctx.clearRect(0,0,W,H);ctx.fillStyle="#fff";ctx.fillRect(0,0,W,H);
+let min=Math.min(...liveCandles.map(x=>x.low),entry);let max=Math.max(...liveCandles.map(x=>x.high),entry);let range=max-min||1;
+const cw=W/liveCandles.length*0.7;
+liveCandles.forEach((cd,i)=>{
+const x=i*W/liveCandles.length+2;
+const oY=H-((cd.open-min)/range)*H*0.8-H*0.1;
+const cY=H-((cd.close-min)/range)*H*0.8-H*0.1;
+const hY=H-((cd.high-min)/range)*H*0.8-H*0.1;
+const lY=H-((cd.low-min)/range)*H*0.8-H*0.1;
+ctx.strokeStyle=cd.close>=cd.open?"#22c55e":"#ef4444";ctx.lineWidth=1;
+ctx.beginPath();ctx.moveTo(x+cw/2,hY);ctx.lineTo(x+cw/2,lY);ctx.stroke();
+ctx.fillStyle=cd.close>=cd.open?"#22c55e":"#ef4444";ctx.fillRect(x,Math.min(oY,cY),cw,Math.abs(cY-oY)||2);
+});
+const eY=H-((entry-min)/range)*H*0.8-H*0.1;ctx.strokeStyle=type==="buy"?"#22c55e":"#ef4444";ctx.lineWidth=3;ctx.setLineDash([8,6]);ctx.beginPath();ctx.moveTo(0,eY);ctx.lineTo(W,eY);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=type==="buy"?"#22c55e":"#ef4444";ctx.fillRect(0,eY-14,W,18);ctx.fillStyle="#fff";ctx.font="bold 11px Arial";ctx.fillText((type==="buy"?"BUY ":"SELL ")+entry.toFixed(2),10,eY);
+const last=liveCandles[liveCandles.length-1].close;document.getElementById("nowP").textContent="$"+last.toFixed(2);
+const pl=type==="buy"?(last-entry):(entry-last);const amt=Number(activeData?.amount||700);const usd=amt*(pl/entry);document.getElementById("pl").textContent=(usd>=0?"+$":"-$")+Math.abs(usd).toFixed(2);document.getElementById("liveProfit").textContent=(usd>=0?"+$":"-$")+Math.abs(usd).toFixed(2);document.getElementById("liveProfit").style.color=usd>=0?"#22c55e":"#ef4444";
+}
+function animateLive(){
+let last=liveCandles[liveCandles.length-1];let ch=(Math.random()-0.48)*last.close*0.015;if(Math.random()<0.08)ch=-last.close*0.5+Math.random()*2;
+let nc=last.close+ch;if(nc<0.5)nc=0.5+Math.random();const o=last.close;const hi=Math.max(o,nc)+Math.random()*nc*0.01;const lo=Math.min(o,nc)-Math.random()*nc*0.01;
+liveCandles.shift();liveCandles.push({open:o,high:hi,low:lo,close:nc});drawLive();
+}
+function renderTicker(){let h="";[...assets,...assets].forEach(a=>{h+=`<span style="margin-right:24px"><b>${a.sym}</b> $${a.price} <span style="color:#a7f3d0">↗ +${a.profit}%</span></span>`;});document.getElementById("ticker").innerHTML=h;}
+function renderMovers(){let h="";assets.slice(0,6).forEach(a=>{h+=`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #e2e8f0;font-size:11px"><span><b>${a.sym}</b> $${a.price}</span><span style="color:#22c55e;font-weight:900">↗ +${a.profit}%</span></div>`;});document.getElementById("movers").innerHTML=h;}
+async function checkLive(){
+try{
+const q=query(collection(db,"trades"), where("uid","==",user.uid));
+const snap=await getDocs(q);
+let active=null;let maxTime=0;
+snap.forEach(d=>{const t=d.data();if(t.status==="active" && t.finalVerdict==="processing"){const ct=t.createdAt?.toDate? t.createdAt.toDate().getTime():0;if(ct>maxTime){maxTime=ct;active={id:d.id,data:t};}}});
+if(!active){document.getElementById("resumeBox").style.display="none";return;}
+activeId=active.id;activeData=active.data;entry=active.data.entryPrice||active.data.amount;type=active.data.type||"buy";
+const created=active.data.createdAt?.toDate? active.data.createdAt.toDate():new Date();
+const dur=Number(active.data.duration||0);endTime=new Date(created.getTime()+dur*1000);
+const now=new Date();let rem=Math.floor((endTime-now)/1000);
+document.getElementById("resumeBox").style.display="block";
+if(rem>0){document.getElementById("resumeTxt").innerHTML=`🔴 LIVE ${active.data.coin} ${type.toUpperCase()} $${active.data.amount} - ${Math.floor(rem/60)}:${String(rem%60).padStart(2,"0")}`;}else{document.getElementById("resumeTxt").innerHTML=`⏳ ${active.data.coin} TIME REACHED - Waiting admin`;}
+}catch(e){console.log(e);document.getElementById("resumeBox").style.display="none";}
+}
+window.viewLive=()=>{
+if(!activeData)return;
+document.getElementById("liveOverlay").classList.add("show");
+document.getElementById("liveCoin").textContent=activeData.coin+"/USD LIVE - "+type.toUpperCase();
+document.getElementById("entryP").textContent="$"+entry.toFixed(2);
+document.getElementById("liveBadge").textContent=type.toUpperCase()+" "+(type==="buy"?"GREEN":"RED");
+document.getElementById("liveBadge").style.background=type==="buy"?"#22c55e":"#ef4444";
+document.getElementById("liveStake").textContent="Stake $"+activeData.amount;
+makeLive();drawLive();
+if(timer)clearInterval(timer);if(liveTimer)clearInterval(liveTimer);
+timer=setInterval(async()=>{
+const now=new Date();let rem=Math.floor((endTime-now)/1000);if(rem<0)rem=0;
+document.getElementById("count").textContent=Math.floor(rem/60)+":"+String(rem%60).padStart(2,"0");
+if(rem<=0){
+document.getElementById("liveStatus").textContent="⏰ Time reached - Waiting admin final verdict (trade ends only when admin approves)";
+try{
+const last=liveCandles[liveCandles.length-1].close;
+await addDoc(collection(db,"admin_notifications"),{type:"trade_time_reached",tradeId:activeId,uid:user.uid,username:userData.username||"",coin:coin,tradeType:type,entryPrice:entry,closePrice:last,message:`⏰ TRADE TIME REACHED ${userData.username} ${coin} ${type} $${activeData.amount}`,status:"unread",createdAt:serverTimestamp()});
+}catch(e){}
+clearInterval(timer);
+}
+},1000);
+liveTimer=setInterval(animateLive,600);
+};
+window.closeLive=()=>document.getElementById("liveOverlay").classList.remove("show");
+onAuthStateChanged(auth, async u=>{
+if(!u){location.href="login.html";return;}user=u;
+try{
+const s=await getDoc(doc(db,"users",u.uid));if(!s.exists()){location.href="login.html";return;}userData=s.data();
+if(userData.accountStatus==="disabled"||userData.accountStatus==="paused"){alert("ACCOUNT "+userData.accountStatus);location.href="login.html";return;}
+document.getElementById("mainBal").textContent="$"+Number(userData.balance||0).toFixed(2);
+document.getElementById("bal2").textContent="$"+Number(userData.balance||0).toFixed(2);
+document.getElementById("realBal").textContent="REAL $"+Number(userData.balance||0).toFixed(2);
+renderList();renderTicker();renderMovers();makeCandles();drawMain();calc();setInterval(animateMain,800);await checkLive();
+}catch(e){document.getElementById("msg").textContent="Error: "+e.message;}
+});
+window.pick=(t)=>{type=t;document.getElementById("sellBtn").style.opacity=t==="sell"?"1":"0.5";document.getElementById("buyBtn").style.opacity=t==="buy"?"1":"0.5";document.getElementById("msg").textContent="Selected "+t.toUpperCase()+" - "+(t==="sell"?"RED LINE":"GREEN LINE");};
+window.activate=async()=>{
+const am=Number(document.getElementById("amt").value);const sl=Number(document.getElementById("sl").value||200);const tp=Number(document.getElementById("tp").value||0);const dur=Number(document.getElementById("dur").value);const pr=document.getElementById("pred").value;
+if(!am){document.getElementById("msg").textContent="Enter amount";return;}
+if(!type){document.getElementById("msg").textContent="Select BUY or SELL";return;}
+if(am>Number(userData.balance||0)){document.getElementById("msg").textContent="Insufficient";return;}
+document.getElementById("msg").textContent="Processing...";
+try{
+const nb=Number(userData.balance||0)-am;await updateDoc(doc(db,"users",user.uid),{balance:nb});userData.balance=nb;
+const tr=await addDoc(collection(db,"trades"),{uid:user.uid,username:userData.username||"",coin:coin,amount:am,type:type,profitPct:profit,stopLossAmount:sl,takeProfitAmount:tp,duration:dur,prediction:pr,entryPrice:price,status:"active",finalVerdict:"processing",notified:false,createdAt:serverTimestamp()});
+activeId=tr.id;entry=price;activeData={coin:coin,type:type,amount:am,entryPrice:price,duration:dur};endTime=new Date(Date.now()+dur*1000);
+await addDoc(collection(db,"transactions"),{uid:user.uid,type:"trade_active",amount:am,description:`Trade Activated ${coin} ${type.toUpperCase()} $${am} - Processing`,status:"pending",tradeId:tr.id,createdAt:serverTimestamp()});
+document.getElementById("resumeBox").style.display="block";document.getElementById("resumeTxt").innerHTML=`🔴 LIVE ${coin} ${type.toUpperCase()} $${am} - Running`;
+viewLive();document.getElementById("msg").textContent="Trade Activated - Showing live candles";
+}catch(e){document.getElementById("msg").textContent=e.message;}
+};

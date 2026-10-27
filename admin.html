@@ -5,28 +5,25 @@
 </head><body>
 <h2 style="margin:4px 0">🔐 ADMIN - admin@gmail.com</h2>
 <div style="font-size:11px;color:#8aa0c2;margin-bottom:12px">Control: Disable / Pause / Delete | WhatsApp: +2349134538841</div>
-
 <div id="loginBox" class="card"><h3>Admin Login</h3>
-<input id="email" value="admin@gmail.com" placeholder="admin@gmail.com">
+<input id="email" value="admin@gmail.com">
 <input id="pass" type="password" placeholder="Password">
 <button class="btn btnB" onclick="login()">Login</button>
 <div id="loginMsg" style="color:#f87171;font-size:12px;margin-top:8px"></div>
 </div>
-
 <div id="adminBox" style="display:none">
 <div style="flex-wrap:wrap;display:flex">
 <div class="tab active" id="tabDep" onclick="showTab('deposits')">Deposits</div>
-<div class="tab" id="tabTrade" onclick="showTab('trades')">Trades - EDITABLE</div>
-<div class="tab" id="tabUsers" onclick="showTab('users')">Users - Disable/Pause/Delete</div>
-<div class="tab" id="tabTrans" onclick="showTab('transactions')">Transactions</div>
-<div class="tab" id="tabTier" onclick="showTab('tierVerifications')">Tier Verify</div>
-<div class="tab" id="tabNotif" onclick="showTab('admin_notifications')">🔔 Trade Alerts</div>
-<div class="tab" id="tabInfect" onclick="showTab('trade_indicators')">📈 Trade Indicators</div>
+<div class="tab" id="tabTrade" onclick="showTab('trades')">Trades</div>
+<div class="tab" id="tabUsers" onclick="showTab('users')">Users</div>
+<div class="tab" id="tabTrans" onclick="showTab('transactions')">Transactions - EDIT ALL</div>
+<div class="tab" id="tabTier" onclick="showTab('tierVerifications')">Tier</div>
+<div class="tab" id="tabNotif" onclick="showTab('admin_notifications')">🔔 Alerts</div>
+<div class="tab" id="tabInfect" onclick="showTab('trade_indicators')">📈 Indicators</div>
 </div>
-<h3 id="title" style="margin-top:14px">Deposits</h3>
+<h3 id="title">Deposits</h3>
 <div id="list">Loading...</div>
 <button class="btn btnR" onclick="logout()" style="margin-top:16px">Logout</button>
 </div>
-
 <script type="module" src="admin.js"></script>
 </body></html>

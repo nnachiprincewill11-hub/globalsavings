@@ -2,37 +2,31 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Trade - Candles - Success/Lost Popup</title>
+<title>Trade - Multi Live - Working</title>
 <link rel="stylesheet" href="trade.css">
 </head>
 <body>
 <div class="topBar">
 <b onclick="location.href='dashboard.html'" style="color:#155eef">← Home</b>
-<div class="assetDrop"><div class="assetBtn" onclick="toggleList()"><span id="btnTxt">₿ BTC/USD +83.7%</span><span>▼</span></div><div class="assetList" id="assetList"><div style="padding:8px"><input id="search" placeholder="Search..." oninput="filterList()" style="width:100%;padding:9px;border:2px solid #cbd5e1;border-radius:8px"></div><div id="options"></div></div></div>
+<div class="assetDrop"><div class="assetBtn" onclick="toggleList()"><span id="btnTxt">₿ BTC/USD +83.7%</span><span>▼</span></div><div class="assetList" id="assetList"><div style="padding:8px"><input id="search" placeholder="Search..." oninput="filterList()"></div><div id="options"></div></div></div>
 <div style="background:#155eef;color:#fff;padding:6px 12px;border-radius:20px;font-weight:900;font-size:12px" id="realBal">REAL $0.00</div>
 </div>
-<div class="stats">
-<div class="stat"><b>10,284,391</b>Traders</div>
-<div class="stat"><b>$10B+</b>Volume</div>
-<div class="stat"><b>10M</b>Online</div>
-<div class="stat"><b style="color:#22c55e">+$2.8M</b>Today</div>
-</div>
+<div class="stats"><div class="stat"><b>10,284,391</b>Traders</div><div class="stat"><b>$10B+</b>Volume</div><div class="stat"><b>10M</b>Online</div><div class="stat"><b style="color:#22c55e">+$2.8M</b>Today</div></div>
 <div class="tickerWrap"><div class="ticker" id="ticker"></div></div>
 <div style="padding:12px;background:#fff;display:flex;justify-content:space-between;border-bottom:2px solid #dbeafe">
-<div><h2 id="priceText" style="margin:0">$68,420.50 <span style="color:#22c55e">↗ +2.41%</span></h2><small id="profitShow" style="color:#155eef;font-weight:900">+83.7% • BTC INCREASING 📈 • <span id="lastU">now</span></small></div>
+<div><h2 id="priceText" style="margin:0">$68,420.50 <span style="color:#22c55e">↗ +2.41%</span></h2><small id="profitShow" style="color:#155eef;font-weight:900">+83.7% • <span id="lastU">now</span></small></div>
 <div><small>Balance</small><br><b id="bal2" style="color:#155eef">$0.00</b></div>
 </div>
 <canvas id="chart"></canvas>
 <div class="layout">
 <div class="main">
 <div class="card">
-<div id="resumeBox">
-<div id="resumeTxt" style="font-weight:900;margin-bottom:10px">🔴 LIVE TRADE RUNNING</div>
-<button onclick="viewLive()" style="width:100%;padding:14px;background:#fff;color:#155eef;border:0;border-radius:12px;font-weight:900">VIEW LIVE TRADE</button>
-<div style="font-size:10px;margin-top:6px">Click to see your live candles</div>
+<div id="resumeBox" style="display:none">
+<div style="font-weight:900;color:#fff;background:#155eef;padding:8px 12px;border-radius:10px;margin-bottom:10px;text-align:center">🔴 YOUR LIVE TRADES - TAP TO VIEW</div>
+<div id="liveTradesList"></div>
 </div>
 <div style="background:#edf4ff;padding:10px;border-radius:10px;border:2px solid #155eef;text-align:center;margin-bottom:10px">REAL Balance: <b id="mainBal" style="color:#155eef">$0.00</b></div>
-<label class="label">Amount USD</label><input id="amt" type="number" placeholder="700" value="700" oninput="calc()">
+<label class="label">Amount USD</label><input id="amt" type="number" value="700" oninput="calc()">
 <div style="background:#edf4ff;padding:10px;border-radius:10px;border:2px solid #155eef;margin:8px 0">Will get: <b id="willGet">$0</b> (<span id="profitAmt">+$0</span>) - <b id="selProfit">+83.7%</b></div>
 <label class="label">Prediction</label><textarea id="pred" placeholder="I think BTC will go up..."></textarea>
 <div style="display:flex;gap:10px"><button class="btn btnSell" id="sellBtn" onclick="pick('sell')">↓ SELL</button><button class="btn btnBuy" id="buyBtn" onclick="pick('buy')">↑ BUY</button></div>
@@ -42,17 +36,17 @@
 <div id="msg" style="text-align:center;color:#155eef;font-weight:900;margin-top:10px"></div>
 </div>
 </div>
-<div class="side"><div style="padding:12px;font-weight:900;color:#155eef;background:#edf4ff;border-bottom:2px solid #155eef">📈 Top Movers - All UP</div><div id="movers" style="padding:10px"></div></div>
+<div class="side"><div style="padding:12px;font-weight:900;color:#155eef;background:#edf4ff;border-bottom:2px solid #155eef">📈 Top Movers</div><div id="movers" style="padding:10px"></div></div>
 </div>
 
 <div id="liveOverlay">
 <div style="padding:12px;background:#fff;border-bottom:3px solid #155eef;display:flex;justify-content:space-between;align-items:center">
-<b id="liveCoin" style="color:#155eef">BTC/USD LIVE</b><div><span id="liveBadge" style="padding:6px 12px;border-radius:20px;background:#22c55e;color:#fff;font-weight:900">BUY</span><button onclick="closeLive()" style="margin-left:8px;padding:6px 10px;border:0;background:#e2e8f0;border-radius:8px">✕</button></div>
+<b id="liveCoin" style="color:#155eef">BTC/USD LIVE</b><div><span id="liveBadge" style="padding:6px 12px;border-radius:20px;background:#22c55e;color:#fff;font-weight:900">BUY</span><button onclick="closeLive()" style="margin-left:8px;padding:6px 10px;border:0;background:#e2e8f0;border-radius:8px">✕ Close</button></div>
 </div>
 <div style="display:flex;justify-content:space-between;padding:10px;background:#edf4ff;margin:10px;border-radius:10px;border:2px solid #155eef;font-size:12px">
-<span>Entry: <b id="entryP">$0</b></span><span>Now: <b id="nowP">$0</b></span><span>PL: <b id="pl">$0</b></span>
+<span>Entry: <b id="entryP">$0</b></span><span>Now: <b id="nowP">$0</b></span><span>PL: <b id="pl">$0</b></span><span>ID: <b id="tradeIdShow">-</b></span>
 </div>
-<div style="text-align:center;background:#dbeafe;padding:10px;margin:0 10px;border-radius:10px;font-weight:900;color:#155eef">⏳ <span id="count">00:00</span></div>
+<div style="text-align:center;background:#dbeafe;padding:10px;margin:0 10px;border-radius:10px;font-weight:900;color:#155eef">⏳ <span id="count">00:00</span> | <span id="adminEditInfo" style="font-size:11px">Admin edits apply live</span></div>
 <div style="position:relative;margin:10px"><canvas id="liveChart"></canvas></div>
 <div style="text-align:center;font-size:28px;font-weight:900;padding:10px" id="liveProfit">+$0.00</div>
 <div style="padding:12px;text-align:center;background:#fff;border-top:2px solid #dbeafe"><div id="liveStatus" style="color:#155eef;font-weight:900"></div><div style="margin-top:10px"><span id="liveStake" style="background:#155eef;color:#fff;padding:8px 16px;border-radius:20px;font-weight:900">Stake $700</span></div></div>
@@ -62,8 +56,9 @@
 <div class="popupCard success">
 <div style="font-size:50px">✅</div>
 <h2 style="color:#22c55e;margin:10px 0">TRADE SUCCESSFUL!</h2>
-<div id="successMsg" style="font-size:14px;color:#142b49;margin-bottom:12px">You won $0.00</div>
+<div id="successMsg" style="font-size:14px;color:#142b49;margin-bottom:12px"></div>
 <div id="successAmount" style="font-size:26px;font-weight:900;color:#22c55e;margin-bottom:16px">+$0.00</div>
+<div id="successAdminEdit" style="font-size:11px;color:#64748b;margin-bottom:10px"></div>
 <button onclick="closeSuccess()" style="width:100%;padding:14px;background:#22c55e;color:#fff;border:0;border-radius:12px;font-weight:900">CONTINUE TRADING</button>
 </div>
 </div>
@@ -72,8 +67,9 @@
 <div class="popupCard lost">
 <div style="font-size:50px">❌</div>
 <h2 style="color:#ef4444;margin:10px 0">TRADE LOST!</h2>
-<div id="lostMsg" style="font-size:14px;color:#142b49;margin-bottom:12px">You lost $0.00</div>
+<div id="lostMsg" style="font-size:14px;color:#142b49;margin-bottom:12px"></div>
 <div id="lostAmount" style="font-size:26px;font-weight:900;color:#ef4444;margin-bottom:16px">-$0.00</div>
+<div id="lostAdminEdit" style="font-size:11px;color:#64748b;margin-bottom:10px"></div>
 <button onclick="closeLost()" style="width:100%;padding:14px;background:#ef4444;color:#fff;border:0;border-radius:12px;font-weight:900">TRY AGAIN</button>
 </div>
 </div>

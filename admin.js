@@ -32,12 +32,27 @@ window.approveDeposit=async(id)=>{
 };
 window.rejectDeposit=async(id)=>{await updateDoc(doc(db,"deposits",id),{status:"rejected"});alert("Rejected");loadDeposits();};
 async function loadUsers(){
- document.getElementById("title").textContent="Users - Disable / Pause / Delete";
+ document.getElementById("title").textContent="Users - Disable / Pause / Delete - FULL DETAILS";
  const snap=await getDocs(collection(db,"users"));
  let html="";snap.forEach(d=>{
   const u=d.data();const status=u.accountStatus||"active";
   let badge=status==="active"?`<span class="statusBadge activeS">ACTIVE</span>`:status==="disabled"?`<span class="statusBadge disabled">DISABLED</span>`:`<span class="statusBadge paused">PAUSED</span>`;
-  html+=`<div class="item" onclick="toggleDetail('${d.id}')"><div><b>${u.fullName||u.username}</b> ${badge}<br>Balance: $${Number(u.balance||0).toFixed(2)} - ${u.email}</div><div id="det-${d.id}" class="detailBox"><div class="rowD"><b>Email</b><span>${u.email}</span></div><div class="rowD"><b>Status</b><span>${status}</span></div><input id="reason-${d.id}" value="${u.statusReason||""}" placeholder="Reason"><div style="display:flex;gap:6px;margin-top:8px"><button class="btn btnY" onclick="event.stopPropagation();setUserStatus('${d.id}','paused')">PAUSE</button><button class="btn btnR" onclick="event.stopPropagation();setUserStatus('${d.id}','disabled')">DISABLE</button><button class="btn btnG" onclick="event.stopPropagation();setUserStatus('${d.id}','active')">ENABLE</button><button class="btn btnR" onclick="event.stopPropagation();deleteUserFull('${d.id}')">DELETE</button></div><div style="margin-top:10px" class="editGrid"><input id="bal-${d.id}" type="number" value="${u.balance||0}"><button class="btn btnB" onclick="event.stopPropagation();setBal('${d.id}')">Set Balance</button></div><div style="margin-top:10px;background:#0f1e38;padding:10px;border-radius:10px"><b>ADD TRANSACTION</b><input id="tType-${d.id}" placeholder="Type"><input id="tAmt-${d.id}" type="number" placeholder="Amount"><input id="tDesc-${d.id}" placeholder="Description"><select id="tStat-${d.id}"><option value="completed">completed</option><option value="approved">approved</option><option value="pending">pending</option></select><button class="btn btnG" onclick="event.stopPropagation();addTransactionForUser('${d.id}')">ADD</button></div></div></div>`;
+  let allDetailsHtml="";
+  try{
+    const allKeys=Object.keys(u).sort();
+    allKeys.forEach(k=>{
+      let v=u[k];
+      if(v===null||v===undefined) v="";
+      if(v && typeof v==="object" && v.toDate) { try{v=v.toDate().toLocaleString();}catch(e){v=JSON.stringify(v);} }
+      else if(typeof v==="object") { try{v=JSON.stringify(v).substring(0,500);}catch(e){v=String(v);} }
+      allDetailsHtml+=`<div class="rowD" style="background:#08162e;border-left:3px solid #22c55e;margin:2px 0"><b style="color:#5eead4;min-width:110px">${k}</b><span style="word-break:break-all;text-align:right;font-size:11px">${String(v).replace(/</g,"&lt;")}</span></div>`;
+    });
+  }catch(e){ allDetailsHtml="<div>Error: "+e.message+"</div>"; }
+  html+=`<div class="item" onclick="toggleDetail('${d.id}')"><div><b>${u.fullName||u.username}</b> ${badge}<br>Balance: $${Number(u.balance||0).toFixed(2)} - ${u.email}</div><div id="det-${d.id}" class="detailBox">
+  <div style="background:#122a4a;padding:10px;border-radius:10px;margin-bottom:10px;border:2px solid #22c55e"><b style="color:#22c55e">📋 FULL SIGNUP DETAILS - All info user entered</b><div style="font-size:10px;color:#8aa0c2;margin-top:4px">Email, password (if stored), phone, full details - Scroll down - Green rows = all Firestore fields</div></div>
+  ${allDetailsHtml}
+  <div style="background:#0f1e38;padding:8px;border-radius:8px;margin:10px 0;border:1px solid #f59e0b"><b style="color:#f59e0b;font-size:11px">⚠️ Password Note:</b><span style="font-size:11px;color:#e2e8f0"> Password shown only if you saved it in Firestore during signup as field 'password'. Firebase Auth passwords are encrypted. Add password field in signup to see it here.</span></div>
+  <div class="rowD"><b>Email</b><span>${u.email}</span></div><div class="rowD"><b>Status</b><span>${status}</span></div><input id="reason-${d.id}" value="${u.statusReason||""}" placeholder="Reason"><div style="display:flex;gap:6px;margin-top:8px"><button class="btn btnY" onclick="event.stopPropagation();setUserStatus('${d.id}','paused')">PAUSE</button><button class="btn btnR" onclick="event.stopPropagation();setUserStatus('${d.id}','disabled')">DISABLE</button><button class="btn btnG" onclick="event.stopPropagation();setUserStatus('${d.id}','active')">ENABLE</button><button class="btn btnR" onclick="event.stopPropagation();deleteUserFull('${d.id}')">DELETE</button></div><div style="margin-top:10px" class="editGrid"><input id="bal-${d.id}" type="number" value="${u.balance||0}"><button class="btn btnB" onclick="event.stopPropagation();setBal('${d.id}')">Set Balance</button></div><div style="margin-top:10px;background:#0f1e38;padding:10px;border-radius:10px"><b>ADD TRANSACTION</b><input id="tType-${d.id}" placeholder="Type"><input id="tAmt-${d.id}" type="number" placeholder="Amount"><input id="tDesc-${d.id}" placeholder="Description"><select id="tStat-${d.id}"><option value="completed">completed</option><option value="approved">approved</option><option value="pending">pending</option></select><button class="btn btnG" onclick="event.stopPropagation();addTransactionForUser('${d.id}')">ADD</button></div></div></div>`;
  });
  document.getElementById("list").innerHTML=html||"No users";
 }

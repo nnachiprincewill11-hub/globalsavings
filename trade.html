@@ -1,88 +1,75 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Trade - Global Savings</title>
-<link rel="stylesheet" href="trade.css">
-</head><body>
-<!-- TOP - TRADE UP + OLD COINS + ACTIVE -->
-<div class="topNav">
-  <div class="leftTop"><b onclick="location.href='dashboard.html'">‹</b><span class="logo">Global Savings</span></div>
-  <div class="rightTop"><span id="balanceTop">Loading...</span><button class="tradeUpBtn" onclick="document.getElementById('liveDrawer').classList.toggle('open')">TRADE ↑</button></div>
-</div>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Trade - Global Savings</title><link rel="stylesheet" href="trade.css"></head><body>
 
-<div class="assetBar">
-  <select id="coinSel" onchange="changeCoin()">
-    <option value="GOLD">GOLD</option><option value="BTCUSDT">BTC ₿</option><option value="ETHUSDT">ETH Ξ</option>
-    <option value="SOLUSDT">SOL S</option><option value="EURUSD">EUR/USD €</option><option value="GBPUSD">GBP/USD £</option>
-    <option value="USOIL">USOIL 🛢</option><option value="SILVER">SILVER</option><option value="XAUUSD">XAU/USD</option>
-  </select>
-  <div class="activeInfo"><span>👥 Active: <b id="activeUsers">1,284</b></span><span>📈 Trades: <b id="activeTradesCount">342</b></span></div>
-  <button id="checkLiveBtn" class="checkLiveBtn" onclick="toggleLive()">Check Live Trade</button>
-</div>
+<div class="topBlue">
+  <!-- WHITE MARK - OLD COINS WITH PRICE INCREASE/REDUCE -->
+  <div class="coinsTicker" id="coinsTicker">
+    <span class="coinT"><b>BTC</b> $68,421 <small class="up">+1.2%</small></span>
+    <span class="coinT"><b>ETH</b> $3,842 <small class="down">-0.8%</small></span>
+    <span class="coinT"><b>SOL</b> $142 <small class="up">+2.1%</small></span>
+    <span class="coinT"><b>GOLD</b> $4,021 <small class="down">-1.12%</small></span>
+    <span class="coinT"><b>EUR/USD</b> 1.084 <small class="up">+0.12%</small></span>
+    <span class="coinT"><b>USOIL</b> $78.2 <small class="down">-0.5%</small></span>
+  </div>
 
-<div class="priceHead">
-  <span id="coinPrice" class="priceRed">4,020.190 -46.890 (-1.15%)</span>
-  <span id="priceList">4,032.500<br>4,030.000<br>4,027.500<br>4,025.000<br><b style="background:#ef4444;padding:2px 6px;border-radius:4px">3.06 K</b></span>
-</div>
-
-<div id="chartWrap">
-  <div id="tvChart"></div>
-  <div id="yellowLine" class="yellowLine">4,020.190 00:41</div>
-  <div class="volText">Vol <span id="volNum">855</span></div>
-</div>
-
-<!-- MOBILE SIDE = SECOND IMAGE - SELL BUY DOWN -->
-<div class="tradeBottom mobileOnly">
-  <button class="sellBtn" onclick="openTradeForm('sell')">Sell</button>
-  <span class="qty">1</span>
-  <button class="buyBtn" onclick="openTradeForm('buy')">Buy</button>
-  <button class="flatBtn">Flatten</button>
-</div>
-
-<!-- ROTATED = FIRST IMAGE YOU JUST SENT -->
-<div class="tradeBottom desktopOnly">
-  <button class="sellBtn" onclick="openTradeForm('sell')">Sell</button>
-  <span class="qty">1</span>
-  <button class="buyBtn" onclick="openTradeForm('buy')">Buy</button>
-  <button class="flatBtn">Flatten</button>
-  <span class="kBadge">3.06 K</span>
-</div>
-
-<!-- CONTROLS - BELOW IMAGE LET IT BE IN MOBILE SIDE DOWN -->
-<div class="controlsRow mobileOnly">
-  <div class="cLeft"><button>|◀</button><button>▷</button><button>◁|</button><button class="on">3x</button><button class="on">1m</button><button>|▷</button></div>
-  <div class="cRight"><button>⚙</button><button>✕</button></div>
-</div>
-
-<div class="controlsRow desktopOnly">
-  <div class="cLeft"><button>|◀</button><button>▷</button><button>◁|</button><button class="on">3x</button><button class="on">1m</button><button>|▷</button></div>
-  <div class="cRight"><button>⚙</button><button>✕</button></div>
-</div>
-
-<div class="footerBar">
-  <span id="footerCoin">GOLD &nbsp; 1m</span>
-  <div class="footerIcons">
-    <button>✎</button><button>📊</button><button>⊞</button><button>〰</button><button>⊕</button><button>🕒</button><button>◧</button>
-    <button>◀◀</button><button>⬙</button><button>⋯</button><button>↩</button><button>⛶</button>
+  <!-- BLUE MARK - WIDER - MILLIONS + BALANCE BOLDER -->
+  <div class="blueStats">
+    <div><small>Online Users</small><b>2.4M+</b></div>
+    <div><small>Total Traded</small><b>$184M</b></div>
+    <div><small>Live Traders</small><b>14,892</b></div>
+    <div class="balBig"><small>Your Balance</small><b id="userBal">$0.00</b></div>
   </div>
 </div>
 
-<!-- LIVE TRADE DRAWER - OLD PATTERN BUT NEW INTERFACE + INCREASE ANIMATION -->
-<div id="liveDrawer" class="liveDrawer">
-  <div class="liveHead"><b>Live Trades</b><span id="liveCount">0 Active</span><button onclick="toggleLive()">✕</button></div>
-  <div id="liveList"></div>
+<div class="chartArea">
+  <!-- PINK MARK - RED GLOWING LIVE TRADE BUTTON -->
+  <button id="liveBtn" class="liveGlow" onclick="toggleLive()">LIVE TRADE 🍅</button>
+  
+  <div id="tvChart"></div>
+  <div id="yellowTag" class="yellowTag">4,021.610 00:41</div>
+  <div id="priceScale" class="priceScale">
+    <div>4,028.000</div><div>4,027.000</div><div>4,026.000</div><div>4,025.000</div>
+    <div>4,024.000</div><div>4,023.000</div><div>4,022.000</div>
+    <div class="activePrice">4,021.610 00:41</div>
+    <div>4,020.000</div><div>4,019.000</div><div class="volBadge">855</div>
+  </div>
 </div>
 
-<!-- OLD TRADE FORM WHEN TAP BUY/SELL -->
-<div id="formModal" class="formModal"><div class="formBox">
-  <h3 id="formTitle">Open BUY</h3>
-  <label>Amount (USD)</label><input id="fAmount" type="number" placeholder="100">
-  <div class="two"><div><label>Stop Loss</label><input id="fSL" type="number" placeholder="200"></div><div><label>Take Profit</label><input id="fTP" type="number" placeholder="100"></div></div>
-  <label>Duration</label><select id="fDuration"><option value="60">1 Minute</option><option value="300">5 Minutes</option><option value="900">15 Minutes</option><option value="3600">1 Hour</option></select>
-  <div class="formBtns"><button class="cancel" onclick="closeForm()">Cancel</button><button id="formConfirm" class="confirm" onclick="confirmTrade()">Confirm Trade</button></div>
+<!-- MOBILE BOTTOM = IMAGE - SELL BUY -->
+<div class="mobileTrade">
+  <button class="sBtn" onclick="openTrade('sell')">Sell</button>
+  <span class="q">1</span>
+  <button class="bBtn" onclick="openTrade('buy')">Buy</button>
+  <button class="fBtn">Flatten</button>
+  <span class="timeLbl">15:30 &nbsp; 15:45 &nbsp; 16:00</span>
+</div>
+
+<div class="ctrls">
+  <div><button>|◀</button><button>▷</button><button>◁|</button><button class="on">3x</button><button class="on">1m</button></div>
+  <div><button>⚙</button><button>✕</button></div>
+</div>
+
+<div class="foot"><span>GOLD 1m</span><span>USOIL / SILVER</span></div>
+
+<!-- OLD LIVE TRADE FORMAT - WEBSITE COLOR -->
+<div id="liveDrawer" class="liveDrawer">
+  <div class="liveHeader"><h3>Live Trades</h3><button onclick="toggleLive()">✕</button></div>
+  <div class="liveOldInfo">
+    <div><small>Active Users</small><b>2,412,890</b></div>
+    <div><small>24h Volume</small><b>$184,291,203</b></div>
+  </div>
+  <div id="liveListOld"></div>
+</div>
+
+<div id="tradeForm" class="modal"><div class="box">
+  <h3 id="tTitle">BUY Trade</h3>
+  <label>Amount</label><input id="tAmount" type="number" placeholder="100">
+  <div class="row2"><div><label>Stop Loss</label><input id="tSL" type="number" placeholder="200"></div><div><label>Take Profit</label><input id="tTP" type="number" placeholder="100"></div></div>
+  <label>Duration</label><select id="tDur"><option value="60">1 Min</option><option value="300">5 Min</option><option value="900">15 Min</option></select>
+  <div class="btns"><button onclick="closeTrade()">Cancel</button><button class="go" onclick="confirmTrade()">Confirm</button></div>
 </div></div>
 
-<!-- POPUP MESSAGE - KEEP OLD -->
-<div id="popup"><div class="popBox"><div id="popTick" class="tick">✓</div><h3 id="popT">Success</h3><p id="popD">Trade opened</p><h2 id="popA">$0</h2><button onclick="closePop()">OK</button></div></div>
+<div id="popup" class="popup"><div class="pBox"><div id="pTick" class="tick">✓</div><h3 id="pT">Success</h3><p id="pD">Trade</p><h2 id="pA">$0</h2><button onclick="closePop()">OK</button></div></div>
 
 <script src="https://unpkg.com/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js"></script>
 <script type="module" src="trade.js"></script>

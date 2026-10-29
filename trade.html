@@ -1,75 +1,82 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>Trade - Global Savings</title><link rel="stylesheet" href="trade.css"></head><body>
 
-<div class="topBlue">
-  <!-- WHITE MARK - OLD COINS WITH PRICE INCREASE/REDUCE -->
-  <div class="coinsTicker" id="coinsTicker">
-    <span class="coinT"><b>BTC</b> $68,421 <small class="up">+1.2%</small></span>
-    <span class="coinT"><b>ETH</b> $3,842 <small class="down">-0.8%</small></span>
-    <span class="coinT"><b>SOL</b> $142 <small class="up">+2.1%</small></span>
-    <span class="coinT"><b>GOLD</b> $4,021 <small class="down">-1.12%</small></span>
-    <span class="coinT"><b>EUR/USD</b> 1.084 <small class="up">+0.12%</small></span>
-    <span class="coinT"><b>USOIL</b> $78.2 <small class="down">-0.5%</small></span>
+<!-- TOP - SINGLE BAR - BTC AND OTHER COINS DROP DOWN WITH LOGOS -->
+<div class="topBarWhite">
+  <div class="coinDrop" onclick="toggleCoinDrop()">
+    <span id="curCoinLogo">₿</span><span id="curCoinName">BTC</span><span id="curCoinPrice">$68,509</span><small id="curCoinPct" class="up">+0.5%</small> <span>▼</span>
   </div>
-
-  <!-- BLUE MARK - WIDER - MILLIONS + BALANCE BOLDER -->
-  <div class="blueStats">
-    <div><small>Online Users</small><b>2.4M+</b></div>
-    <div><small>Total Traded</small><b>$184M</b></div>
-    <div><small>Live Traders</small><b>14,892</b></div>
-    <div class="balBig"><small>Your Balance</small><b id="userBal">$0.00</b></div>
-  </div>
+  <div class="topRight"><b id="userBalTop">$4.69</b><button class="settingsBtn" onclick="toggleSettings()">⚙ Settings</button></div>
 </div>
 
-<div class="chartArea">
-  <!-- PINK MARK - RED GLOWING LIVE TRADE BUTTON -->
-  <button id="liveBtn" class="liveGlow" onclick="toggleLive()">LIVE TRADE 🍅</button>
-  
+<div id="coinList" class="coinList">
+  <div onclick="selectCoin('BTC','₿',68509)"><span>₿</span> BTC - $68,509 <small class="up">+0.5%</small></div>
+  <div onclick="selectCoin('ETH','Ξ',3849)"><span>Ξ</span> ETH - $3,849 <small class="up">+1.9%</small></div>
+  <div onclick="selectCoin('SOL','S',147)"><span>S</span> SOL - $147.0 <small class="up">+0.1%</small></div>
+  <div onclick="selectCoin('GOLD','G',4021)"><span>●</span> GOLD - $4,021 <small class="down">-1.12%</small></div>
+  <div onclick="selectCoin('EUR/USD','€',1.084)"><span>€</span> EUR/USD <small class="up">+0.12%</small></div>
+  <div onclick="selectCoin('USOIL','🛢',78.2)"><span>🛢</span> USOIL <small class="down">-0.5%</small></div>
+</div>
+
+<!-- CHART - WIDER - NO RED SIDE - NO GREEN SHADOWS -->
+<div id="chartWrap">
   <div id="tvChart"></div>
-  <div id="yellowTag" class="yellowTag">4,021.610 00:41</div>
-  <div id="priceScale" class="priceScale">
-    <div>4,028.000</div><div>4,027.000</div><div>4,026.000</div><div>4,025.000</div>
-    <div>4,024.000</div><div>4,023.000</div><div>4,022.000</div>
-    <div class="activePrice">4,021.610 00:41</div>
-    <div>4,020.000</div><div>4,019.000</div><div class="volBadge">855</div>
+  <!-- DRAWING LAYER FOR YOUR TOOLS -->
+  <div id="drawLayer"></div>
+  <div id="pinkDots"></div>
+</div>
+
+<!-- BOTTOM SELL BUY -->
+<div class="tradeBar">
+  <button class="sell" onclick="openTrade('sell')">Sell</button>
+  <span class="qty">1</span>
+  <button class="buy" onclick="openTrade('buy')">Buy</button>
+  <button class="flat">Flatten</button>
+  <span class="time">15:30 15:45 16:00</span>
+</div>
+
+<!-- SETTINGS PANEL - TRADE LINE / PREDICTION STICK / POINTER -->
+<div id="settingsPanel" class="settingsPanel">
+  <h3>Trading Tools</h3>
+  <button onclick="activateTool('trend')">📈 Trend Line - Blue line like yellow line - Move + Make longer to mark movement</button>
+  <button onclick="activateTool('predict')">📍 Prediction Stick - White stick - Keep first & last place + popup amount</button>
+  <button onclick="activateTool('pointer')">🩷 Pointer - Pink dot anywhere</button>
+  <button onclick="closeSettings()" class="closeS">Close</button>
+</div>
+
+<!-- TRADE FORM - AMOUNT SL TP % AUTOMATIC -->
+<div id="tradeForm" class="modal"><div class="boxWhite">
+  <h3 id="formTitle">Trade</h3>
+  <label>Amount (USD)</label><input id="fAmount" type="number" placeholder="100">
+  <div class="row2"><div><label>Stop Loss (auto %)</label><input id="fSL" type="number"></div><div><label>Take Profit (auto %)</label><input id="fTP" type="number"></div></div>
+  <div id="predictBox" class="predictBox" style="display:none">
+    <label>Prediction Stick</label><p>First: <span id="predFirst">-</span> Last: <span id="predLast">-</span></p>
   </div>
-</div>
-
-<!-- MOBILE BOTTOM = IMAGE - SELL BUY -->
-<div class="mobileTrade">
-  <button class="sBtn" onclick="openTrade('sell')">Sell</button>
-  <span class="q">1</span>
-  <button class="bBtn" onclick="openTrade('buy')">Buy</button>
-  <button class="fBtn">Flatten</button>
-  <span class="timeLbl">15:30 &nbsp; 15:45 &nbsp; 16:00</span>
-</div>
-
-<div class="ctrls">
-  <div><button>|◀</button><button>▷</button><button>◁|</button><button class="on">3x</button><button class="on">1m</button></div>
-  <div><button>⚙</button><button>✕</button></div>
-</div>
-
-<div class="foot"><span>GOLD 1m</span><span>USOIL / SILVER</span></div>
-
-<!-- OLD LIVE TRADE FORMAT - WEBSITE COLOR -->
-<div id="liveDrawer" class="liveDrawer">
-  <div class="liveHeader"><h3>Live Trades</h3><button onclick="toggleLive()">✕</button></div>
-  <div class="liveOldInfo">
-    <div><small>Active Users</small><b>2,412,890</b></div>
-    <div><small>24h Volume</small><b>$184,291,203</b></div>
-  </div>
-  <div id="liveListOld"></div>
-</div>
-
-<div id="tradeForm" class="modal"><div class="box">
-  <h3 id="tTitle">BUY Trade</h3>
-  <label>Amount</label><input id="tAmount" type="number" placeholder="100">
-  <div class="row2"><div><label>Stop Loss</label><input id="tSL" type="number" placeholder="200"></div><div><label>Take Profit</label><input id="tTP" type="number" placeholder="100"></div></div>
-  <label>Duration</label><select id="tDur"><option value="60">1 Min</option><option value="300">5 Min</option><option value="900">15 Min</option></select>
-  <div class="btns"><button onclick="closeTrade()">Cancel</button><button class="go" onclick="confirmTrade()">Confirm</button></div>
+  <div class="btns"><button onclick="closeTrade()">Cancel</button><button class="go" onclick="activateTrade()">Activate Trade → Live</button></div>
 </div></div>
 
-<div id="popup" class="popup"><div class="pBox"><div id="pTick" class="tick">✓</div><h3 id="pT">Success</h3><p id="pD">Trade</p><h2 id="pA">$0</h2><button onclick="closePop()">OK</button></div></div>
+<!-- LIVE TRADES LIST -->
+<div id="liveBtnBar"><button class="liveListBtn" onclick="openLiveList()">Check Live Trades (<span id="liveCount">0</span>)</button></div>
+
+<div id="liveListModal" class="modal"><div class="boxWhite large">
+  <div class="head"><h3>Live Trades</h3><button onclick="closeLiveList()">✕</button></div>
+  <div id="liveListContainer"></div>
+</div></div>
+
+<!-- SINGLE LIVE TRADE DETAIL PAGE - LIKE YOUR HIGHLIGHTED IMAGE - REMOVED GREEN SIDES -->
+<div id="liveDetail" class="liveDetail">
+  <div class="detailTop"><button onclick="closeDetail()">‹ Back</button><span id="detailCoin">BTC - $68,509</span></div>
+  <div class="detailChart"><div id="detailChart"></div><div id="detailPink"></div></div>
+  <div class="detailInfoWhite">
+    <div><small>1. Amount Used</small><b id="dAmount">$100</b></div>
+    <div><small>2. Day Placed</small><b id="dDay">29 Oct '26</b></div>
+    <div><small>3. Time Ends</small><b id="dEnd">16:00</b></div>
+    <div><small>4. Profit (live)</small><b id="dProfit" class="profitLive">+$0.00</b></div>
+  </div>
+  <p style="font-size:11px;color:#64748b;padding:10px">Pink dot shows where you traded on candle. Profit adds/reduces based on Sell/Buy.</p>
+</div>
+
+<div id="popup" class="popup"><div class="pBoxWhite"><div id="pTick" class="tick">✓</div><h3 id="pT">Success</h3><p id="pD">Trade</p><h2 id="pA">$0</h2><button onclick="closePop()">OK</button></div></div>
 
 <script src="https://unpkg.com/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js"></script>
 <script type="module" src="trade.js"></script>

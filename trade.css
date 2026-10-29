@@ -1,42 +1,31 @@
-*{box-sizing:border-box}body{margin:0;background:#08111f;color:white;font-family:Arial;height:100vh;display:flex;flex-direction:column;overflow:hidden}
-.topBlue{background:linear-gradient(180deg,#11264a,#08111f);border-bottom:2px solid #155eef;padding:8px 10px}
-.coinsTicker{display:flex;gap:12px;overflow-x:auto;white-space:nowrap;padding-bottom:6px;font-size:12px}
-.coinT{background:#0d1d38;border:1px solid #1e3a5f;padding:5px 10px;border-radius:20px}
-.coinT b{color:white}.up{color:#22c55e}.down{color:#ef4444}
-.blueStats{display:flex;justify-content:space-between;background:#0d1d38;border:1px solid #28456e;border-radius:12px;padding:8px 10px;margin-top:6px}
-.blueStats div{display:flex;flex-direction:column;font-size:11px;color:#8aa0c2;text-align:center}
-.blueStats b{font-size:13px;color:white;margin-top:2px}.balBig b{font-size:16px;color:#facc15;font-weight:900}
-.chartArea{flex:1;position:relative;background:#08111f;display:flex}
-#tvChart{flex:1}
-.priceScale{width:95px;background:#11264a;border-left:2px solid #1e3a5f;display:flex;flex-direction:column;justify-content:space-between;padding:6px 6px;font-size:11px;color:#8aa0c2;text-align:right}
-.activePrice{background:#facc15;color:#000;padding:3px 6px;border-radius:6px;font-weight:bold;font-size:10px}
-.volBadge{background:#ef4444;color:white;padding:3px 6px;border-radius:4px;margin-left:auto;width:fit-content;font-size:11px}
-/* PINK - RED GLOWING LIVE TRADE BUTTON */
-.liveGlow{position:absolute;top:8px;left:10px;z-index:10;background:#ef4444;color:white;border:0;padding:8px 16px;border-radius:20px;font-weight:900;font-size:12px;cursor:pointer;box-shadow:0 0 15px #ef4444,0 0 30px #ef4444a0;animation:glow 1.5s infinite}
-@keyframes glow{0%,100%{box-shadow:0 0 10px #ef4444}50%{box-shadow:0 0 25px #ef4444,0 0 45px #ef4444a0}}
-.yellowTag{position:absolute;right:95px;top:60%;background:#facc15;color:#000;font-size:10px;padding:3px 8px;border-radius:10px 0 0 10px;transform:translateY(-50%);font-weight:bold;z-index:5}
-.yellowTag::before{content:'';position:absolute;left:-60vw;right:100%;top:50%;height:1px;background:repeating-linear-gradient(90deg,#facc15 0 4px,transparent 4px 8px)}
-.mobileTrade{background:#0d1d38;border-top:2px solid #155eef;padding:8px 10px;display:flex;align-items:center;gap:10px}
-.sBtn{background:#ef4444;border:0;color:white;padding:8px 16px;border-radius:20px;font-weight:bold}.bBtn{background:#155eef;border:0;color:white;padding:8px 16px;border-radius:20px;font-weight:bold}.fBtn{background:#1f2a44;border:0;color:#8aa0c2;padding:8px 12px;border-radius:20px}.q{color:#8aa0c2}.timeLbl{margin-left:auto;font-size:11px;color:#8aa0c2}
-.ctrls{background:#11264a;display:flex;justify-content:space-between;padding:8px 10px;border-top:1px solid #1e3a5f}.ctrls button{background:transparent;border:0;color:#8aa0c2;font-size:14px}.ctrls .on{background:#155eef;color:white;padding:4px 8px;border-radius:6px}
-.foot{background:#08111f;display:flex;justify-content:space-between;padding:6px 12px;font-size:11px;color:#8aa0c2;border-top:1px solid #11264a}
-/* OLD LIVE FORMAT */
-.liveDrawer{position:fixed;right:-100%;top:0;bottom:0;width:100%;max-width:420px;background:#08111f;border-left:3px solid #155eef;z-index:90;transition:0.35s;display:flex;flex-direction:column}
-.liveDrawer.open{right:0}.liveHeader{display:flex;justify-content:space-between;padding:14px;background:#11264a;border-bottom:2px solid #155eef}
-.liveOldInfo{display:flex;justify-content:space-around;padding:10px;background:#0d1d38;border-bottom:1px solid #1e3a5f;font-size:11px}
-.liveOldInfo b{display:block;color:#facc15;margin-top:2px}
-#liveListOld{flex:1;overflow-y:auto;padding:10px}
-.oldCard{background:white;color:#08111f;border-radius:12px;padding:12px;margin-bottom:10px;border-left:4px solid #155eef;position:relative;overflow:hidden}
-.oldCard .bigLine{position:absolute;left:0;right:0;top:50%;height:2px;background:repeating-linear-gradient(90deg,#facc15 0 6px,transparent 6px 12px)}
-.oldTop{display:flex;justify-content:space-between;position:relative;z-index:2;font-size:13px;font-weight:bold}
-.oldBottom{display:flex;justify-content:space-between;font-size:11px;color:#64748b;margin-top:6px;position:relative;z-index:2}
-.profitUp{color:#16a34a}.profitDown{color:#ef4444}
-.modal{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:95;padding:20px}
-.modal.show{display:flex}.box{background:#11264a;border:2px solid #155eef;border-radius:16px;padding:18px;width:100%;max-width:360px}
-.box input,.box select{width:100%;padding:11px;border-radius:8px;border:1px solid #28456e;background:#08111f;color:white;margin-top:4px}
-.box label{font-size:11px;color:#8aa0c2;margin-top:8px;display:block}.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+*{box-sizing:border-box}body{margin:0;background:white;color:#08111f;font-family:Arial;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.topBarWhite{background:white;border-bottom:2px solid #155eef;display:flex;justify-content:space-between;padding:10px 12px;align-items:center}
+.coinDrop{background:#f1f5f9;border:1px solid #155eef;padding:7px 12px;border-radius:20px;font-weight:bold;cursor:pointer;display:flex;gap:6px;align-items:center}
+.coinList{position:absolute;top:50px;left:10px;right:10px;background:white;border:2px solid #155eef;border-radius:12px;z-index:20;display:none;max-height:300px;overflow-y:auto}
+.coinList.show{display:block}.coinList div{padding:12px;border-bottom:1px solid #e2e8f0;cursor:pointer;display:flex;gap:8px}
+.up{color:#16a34a}.down{color:#ef4444}
+.topRight{display:flex;gap:10px;align-items:center}#userBalTop{color:#08111f;font-weight:900;font-size:16px}
+.settingsBtn{background:#155eef;color:white;border:0;padding:7px 12px;border-radius:20px;font-weight:bold}
+#chartWrap{flex:1;position:relative;background:white}
+#tvChart{width:100%;height:100%}
+#drawLayer{position:absolute;inset:0;pointer-events:none;z-index:5}
+.tradeLine{position:absolute;left:0;right:0;height:2px;background:#155eef;cursor:move;pointer-events:auto}
+.tradeLine::after{content:'';position:absolute;right:0;top:-6px;width:12px;height:12px;background:#155eef;border-radius:50%;cursor:ew-resize}
+.predLine{position:absolute;left:10%;right:10%;height:2px;background:white;border:2px dashed #08111f;cursor:move;pointer-events:auto;box-shadow:0 0 0 2px white}
+.pinkDot{position:absolute;width:14px;height:14px;background:#ec4899;border-radius:50%;transform:translate(-50%,-50%);pointer-events:auto;box-shadow:0 0 10px #ec4899;z-index:6}
+.tradeBar{background:#f8fafc;border-top:2px solid #155eef;padding:8px 10px;display:flex;gap:10px;align-items:center}
+.sell{background:#ef4444;border:0;color:white;padding:8px 16px;border-radius:20px;font-weight:bold}.buy{background:#155eef;border:0;color:white;padding:8px 16px;border-radius:20px;font-weight:bold}.flat{background:#e2e8f0;border:0;padding:8px 12px;border-radius:20px}.time{margin-left:auto;font-size:11px;color:#64748b}
+.settingsPanel{position:fixed;inset:0;background:white;z-index:30;padding:20px;display:none;flex-direction:column;gap:12px}
+.settingsPanel.show{display:flex}.settingsPanel button{padding:14px;border:1px solid #155eef;border-radius:12px;background:#f1f5f9;text-align:left;font-size:14px}.closeS{background:#08111f!important;color:white!important;text-align:center!important}
+.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:40;padding:20px}.modal.show{display:flex}
+.boxWhite{background:white;border:2px solid #155eef;border-radius:16px;padding:18px;width:100%;max-width:380px}.boxWhite.large{max-width:420px;max-height:90vh;overflow-y:auto}
+.boxWhite input,.boxWhite select{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;background:#f8fafc;margin-top:4px}.boxWhite label{font-size:11px;color:#64748b;margin-top:8px;display:block}.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .btns{display:flex;gap:8px;margin-top:14px}.btns button{flex:1;padding:12px;border-radius:10px;border:0}.go{background:#155eef;color:white;font-weight:bold}
-.popup{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:99;padding:20px}.popup.show{display:flex}
-.pBox{background:white;color:#08111f;border-radius:16px;padding:22px;text-align:center;max-width:320px;width:100%;border:2px solid #155eef}
-.tick{width:60px;height:60px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:28px;color:white;background:#22c55e}
-.pBox button{width:100%;padding:12px;background:#155eef;border:0;border-radius:10px;color:white;font-weight:bold;margin-top:10px}
+.predictBox{background:#f1f5f9;border:1px dashed #155eef;padding:10px;border-radius:8px;margin-top:10px;font-size:12px}
+#liveBtnBar{padding:8px;background:white;border-top:1px solid #e2e8f0}.liveListBtn{width:100%;padding:12px;background:#facc15;border:0;border-radius:10px;font-weight:bold;color:#000}
+.liveDetail{position:fixed;inset:0;background:white;z-index:50;display:none;flex-direction:column}.liveDetail.show{display:flex}
+.detailTop{display:flex;justify-content:space-between;padding:12px;background:#f1f5f9;border-bottom:2px solid #155eef;font-weight:bold}
+.detailChart{flex:1;position:relative;background:white}.detailInfoWhite{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px;background:#f8fafc;border-top:2px solid #155eef}
+.detailInfoWhite div{background:white;border:1px solid #e2e8f0;border-radius:10px;padding:10px}.detailInfoWhite small{display:block;color:#64748b;font-size:10px}.detailInfoWhite b{color:#08111f}.profitLive{color:#16a34a;font-size:18px;animation:pulse 1s infinite}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+.head{display:flex;justify-content:space-between;align-items:center}.popup{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:99;padding:20px}.popup.show{display:flex}.pBoxWhite{background:white;border:2px solid #155eef;border-radius:16px;padding:22px;text-align:center;max-width:320px;width:100%}.tick{width:60px;height:60px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;color:white;background:#22c55e;font-size:28px}.pBoxWhite button{width:100%;padding:12px;background:#155eef;border:0;border-radius:10px;color:white;font-weight:bold;margin-top:10px}

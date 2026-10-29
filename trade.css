@@ -1,38 +1,46 @@
-*{box-sizing:border-box}body{margin:0;background:#08111f;color:white;font-family:Arial;overflow:hidden;height:100vh;display:flex;flex-direction:column}
-.topBar{background:#000;display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid #1a3357}
-.topLeft{display:flex;align-items:center;gap:8px}
-.goldIcon{width:22px;height:22px;background:#f59e0b;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:#000;font-weight:bold}
-.priceDown{color:#ef4444;font-size:13px}.priceRight{font-size:11px;text-align:right;color:#8aa0c2;line-height:1.2}
-.volRow{padding:2px 12px;font-size:11px;color:#8aa0c2;background:#000;display:flex;align-items:center;gap:8px}
-.volBtn{border:1px solid #334155;padding:2px 8px;border-radius:6px;background:#0f1e38;color:#8aa0c2}
+*{box-sizing:border-box}body{margin:0;background:#08111f;color:white;font-family:Arial;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.topNav{background:#08111f;display:flex;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #132a48;align-items:center}
+.logo{color:#facc15;font-weight:bold;margin-left:8px}.tradeUpBtn{background:#155eef;border:0;color:white;padding:6px 12px;border-radius:20px;font-weight:bold}
+.assetBar{background:#000;display:flex;align-items:center;gap:8px;padding:8px 10px;flex-wrap:wrap;border-bottom:1px solid #111}
+#coinSel{background:#11264a;border:1px solid #28456e;color:white;border-radius:8px;padding:6px 10px;font-size:13px}
+.activeInfo{display:flex;gap:10px;font-size:11px;color:#8aa0c2}.activeInfo b{color:#facc15}
+.checkLiveBtn{margin-left:auto;background:#facc15;color:#000;border:0;padding:7px 14px;border-radius:20px;font-weight:bold;cursor:pointer;box-shadow:0 4px 12px #facc1533}
+.priceHead{background:#000;display:flex;justify-content:space-between;padding:4px 12px;font-size:12px;border-bottom:1px solid #111}
+.priceRed{color:#ef4444}.volText{position:absolute;top:6px;left:10px;font-size:11px;color:#8aa0c2;z-index:3}
 #chartWrap{flex:1;position:relative;background:#000}
 #tvChart{width:100%;height:100%}
-.priceLine{position:absolute;right:0;top:48%;background:#facc15;color:#000;font-size:11px;padding:2px 6px;border-radius:4px 0 0 4px;z-index:5;font-weight:bold}
-.timeAxis{position:absolute;bottom:50px;left:0;right:0;display:flex;justify-content:space-around;font-size:11px;color:#8aa0c2;pointer-events:none}
-.bottomTrade{background:#0d1d38;border-top:1px solid #1a3357;padding:8px 10px;display:flex;align-items:center;gap:8px}
-.btnSell{background:#ef4444;color:white;border:0;padding:8px 18px;border-radius:20px;font-weight:bold;cursor:pointer;font-size:13px}
-.btnBuy{background:#155eef;color:white;border:0;padding:8px 18px;border-radius:20px;font-weight:bold;cursor:pointer;font-size:13px}
-.btnFlat{background:#1f2a44;color:#8aa0c2;border:0;padding:8px 14px;border-radius:20px;font-size:12px}
-.qty{color:#8aa0c2;font-size:13px;padding:0 6px}
-.volBadge{margin-left:auto;font-size:11px;background:#ef4444;padding:2px 6px;border-radius:4px}
-.controlsBar{background:#0a0a0a;display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-top:1px solid #1a3357}
-.controlsLeft{display:flex;gap:14px;align-items:center}
-.ctrlBtn{background:transparent;border:0;color:#8aa0c2;font-size:18px;cursor:pointer}
-.activeCtrl{background:#2a2a2a;color:white;padding:4px 8px;border-radius:6px;font-size:12px}
-.footerSym{background:#000;padding:6px 12px;display:flex;justify-content:space-between;align-items:center;font-size:12px;border-top:1px solid #111;color:#8aa0c2}
-#liveBox{position:absolute;top:10px;left:10px;right:10px;z-index:20;pointer-events:none}
-.liveItem{background:#132a48e6;border:1px solid #155eef;border-radius:10px;padding:8px 10px;margin-bottom:6px;pointer-events:auto;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(6px)}
-.liveItem b{font-size:12px}.livePnL{font-size:12px;font-weight:bold}.pnlUp{color:#22c55e}.pnlDown{color:#ef4444}
-#popup{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:99;padding:20px}
-#popup.show{display:flex}.popCard{background:#132a48;border:1px solid #1e3a5f;border-radius:16px;padding:20px;text-align:center;max-width:320px;width:100%}
-.tick{width:60px;height:60px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:30px;color:white}
-#popTitle{margin:6px 0}#popDesc{color:#8aa0c2;font-size:13px}#popAmt{font-size:20px;font-weight:bold;margin:8px 0}
-.btnOk{width:100%;padding:12px;background:#155eef;border:0;border-radius:10px;color:white;font-weight:bold;cursor:pointer}
-.modal{display:none;position:fixed;inset:0;background:#000a;z-index:50;align-items:center;justify-content:center;padding:20px}
-.modal.show{display:flex}.modalBox{background:#132a48;border-radius:14px;padding:16px;width:100%;max-width:360px;border:1px solid #1e3a5f}
-.modalBox input{width:100%;padding:11px;border-radius:8px;border:1px solid #28456e;background:#11264a;color:white;margin:6px 0;font-size:14px}
-.editGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
-.modalBtns{display:flex;gap:8px;margin-top:10px}.btnCancel{flex:1;padding:12px;background:#334155;border:0;border-radius:10px;color:white}.btnConfirm{flex:1;padding:12px;background:#155eef;border:0;border-radius:10px;color:white;font-weight:bold}
-.assetSelect{background:#11264a;border:1px solid #28456e;color:white;border-radius:8px;padding:6px 10px;font-size:12px}
+.yellowLine{position:absolute;right:0;top:62%;background:#facc15;color:#000;font-size:10px;padding:3px 8px;border-radius:10px 0 0 10px;z-index:5;transform:translateY(-50%);font-weight:bold;border:1px dashed #000}
+.yellowLine::before{content:'';position:absolute;left:-100vw;right:100%;top:50%;height:1px;background:repeating-linear-gradient(90deg,#facc15 0 4px,transparent 4px 8px);z-index:-1}
+.tradeBottom{background:#0d1d38;border-top:1px solid #1a3357;padding:8px 12px;display:flex;align-items:center;gap:10px}
+.sellBtn{background:#ef4444;border:0;color:white;padding:8px 18px;border-radius:20px;font-weight:bold;cursor:pointer}
+.buyBtn{background:#155eef;border:0;color:white;padding:8px 18px;border-radius:20px;font-weight:bold;cursor:pointer}
+.flatBtn{background:#1f2a44;border:0;color:#8aa0c2;padding:8px 14px;border-radius:20px}
+.qty{color:#8aa0c2}.kBadge{margin-left:auto;background:#ef4444;padding:4px 8px;border-radius:4px;font-size:12px}
+.controlsRow{background:#0a0a0a;display:flex;justify-content:space-between;padding:8px 10px;border-top:1px solid #1a3357}
+.controlsRow .cLeft,.cRight{display:flex;gap:12px;align-items:center}
+.controlsRow button{background:transparent;border:0;color:#8aa0c2;font-size:14px;cursor:pointer}
+.controlsRow button.on{background:#2a2a2a;color:white;padding:4px 8px;border-radius:6px}
+.footerBar{background:#000;display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-top:1px solid #111;font-size:12px;color:#8aa0c2}
+.footerIcons{display:flex;gap:14px}.footerIcons button{background:transparent;border:0;color:#8aa0c2;font-size:16px}
+.liveDrawer{position:fixed;right:-100%;top:0;bottom:0;width:92%;max-width:380px;background:#08111f;border-left:2px solid #facc15;z-index:60;transition:0.35s;padding:0;display:flex;flex-direction:column}
+.liveDrawer.open{right:0}
+.liveHead{display:flex;justify-content:space-between;align-items:center;padding:14px;background:#11264a;border-bottom:1px solid #1e3a5f}
+.liveHead button{background:#000;border:0;color:white;padding:6px 10px;border-radius:6px}
+#liveList{flex:1;overflow-y:auto;padding:10px}
+.liveCard{background:#132a48;border:1px solid #1e3a5f;border-radius:12px;padding:12px;margin-bottom:10px;position:relative;overflow:hidden}
+.liveCard .bigLine{position:absolute;left:0;right:0;top:50%;height:2px;background:repeating-linear-gradient(90deg,#facc15 0 6px,transparent 6px 12px);opacity:0.8}
+.liveTop{display:flex;justify-content:space-between;font-size:12px;z-index:2;position:relative}
+.profitInc{font-weight:bold;animation:pulse 1s infinite}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+.pnlUp{color:#22c55e}.pnlDown{color:#ef4444}
+.formModal{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:70;padding:20px}
+.formModal.show{display:flex}.formBox{background:#132a48;border:1px solid #28456e;border-radius:16px;padding:18px;width:100%;max-width:360px}
+.formBox label{font-size:11px;color:#8aa0c2;margin-top:8px;display:block}.formBox input,.formBox select{width:100%;padding:11px;border-radius:8px;border:1px solid #28456e;background:#11264a;color:white;margin-top:4px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.formBtns{display:flex;gap:8px;margin-top:14px}.cancel{flex:1;padding:12px;background:#334155;border:0;border-radius:10px;color:white}.confirm{flex:1;padding:12px;background:#facc15;border:0;border-radius:10px;color:#000;font-weight:bold}
+#popup{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:80;padding:20px}
+#popup.show{display:flex}.popBox{background:#132a48;border:1px solid #1e3a5f;border-radius:16px;padding:22px;text-align:center;max-width:320px;width:100%}
+.tick{width:60px;height:60px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:28px;color:white;background:#22c55e}
+.popBox button{width:100%;padding:12px;background:#facc15;border:0;border-radius:10px;color:#000;font-weight:bold;margin-top:10px}
 .mobileOnly{display:flex}.desktopOnly{display:none}
-@media (min-width:768px), (orientation: landscape){.mobileOnly{display:none!important}.desktopOnly{display:flex!important}.bottomTrade{padding:10px 16px}}
+@media (min-width:768px), (orientation: landscape){.mobileOnly{display:none!important}.desktopOnly{display:flex!important}}

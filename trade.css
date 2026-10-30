@@ -1,43 +1,37 @@
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:white;font-family:Arial;height:100vh;display:flex;flex-direction:column;overflow:hidden;color:#08111f}
-.topBar{padding:10px 12px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #155eef;background:white}
-.coinDrop{background:#f1f5f9;border:1px solid #155eef;padding:8px 12px;border-radius:20px;font-weight:bold;cursor:pointer;display:flex;gap:6px;align-items:center}
-.pct{background:#155eef;color:white;padding:2px 8px;border-radius:10px;font-size:11px}
-.coinList{position:absolute;top:50px;left:10px;right:10px;background:white;border:2px solid #155eef;border-radius:12px;z-index:20;display:none;max-height:340px;overflow-y:auto}
-.coinList.show{display:block}.coinList div{padding:12px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;cursor:pointer}
-.stats{display:flex;justify-content:space-between;background:#f1f5f9;border-bottom:2px solid #155eef;padding:8px 10px;font-size:11px;color:#64748b;text-align:center}
-.stats div{display:flex;flex-direction:column}.stats b{color:#08111f;font-size:13px}.yellow{color:#ca8a04!important;font-weight:900!important;font-size:16px!important}
-#chartWrap{flex:1;position:relative;background:white;touch-action:none}
-#mainChart{width:100%;height:100%}
-.liveBtn{position:absolute;top:10px;left:10px;background:#ef4444;color:white;border:0;padding:8px 14px;border-radius:20px;font-weight:900;z-index:10;box-shadow:0 0 15px #ef4444}
-.saveBtn{position:absolute;bottom:10px;right:10px;background:#22c55e;color:white;border:0;padding:8px 14px;border-radius:20px;font-weight:bold;z-index:10}
-/* Tools anchored to time/price */
-.toolLine{position:absolute;transform-origin:left center;z-index:7;pointer-events:auto;touch-action:none}
-.blueTool{height:3px;background:#155eef}
-.whiteTool{height:3px;background:white;border:1.5px dashed #08111f;box-shadow:0 0 0 2px white}
-.handle{position:absolute;width:18px;height:18px;border-radius:50%;border:2px solid white;top:50%;transform:translate(-50%,-50%)}
-.hBlue{background:#155eef;left:0}.hYellow{background:#facc15;right:0}.hGreen{background:#22c55e;right:-30px}
-.pinkDot{position:absolute;width:14px;height:14px;background:#ec4899;border-radius:50%;transform:translate(-50%,-50%);z-index:6;box-shadow:0 0 10px #ec4899;pointer-events:none}
-.tradeBar{background:#f8fafc;border-top:2px solid #155eef;padding:8px 10px;display:flex;gap:10px;align-items:center}
-.sell{background:#ef4444;color:white;border:0;padding:11px 24px;border-radius:20px;font-weight:900;font-size:14px}
-.buy{background:#16a34a;color:white;border:0;padding:11px 24px;border-radius:20px;font-weight:900;font-size:14px}
-.flat{background:#e2e8f0;border:0;padding:8px 12px;border-radius:20px}.qty{font-weight:bold}.clock{margin-left:auto;font-size:11px;color:#64748b}
-.panel{position:fixed;inset:0;background:white;z-index:30;padding:20px;display:none;flex-direction:column;gap:12px}
-.panel.show{display:flex}.panel button{padding:14px;border:1px solid #155eef;border-radius:12px;background:#f1f5f9;text-align:left}
-.green{background:#22c55e!important;color:white!important;font-weight:bold}.redLight{background:#fee2e2!important}.dark{background:#08111f!important;color:white!important;text-align:center!important}
-.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:40;padding:20px}
-.modal.show{display:flex}.box{background:white;border:2px solid #155eef;border-radius:16px;padding:18px;width:100%;max-width:380px}.box.large{max-width:420px;max-height:90vh;overflow-y:auto}
-.box input,.box select{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:8px;margin-top:4px;background:#f8fafc}
-.box label{font-size:11px;color:#64748b;margin-top:8px;display:block}.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.btns{display:flex;gap:8px;margin-top:14px}.btns button{flex:1;padding:12px;border-radius:10px;border:0}.go{background:#155eef;color:white;font-weight:bold}
-.info{background:#f1f5f9;border:1px dashed #155eef;padding:10px;border-radius:8px;margin-top:8px;font-size:12px}
-.head{display:flex;justify-content:space-between;align-items:center}
-.detailPage{position:fixed;inset:0;background:white;z-index:50;display:none;flex-direction:column}.detailPage.show{display:flex}
-.detailTop{display:flex;justify-content:space-between;align-items:center;padding:12px;background:#f1f5f9;border-bottom:2px solid #155eef;font-weight:bold}
-.timer{background:#ef4444;color:white;padding:4px 10px;border-radius:20px;font-size:12px}
-.detailWrap{flex:1;position:relative;background:white}#detailChart{width:100%;height:100%}
-.detailInfo{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px;background:#f8fafc;border-top:2px solid #155eef}
-.detailInfo div{background:white;border:1px solid #e2e8f0;border-radius:10px;padding:10px}.detailInfo small{color:#64748b;font-size:10px;display:block}.greenText{color:#16a34a;font-size:18px}
-.popup{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:99;padding:20px}.popup.show{display:flex}
-.pBox{background:white;border:2px solid #155eef;border-radius:16px;padding:22px;text-align:center;max-width:320px;width:100%}
-.tick{width:60px;height:60px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;color:white;background:#22c55e;font-size:28px}
+*{box-sizing:border-box}body{margin:0;background:#f0f7ff;color:#142b49;font-family:Arial}
+.topBar{background:#fff;border-bottom:3px solid #155eef;padding:10px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:99}
+.assetDrop{flex:1;max-width:400px;margin:0 10px;position:relative}
+.assetBtn{background:#edf4ff;border:2px solid #155eef;padding:12px;border-radius:12px;width:100%;font-weight:900;display:flex;justify-content:space-between;cursor:pointer}
+.assetList{position:absolute;top:48px;left:0;right:0;background:#fff;border:2px solid #155eef;border-radius:14px;max-height:400px;overflow:auto;display:none;z-index:100}
+.assetList.show{display:block}
+.assetItem{padding:11px 12px;border-bottom:1px solid #e2e8f0;cursor:pointer;display:flex;align-items:center;gap:10px}
+.assetItem:hover{background:#edf4ff}
+.logo{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:12px}
+#chart{width:100%;height:320px;background:#fff;border:2px solid #155eef;display:block}
+#liveChart{width:100%;height:300px;background:#fff;border:2px solid #155eef;display:block}
+.stats{display:flex;justify-content:space-around;background:#fff;padding:10px;border-bottom:2px solid #dbeafe;flex-wrap:wrap}
+.stat{font-size:12px;text-align:center}.stat b{display:block;color:#155eef;font-size:13px}
+.tickerWrap{background:#155eef;color:#fff;overflow:hidden;white-space:nowrap;padding:7px 0}
+.ticker{display:inline-block;animation:move 120s linear infinite}
+@keyframes move{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.layout{display:flex;flex-wrap:wrap;max-width:1300px;margin:auto}
+.main{flex:1;min-width:320px;max-width:800px}
+.side{width:350px;background:#fff;border-left:2px solid #dbeafe}
+.card{background:#fff;margin:12px;border-radius:16px;padding:16px;box-shadow:0 4px 20px #00000012;border:1px solid #e2e8f0}
+.label{font-size:11px;color:#155eef;font-weight:900;margin-top:10px;display:block}
+input,select,textarea{width:100%;padding:12px;border:2px solid #cbd5e1;border-radius:10px;background:#f8fbff;color:#142b49;margin:6px 0}
+.btn{flex:1;padding:14px;border-radius:12px;border:0;font-weight:900;color:#fff;cursor:pointer}
+.btnSell{background:#ef4444}.btnBuy{background:#22c55e}
+.btnBlue{width:100%;padding:16px;background:#155eef;color:#fff;border:0;border-radius:12px;font-weight:900;font-size:16px;margin-top:10px;cursor:pointer}
+#resumeBox{background:#fff;padding:10px;border-radius:16px;margin-bottom:12px;border:2px solid #155eef}
+.liveTradeItem{background:#edf4ff;border:2px solid #cbd5e1;border-radius:12px;padding:10px;margin:8px 0;display:flex;justify-content:space-between;align-items:center}
+.liveTradeItem.activeTrade{border-color:#155eef;background:#dbeafe}
+#liveOverlay{position:fixed;inset:0;background:#f0f7ff;z-index:200;display:none;flex-direction:column;overflow:auto}
+#liveOverlay.show{display:flex}
+.popupOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;display:none;align-items:center;justify-content:center;padding:20px}
+.popupOverlay.show{display:flex}
+.popupCard{background:#fff;border-radius:20px;padding:24px;text-align:center;max-width:380px;width:100%;box-shadow:0 20px 60px #00000030;animation:pop 0.3s ease}
+.popupCard.success{border:3px solid #22c55e}
+.popupCard.lost{border:3px solid #ef4444}
+@keyframes pop{0%{transform:scale(0.8);opacity:0}100%{transform:scale(1);opacity:1}}
+@media(max-width:900px){.layout{flex-direction:column}.side{width:100%}#chart{height:260px}}

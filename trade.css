@@ -2,19 +2,17 @@
 .topBarWhite{background:white;border-bottom:2px solid #155eef;display:flex;justify-content:space-between;padding:10px 12px;align-items:center}
 .coinDrop{background:#f1f5f9;border:1px solid #155eef;padding:7px 12px;border-radius:20px;font-weight:bold;cursor:pointer;display:flex;gap:6px;align-items:center}.pct{background:#155eef;color:white;padding:2px 8px;border-radius:10px;font-size:11px}
 .coinList{position:absolute;top:50px;left:10px;right:10px;background:white;border:2px solid #155eef;border-radius:12px;z-index:20;display:none;max-height:320px;overflow-y:auto}.coinList.show{display:block}.coinList div{padding:12px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;cursor:pointer}
-.up{color:#16a34a}.down{color:#ef4444}
-.topRight{display:flex;gap:10px;align-items:center}.settingsBtn{background:#155eef;color:white;border:0;padding:7px 12px;border-radius:20px;font-weight:bold}
-.blueStats{display:flex;justify-content:space-between;background:#f1f5f9;border-bottom:2px solid #155eef;padding:8px 10px;transition:0.3s}.blueStats div{text-align:center;font-size:11px;color:#64748b;display:flex;flex-direction:column}.blueStats b{color:#08111f;font-size:13px}.yellowBold{color:#ca8a04!important;font-size:16px!important;font-weight:900!important}
+.blueStats{display:flex;justify-content:space-between;background:#f1f5f9;border-bottom:2px solid #155eef;padding:8px 10px}.blueStats div{text-align:center;font-size:11px;color:#64748b;display:flex;flex-direction:column}.blueStats b{color:#08111f}.yellowBold{color:#ca8a04!important;font-size:16px!important;font-weight:900!important}
 #chartWrap{flex:1;position:relative;background:white}#tvChart{width:100%;height:100%}#drawSvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:6}
-.liveGlow{position:absolute;top:10px;left:10px;z-index:10;background:#ef4444;color:white;border:0;padding:8px 16px;border-radius:20px;font-weight:900;font-size:12px;box-shadow:0 0 15px #ef4444;animation:glow 1.5s infinite}
-@keyframes glow{0%,100%{box-shadow:0 0 10px #ef4444}50%{box-shadow:0 0 25px #ef4444}}
-.lineWrap{position:absolute;pointer-events:auto;transform-origin:left center;cursor:move;z-index:7;height:4px}
-.trendLine{width:100%;height:3px;background:#155eef}.predLine{width:100%;height:3px;background:white;border:1.5px dashed #08111f;box-shadow:0 0 0 2px white}
-.handle{position:absolute;width:16px;height:16px;background:#08111f;border:2px solid white;border-radius:50%;top:50%;transform:translate(-50%,-50%);cursor:pointer}.handle.rotate{right:-26px;background:#facc15;border-color:#08111f}.handle.len{right:-6px;background:#155eef}
+.liveGlow{position:absolute;top:10px;left:10px;z-index:10;background:#ef4444;color:white;border:0;padding:8px 16px;border-radius:20px;font-weight:900;font-size:12px;box-shadow:0 0 15px #ef4444}
+.lineWrap{position:absolute;pointer-events:auto;z-index:7;transform-origin:left center}
+.trendLine{height:3px;background:#155eef;width:100%}.predLine{height:3px;background:white;border:1.5px dashed #08111f;box-shadow:0 0 0 2px white;width:100%}
+.circle{position:absolute;width:16px;height:16px;border-radius:50%;border:2px solid white;top:50%;transform:translate(-50%,-50%);cursor:pointer}
+.cBlue{background:#155eef;left:0}.cYellow{background:#facc15;right:0}.cGreen{background:#22c55e;right:-28px;top:50%}
 .pinkDot{position:absolute;width:14px;height:14px;background:#ec4899;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 10px #ec4899;z-index:6}
 .saveBtn{position:absolute;bottom:10px;right:10px;z-index:10;background:#22c55e;color:white;border:0;padding:8px 14px;border-radius:20px;font-weight:bold}
 .tradeBar{background:#f8fafc;border-top:2px solid #155eef;padding:8px 10px;display:flex;gap:10px;align-items:center}
-.sell{background:#ef4444;border:0;color:white;padding:10px 22px;border-radius:20px;font-weight:900;font-size:14px}.buy{background:#16a34a;border:0;color:white;padding:10px 22px;border-radius:20px;font-weight:900;font-size:14px}.flat{background:#e2e8f0;border:0;padding:8px 12px;border-radius:20px}.time{margin-left:auto;font-size:11px;color:#64748b}
+.sell{background:#ef4444;border:0;color:white;padding:10px 22px;border-radius:20px;font-weight:900}.buy{background:#16a34a;border:0;color:white;padding:10px 22px;border-radius:20px;font-weight:900}.flat{background:#e2e8f0;border:0;padding:8px 12px;border-radius:20px}.time{margin-left:auto;font-size:11px;color:#64748b}
 .settingsPanel{position:fixed;inset:0;background:white;z-index:30;padding:20px;display:none;flex-direction:column;gap:12px}.settingsPanel.show{display:flex}.settingsPanel button{padding:14px;border:1px solid #155eef;border-radius:12px;background:#f1f5f9;text-align:left}.closeS{background:#08111f!important;color:white!important;text-align:center!important}
 .modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:40;padding:20px}.modal.show{display:flex}
 .boxWhite{background:white;border:2px solid #155eef;border-radius:16px;padding:18px;width:100%;max-width:380px}.boxWhite.large{max-width:420px;max-height:90vh;overflow-y:auto}

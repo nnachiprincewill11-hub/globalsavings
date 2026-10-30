@@ -3,31 +3,29 @@
 
 <div class="topBarWhite">
   <div class="coinDrop" onclick="toggleCoinDrop()">
-    <span id="curCoinLogo">₿</span><span id="curCoinName">BTC</span><span id="curCoinPrice">$68,509</span><small class="up">+0.5%</small> ▼
+    <span id="curCoinLogo">₿</span>
+    <span id="curCoinName">BTC</span>
+    <span id="curCoinPrice">$68,509</span>
+    <span id="curCoinPct" class="pct">92%</span> ▼
   </div>
   <div class="topRight"><b id="userBalTop">$0.00</b><button class="settingsBtn" onclick="toggleSettings()">⚙ Tools</button></div>
 </div>
 
-<div id="coinList" class="coinList">
-  <div onclick="selectCoin('BTC','₿',68509)"><span>₿</span> BTC</div>
-  <div onclick="selectCoin('ETH','Ξ',3849)"><span>Ξ</span> ETH</div>
-  <div onclick="selectCoin('SOL','S',147)"><span>S</span> SOL</div>
-  <div onclick="selectCoin('GOLD','G',4021)"><span>●</span> GOLD</div>
-</div>
+<div id="coinList" class="coinList"></div>
 
-<div class="blueStats">
-  <div><small>Online Users</small><b>2.4M+</b></div>
-  <div><small>Total Traded</small><b>$184M</b></div>
-  <div><small>Live Traders</small><b>14,892</b></div>
+<div class="blueStats" id="blueStats">
+  <div><small>Online Users</small><b id="statUsers">2,412,890</b></div>
+  <div><small>Total Traded</small><b id="statTraded">$184,291,203</b></div>
+  <div><small>Live Traders</small><b id="statLive">14,892</b></div>
   <div><small>Your Balance</small><b id="balBold" class="yellowBold">$0.00</b></div>
 </div>
 
 <div id="chartWrap">
   <div id="tvChart"></div>
   <button id="liveTradeBtn" class="liveGlow" onclick="openLiveList()">LIVE TRADE 🍅</button>
-  <div id="drawLayer"></div>
+  <svg id="drawSvg"></svg>
   <div id="pinkDots"></div>
-  <button id="saveBtn" class="saveBtn" onclick="saveAllDraw()">💾 Save</button>
+  <button id="saveBtn" class="saveBtn" onclick="saveAllDraw()">💾 Save Tools</button>
 </div>
 
 <div class="tradeBar">
@@ -35,41 +33,42 @@
   <span class="qty">1</span>
   <button class="buy" onclick="openTrade('buy')">Buy</button>
   <button class="flat">Flatten</button>
-  <span class="time">15:30 15:45 16:00</span>
+  <span class="time" id="timeBar">15:30 15:45 16:00</span>
 </div>
 
 <div id="settingsPanel" class="settingsPanel">
-  <h3>Trading Tools - Permanent</h3>
-  <button onclick="activateTool('trend')">📈 Trend Line - Blue - Rotate H/V + Drag + Longer</button>
-  <button onclick="activateTool('predict')">📍 Prediction Stick - White - Rotate + Tap for popup</button>
-  <button onclick="activateTool('pointer')">🩷 Pointer - Pink dot stays permanent on candles</button>
-  <button onclick="saveAllDraw()" style="background:#22c55e;color:white;font-weight:bold">💾 SAVE ALL TOOLS PERMANENT</button>
+  <h3>Trading Tools - Follow Candles</h3>
+  <button onclick="activateTool('trend')">📈 Trend Line - Blue - Drag + Rotate + Longer/Shorter - Follows candles</button>
+  <button onclick="activateTool('predict')">📍 Prediction Stick - White - 88%-98% - Rotate + Tap for popup</button>
+  <button onclick="activateTool('pointer')">🩷 Pointer - Pink dot on green/red candle - Permanent</button>
+  <button onclick="saveAllDraw()" style="background:#22c55e;color:white;font-weight:bold">💾 SAVE - Tools follow candles when expand/reduce</button>
   <button onclick="clearAllDraw()" style="background:#fee2e2">🗑 Clear</button>
   <button onclick="closeSettings()" class="closeS">Close</button>
 </div>
 
 <div id="tradeForm" class="modal"><div class="boxWhite">
-  <h3 id="formTitle">Trade</h3>
+  <h3 id="formTitle">Trade BTC - 92% Profit</h3>
   <label>Amount</label><input id="fAmount" type="number" placeholder="100">
-  <div class="row2"><div><label>SL auto %</label><input id="fSL"></div><div><label>TP auto %</label><input id="fTP"></div></div>
-  <div id="countInfo" class="predictBox">Ends in: <b id="countDown">60s</b> - Stays after logout</div>
+  <div class="row2"><div><label>SL auto %</label><input id="fSL"></div><div><label>TP auto % (88-98%)</label><input id="fTP"></div></div>
+  <div class="predictBox">Profit %: <b id="profitPct">92%</b> - If win you get +<span id="profitShow">$92</span></div>
+  <div class="predictBox">Ends in: <b id="countDown">60s</b></div>
   <div class="btns"><button onclick="closeTrade()">Cancel</button><button class="go" onclick="activateTrade()">Activate Trade → Live</button></div>
 </div></div>
 
-<div id="pointerPopup" class="modal"><div class="boxWhite"><h3>Where to keep point?</h3><p>Tap anywhere on green/red candles, pink dot stays permanent even if you expand/reduce screen.</p><div class="btns"><button onclick="closePointerPop()">Cancel</button><button class="go" onclick="enablePointerTap()">Tap Chart Now</button></div></div></div>
+<div id="pointerPopup" class="modal"><div class="boxWhite"><h3>Where to keep point?</h3><p>Tap any green/red candle, pink dot will follow that candle even when you expand/reduce chart.</p><div class="btns"><button onclick="closePointerPop()">Cancel</button><button class="go" onclick="enablePointerTap()">Tap Candle Now</button></div></div></div>
 
-<div id="predictPopup" class="modal"><div class="boxWhite"><h3>Prediction Stick</h3><label>First</label><input id="pFirst"><label>Last</label><input id="pLast"><label>Amount</label><input id="pAmount" type="number"><div class="row2"><div><label>Type</label><select id="pType"><option value="buy">Buy</option><option value="sell">Sell</option></select></div><div><label>Action</label><select id="pAct"><option>Keep</option><option>Remove</option></select></div></div><div class="btns"><button onclick="closePredictPop()">Cancel</button><button class="go" onclick="confirmPredict()">Save & Start</button></div></div></div>
+<div id="predictPopup" class="modal"><div class="boxWhite"><h3>Prediction Stick - <span id="pPct">92%</span></h3><label>First Price</label><input id="pFirst"><label>Last Price</label><input id="pLast"><label>Amount</label><input id="pAmount" type="number"><div class="row2"><div><label>Type</label><select id="pType"><option value="buy">Buy</option><option value="sell">Sell</option></select></div><div><label>Profit</label><input id="pProfit" value="92%" readonly></div></div><div class="btns"><button onclick="closePredictPop()">Cancel</button><button class="go" onclick="confirmPredict()">Save & Start</button></div></div></div>
 
-<div id="liveListModal" class="modal"><div class="boxWhite large"><div class="head"><h3>Live Trades - Moving Candles</h3><button onclick="closeLiveList()">✕</button></div><div id="liveListContainer"></div></div></div>
+<div id="liveListModal" class="modal"><div class="boxWhite large"><div class="head"><h3>Live Trades</h3><button onclick="closeLiveList()">✕</button></div><div id="liveListContainer"></div></div></div>
 
 <div id="liveDetail" class="liveDetail">
-  <div class="detailTop"><button onclick="closeDetail()">‹ Back</button><span id="detailCoin">BTC</span><span id="detailTimer" class="timerRed">60s left</span></div>
-  <div class="detailChart"><div id="detailChart"></div><div id="detailPink"></div></div>
+  <div class="detailTop"><button onclick="closeDetail()">‹ Back</button><span id="detailCoin">BTC - 92%</span><span id="detailTimer" class="timerRed">60s</span></div>
+  <div class="detailChart"><div id="detailChart"></div></div>
   <div class="detailInfoWhite">
-    <div><small>1. Amount Used</small><b id="dAmount">$100</b></div>
-    <div><small>2. Day Placed</small><b id="dDay">-</b></div>
-    <div><small>3. Time Ends</small><b id="dEnd">-</b> <small>Remaining: <b id="dRem">60s</b></small></div>
-    <div><small>4. Profit Live</small><b id="dProfit" class="profitLive">+$0.00</b></div>
+    <div><small>1. Amount</small><b id="dAmount">$100</b></div>
+    <div><small>2. Day</small><b id="dDay">-</b></div>
+    <div><small>3. Ends + Remaining</small><b id="dEnd">-</b> <b id="dRem">60s</b></div>
+    <div><small>4. Profit Live 88-98%</small><b id="dProfit" class="profitLive">+$0</b></div>
   </div>
 </div>
 

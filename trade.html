@@ -1,228 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Trade</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Trade - M IMAGE Final</title>
+<link rel="stylesheet" href="trade.css">
 <script src="https://unpkg.com/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js"></script>
-<style>
-*{box-sizing:border-box}body{margin:0;background:white;font-family:Arial;height:100vh;display:flex;flex-direction:column;overflow:hidden}
-.topBar{padding:10px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #155eef;background:white}
-.coinDrop{background:#f1f5f9;border:1px solid #155eef;padding:8px 12px;border-radius:20px;font-weight:bold;cursor:pointer}
-.pct{background:#155eef;color:white;padding:2px 8px;border-radius:10px;font-size:11px}
-.coinList{position:absolute;top:50px;left:10px;right:10px;background:white;border:2px solid #155eef;border-radius:12px;z-index:20;display:none}
-.coinList.show{display:block}.coinList div{padding:12px;border-bottom:1px solid #eee;cursor:pointer}
-.stats{display:flex;justify-content:space-between;background:#f1f5f9;border-bottom:2px solid #155eef;padding:8px;font-size:11px;color:#64748b;text-align:center}
-.stats b{color:#08111f;display:block;font-size:13px}.yellow{color:#ca8a04!important;font-weight:900;font-size:16px!important}
-#chartWrap{flex:1;position:relative;background:white}
-#tvChart{width:100%;height:100%}
-.liveBtn{position:absolute;top:10px;left:10px;background:#ef4444;color:white;border:0;padding:8px 14px;border-radius:20px;font-weight:900;z-index:10;box-shadow:0 0 15px #ef4444}
-.saveBtn{position:absolute;bottom:10px;right:10px;background:#22c55e;color:white;border:0;padding:8px 14px;border-radius:20px;font-weight:bold;z-index:10}
-.line{position:absolute;height:3px;transform-origin:left center;cursor:move;z-index:6;pointer-events:auto}
-.blueLine{background:#155eef;width:200px}.whiteLine{background:white;border:1.5px dashed #000;width:200px;box-shadow:0 0 0 2px white}
-.c{position:absolute;width:16px;height:16px;border-radius:50%;border:2px solid white;top:50%;transform:translate(-50%,-50%)}
-.cBlue{background:#155eef;left:0}.cYellow{background:#facc15;right:0}.cGreen{background:#22c55e;right:-30px}
-.pink{position:absolute;width:14px;height:14px;background:#ec4899;border-radius:50%;transform:translate(-50%,-50%);z-index:6;box-shadow:0 0 10px #ec4899}
-.bar{background:#f8fafc;border-top:2px solid #155eef;padding:8px;display:flex;gap:10px;align-items:center}
-.sell{background:#ef4444;color:white;border:0;padding:10px 22px;border-radius:20px;font-weight:900}.buy{background:#16a34a;color:white;border:0;padding:10px 22px;border-radius:20px;font-weight:900}
-.panel{position:fixed;inset:0;background:white;z-index:30;padding:20px;display:none;flex-direction:column;gap:12px}.panel.show{display:flex}
-.panel button{padding:14px;border:1px solid #155eef;border-radius:12px;background:#f1f5f9}
-.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:40;padding:20px}.modal.show{display:flex}
-.box{background:white;border:2px solid #155eef;border-radius:16px;padding:18px;width:100%;max-width:360px}
-.box input{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;margin-top:4px}
-.btns{display:flex;gap:8px;margin-top:12px}.btns button{flex:1;padding:12px;border-radius:10px;border:0}.go{background:#155eef;color:white;font-weight:bold}
-.popup{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:99;padding:20px}.popup.show{display:flex}
-.pBox{background:white;border:2px solid #155eef;border-radius:16px;padding:20px;text-align:center;max-width:320px;width:100%}
-</style>
 </head>
 <body>
 
 <div class="topBar">
-<div class="coinDrop" onclick="document.getElementById('coinList').classList.toggle('show')">
-<span id="logo">₿</span> <span id="name">BTC</span> <span id="price">$68,509</span> <span id="pct" class="pct">92%</span> ▼
-</div>
-<div><b id="bal">$4.69</b> <button onclick="document.getElementById('toolsPanel').classList.add('show')" style="background:#155eef;color:white;border:0;padding:7px 12px;border-radius:20px;font-weight:bold">⚙ Tools</button></div>
+  <div class="coinDrop" onclick="toggleCoins()">
+    <span id="cLogo">₿</span> <span id="cName">BTC</span> <span id="cPrice">$68,509</span> <span id="cPct" class="pct">92%</span> ▼
+  </div>
+  <div><b id="topBal">$4.69</b> <button class="toolBtn" onclick="openTools()">⚙ Tools</button></div>
 </div>
 
-<div id="coinList" class="coinList">
-<div onclick="sel('BTC','₿',68509,92)">₿ BTC 92%</div>
-<div onclick="sel('ETH','Ξ',3849,88)">Ξ ETH 88%</div>
-<div onclick="sel('SOL','◎',147,94)">◎ SOL 94%</div>
-<div onclick="sel('GOLD','●',4027,90)">● GOLD 90%</div>
-</div>
+<div id="coinList" class="coinList"></div>
 
 <div class="stats">
-<div>Online<b id="u">2,417,485</b></div>
-<div>Traded<b id="t">$184,289,213</b></div>
-<div>Live<b id="l">15,670</b></div>
-<div>Balance<b id="bb" class="yellow">$4.69</b></div>
+  <div>Online Users<b id="sUsers">2,417,485</b></div>
+  <div>Total Traded<b id="sTraded">$184,289,213</b></div>
+  <div>Live Traders<b id="sLive">15,670</b></div>
+  <div>Balance<b id="sBal" class="yellow">$4.69</b></div>
 </div>
 
 <div id="chartWrap">
-<div id="tvChart"></div>
-<button class="liveBtn" onclick="alert('Live Trades - '+liveTrades.length)">LIVE TRADE 🍅</button>
-<button class="saveBtn" onclick="save()">💾 Save Tools</button>
+  <div id="mainChart"></div>
+  <button class="liveBtn" onclick="openLive()">LIVE TRADE 🍅</button>
+  <button class="saveBtn" onclick="saveAll()">💾 Save</button>
 </div>
 
-<div class="bar">
-<button class="sell" onclick="trade('sell')">Sell</button>
-<span>1</span>
-<button class="buy" onclick="trade('buy')">Buy</button>
-<button style="background:#e2e8f0;border:0;padding:8px 12px;border-radius:20px">Flatten</button>
-<span style="margin-left:auto;font-size:11px;color:#64748b" id="clock">00:39 00:39</span>
+<div class="tradeBar">
+  <button class="sell" onclick="openOrder('sell')">Sell</button>
+  <span class="qty">1</span>
+  <button class="buy" onclick="openOrder('buy')">Buy</button>
+  <button class="flat">Flatten</button>
+  <span id="clock" class="clock">00:39 00:39</span>
 </div>
 
+<!-- Tools Panel -->
 <div id="toolsPanel" class="panel">
-<h3>Tools - 3 Circles - Follow Candles</h3>
-<button onclick="add('trend')">📈 Trend Line - Blue - Blue=Move, Yellow=Length, Green=Rotate</button>
-<button onclick="add('predict')">📍 Prediction - White Dotted - 3 Circles</button>
-<button onclick="addPointer()">🩷 Pointer - Pink Dot INSIDE candles (not price side)</button>
-<button onclick="save()" style="background:#22c55e;color:white;font-weight:bold">💾 SAVE - Stays permanent, tiny when zoom out, bold when zoom in</button>
-<button onclick="clearAll()" style="background:#fee2e2">🗑 Clear All</button>
-<button onclick="document.getElementById('toolsPanel').classList.remove('show')" style="background:#08111f;color:white">Close</button>
+  <h3>Tools - Follow Candles</h3>
+  <button onclick="addTool('trend')">📈 Trend Line - Blue - 1 finger move, 2 fingers rotate</button>
+  <button onclick="addTool('predict')">📍 Prediction - White Dotted - Double tap to edit First/Last/Amount</button>
+  <button onclick="enablePointer()">🩷 Pointer - Pink dot INSIDE candles - Tap anywhere on green/red candles</button>
+  <button class="green" onclick="saveAll()">💾 SAVE ALL - Follows candles, shifts out when you slide chart</button>
+  <button class="redLight" onclick="clearAll()">🗑 Clear All</button>
+  <button class="dark" onclick="closeTools()">Close</button>
 </div>
 
-<div id="tradeModal" class="modal"><div class="box">
-<h3 id="tTitle">Trade</h3>
-<label>Amount</label><input id="amt" type="number" value="100">
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><label>SL</label><input id="sl"></div><div><label>TP <span id="tpPct">92%</span></label><input id="tp"></div></div>
-<p style="font-size:12px">Profit: <b id="prof">92%</b> = <span id="profD">$92</span></p>
-<div class="btns"><button onclick="document.getElementById('tradeModal').classList.remove('show')">Cancel</button><button class="go" onclick="activate()">Activate</button></div>
-</div></div>
+<!-- Order Modal -->
+<div id="orderModal" class="modal">
+  <div class="box">
+    <h3 id="oTitle">Trade</h3>
+    <label>Amount</label><input id="oAmt" type="number" value="100" oninput="updateTP()">
+    <div class="row2"><div><label>SL auto</label><input id="oSL"></div><div><label>TP auto <span id="oPct">92%</span></label><input id="oTP"></div></div>
+    <div class="info">Profit: <b id="oProf">92%</b> = <span id="oProfVal">$92</span> - Auto Take Profit</div>
+    <div class="btns"><button onclick="closeOrder()">Cancel</button><button class="go" onclick="doActivate()">Activate Trade → Live</button></div>
+  </div>
+</div>
 
-<div id="pop" class="popup"><div class="pBox"><h3 id="popT">Success</h3><p id="popD">Trade</p><h2 id="popA">$0</h2><button class="go" onclick="document.getElementById('pop').classList.remove('show')">OK</button></div></div>
+<!-- Prediction Edit Modal - Double Tap -->
+<div id="predictModal" class="modal">
+  <div class="box">
+    <h3>Edit Prediction - <span id="pPct">92%</span></h3>
+    <label>First Price</label><input id="pFirst">
+    <label>Last Price</label><input id="pLast">
+    <label>Amount</label><input id="pAmount" type="number">
+    <div class="row2"><div><label>Type</label><select id="pType"><option value="buy">Buy</option><option value="sell">Sell</option></select></div><div><label>Profit %</label><input id="pProfitPct" readonly></div></div>
+    <div class="btns"><button onclick="closePredict()">Cancel</button><button class="go" onclick="savePredictEdit()">Save</button></div>
+  </div>
+</div>
 
-<script>
-let chart,candle,cur=4027,curCoin='BTC',curPct=92,pending='buy',liveTrades=[];
-function init(){
- const el=document.getElementById('tvChart');
- chart=LightweightCharts.createChart(el,{layout:{background:{color:'white'},textColor:'#64748b'},grid:{vertLines:{color:'#f1f5f9'},horzLines:{color:'#f1f5f9'}},width:el.clientWidth,height:el.clientHeight});
- candle=chart.addCandlestickSeries({upColor:'#16a34a',downColor:'#ef4444',borderUpColor:'#16a34a',borderDownColor:'#ef4444',wickUpColor:'#16a34a',wickDownColor:'#ef4444'});
- let now=Math.floor(Date.now()/1000); let d=[];
- for(let i=120;i>=0;i--){let b=4022+Math.sin(i/4)*5+i*0.02; d.push({time:now-i*15,open:b,high:b+0.6,low:b-0.6,close:b+(Math.random()-0.5)});}
- candle.setData(d);
- let last=4022;
- setInterval(()=>{
-   last+=(Math.random()-0.5)*1.8;
-   cur=last;
-   const t=Math.floor(Date.now()/1000);
-   candle.update({time:t,open:last,high:last+0.7,low:last-0.7,close:cur});
- },200);
-}
-init();
-window.addEventListener('resize',()=>{chart.applyOptions({width:document.getElementById('tvChart').clientWidth,height:document.getElementById('tvChart').clientHeight})});
+<!-- Live List -->
+<div id="liveModal" class="modal"><div class="box large"><div class="head"><h3>Live Trades</h3><button onclick="closeLive()">✕</button></div><div id="liveBox"></div></div></div>
 
-// FAST FAST STATS
-let u=2417485,t=184289213,l=15670;
-setInterval(()=>{
- u+=Math.floor((Math.random()-0.45)*3500);
- t+=Math.floor((Math.random()-0.45)*15000);
- l+=Math.floor((Math.random()-0.45)*250);
- document.getElementById('u').textContent=u.toLocaleString();
- document.getElementById('t').textContent='$'+t.toLocaleString();
- document.getElementById('l').textContent=l.toLocaleString();
- document.getElementById('clock').textContent=new Date().toLocaleTimeString().slice(0,5)+' '+new Date().toLocaleTimeString().slice(0,5);
-},300);
+<!-- Live Detail - WITH RED/GREEN CANDLES -->
+<div id="detailPage" class="detailPage">
+  <div class="detailTop"><button onclick="closeDetail()">‹ Back</button><span id="dCoin">BTC 92%</span><span id="dTimer" class="timer">60s</span></div>
+  <div id="detailWrap" class="detailWrap"><div id="detailChart"></div></div>
+  <div class="detailInfo">
+    <div><small>Start Time</small><b id="dStart">-</b></div>
+    <div><small>End Time</small><b id="dEnd">-</b></div>
+    <div><small>Amount</small><b id="dAmt">$100</b></div>
+    <div><small>Profit Live</small><b id="dProf" class="greenText">+$0</b></div>
+  </div>
+</div>
 
-function sel(n,logo,p,pr){
- curCoin=n; curPct=pr;
- document.getElementById('logo').textContent=logo;
- document.getElementById('name').textContent=n;
- document.getElementById('price').textContent='$'+p;
- document.getElementById('pct').textContent=pr+'%';
- document.getElementById('tpPct').textContent=pr+'%';
- document.getElementById('prof').textContent=pr+'%';
- document.getElementById('coinList').classList.remove('show');
-}
+<!-- Success/Loss Popup -->
+<div id="pop" class="popup"><div class="pBox"><div id="pTick" class="tick">✓</div><h3 id="pTitle">TRADE SUCCESSFUL</h3><p id="pDesc">Your trade won</p><h2 id="pAmt">$0</h2><button class="go" onclick="closePop()">OK</button></div></div>
 
-function add(type){
- const wrap=document.createElement('div');
- wrap.className='line '+(type==='trend'?'blueLine':'whiteLine');
- wrap.style.left='20%'; wrap.style.top='50%'; wrap.style.width='180px';
- wrap.dataset.rot=0;
- const b=document.createElement('div'); b.className='c cBlue';
- const y=document.createElement('div'); y.className='c cYellow';
- const g=document.createElement('div'); g.className='c cGreen';
- wrap.appendChild(b); wrap.appendChild(y); wrap.appendChild(g);
- document.getElementById('chartWrap').appendChild(wrap);
- makeDrag(wrap,b,y,g);
- document.getElementById('toolsPanel').classList.remove('show');
-}
-
-function makeDrag(wrap,b,y,g){
- let drag=null,sx,sy,startRot=0,startAng=0;
- wrap.onmousedown=(e)=>{if(e.target===b||e.target===y||e.target===g) return; drag='move'; sx=e.clientX-wrap.offsetLeft; sy=e.clientY-wrap.offsetTop;};
- b.onmousedown=(e)=>{e.stopPropagation(); drag='move'; sx=e.clientX-wrap.offsetLeft; sy=e.clientY-wrap.offsetTop;};
- y.onmousedown=(e)=>{e.stopPropagation(); drag='len'; sx=e.clientX;};
- g.onmousedown=(e)=>{e.stopPropagation(); drag='rot'; const r=wrap.getBoundingClientRect(); const cx=r.left, cy=r.top; startAng=Math.atan2(e.clientY-cy,e.clientX-cx)*180/Math.PI; startRot=Number(wrap.dataset.rot||0);};
- document.addEventListener('mousemove',(e)=>{
-   if(!drag) return;
-   if(drag==='move'){wrap.style.left=(e.clientX-sx)+'px'; wrap.style.top=(e.clientY-sy)+'px';}
-   if(drag==='len'){wrap.style.width=(wrap.offsetWidth+(e.clientX-sx))+'px'; sx=e.clientX;}
-   if(drag==='rot'){const r=wrap.getBoundingClientRect(); const cx=r.left, cy=r.top; const ang=Math.atan2(e.clientY-cy,e.clientX-cx)*180/Math.PI; const rot=ang-startAng+startRot; wrap.dataset.rot=rot; wrap.style.transform='rotate('+rot+'deg)';}
- });
- document.addEventListener('mouseup',()=>{drag=null;});
- wrap.ontouchstart=(e)=>{drag='move'; sx=e.touches[0].clientX-wrap.offsetLeft; sy=e.touches[0].clientY-wrap.offsetTop;};
- document.addEventListener('touchmove',(e)=>{
-   if(!drag) return;
-   if(drag==='move'){wrap.style.left=(e.touches[0].clientX-sx)+'px'; wrap.style.top=(e.touches[0].clientY-sy)+'px';}
-   if(drag==='len'){wrap.style.width=(wrap.offsetWidth+(e.touches[0].clientX-sx))+'px'; sx=e.touches[0].clientX;}
- });
- document.addEventListener('touchend',()=>{drag=null;});
-}
-
-let pointerMode=false;
-function addPointer(){
- document.getElementById('toolsPanel').classList.remove('show');
- pointerMode=true;
- document.getElementById('popT').textContent='Tap INSIDE candles';
- document.getElementById('popD').textContent='Pink dot will stay INSIDE candles, not price side. Tap any green/red candle now.';
- document.getElementById('pop').classList.add('show');
-}
-document.getElementById('chartWrap').addEventListener('click',(e)=>{
- if(!pointerMode) return;
- if(e.target.closest('.line')||e.target.closest('button')) return;
- // block price side (right 80px)
- if(e.clientX > e.currentTarget.getBoundingClientRect().right-80) return;
- const dot=document.createElement('div'); dot.className='pink';
- dot.style.left=(e.clientX-e.currentTarget.getBoundingClientRect().left)+'px';
- dot.style.top=(e.clientY-e.currentTarget.getBoundingClientRect().top)+'px';
- e.currentTarget.appendChild(dot);
-});
-
-function save(){
- let arr=[]; document.querySelectorAll('.line').forEach(el=>{arr.push({left:el.style.left,top:el.style.top,width:el.style.width,rot:el.dataset.rot,cls:el.className});});
- let dots=[]; document.querySelectorAll('.pink').forEach(d=>{dots.push({left:d.style.left,top:d.style.top});});
- localStorage.setItem('m_tools',JSON.stringify(arr));
- localStorage.setItem('m_dots',JSON.stringify(dots));
- showPop('SAVED','Tools saved - stays permanent, follows candles when expand/reduce','✓');
-}
-function restore(){
- const a=localStorage.getItem('m_tools'), b=localStorage.getItem('m_dots');
- if(a){JSON.parse(a).forEach(it=>{
-   const wrap=document.createElement('div'); wrap.className=it.cls; wrap.style.left=it.left; wrap.style.top=it.top; wrap.style.width=it.width; wrap.dataset.rot=it.rot; wrap.style.transform='rotate('+it.rot+'deg)';
-   const b1=document.createElement('div'); b1.className='c cBlue'; const y1=document.createElement('div'); y1.className='c cYellow'; const g1=document.createElement('div'); g1.className='c cGreen';
-   wrap.appendChild(b1); wrap.appendChild(y1); wrap.appendChild(g1);
-   document.getElementById('chartWrap').appendChild(wrap); makeDrag(wrap,b1,y1,g1);
- });}
- if(b){JSON.parse(b).forEach(pt=>{const d=document.createElement('div'); d.className='pink'; d.style.left=pt.left; d.style.top=pt.top; document.getElementById('chartWrap').appendChild(d);});}
-}
-setTimeout(restore,500);
-function clearAll(){document.querySelectorAll('.line').forEach(e=>e.remove()); document.querySelectorAll('.pink').forEach(e=>e.remove()); localStorage.removeItem('m_tools'); localStorage.removeItem('m_dots');}
-
-function trade(type){pending=type; document.getElementById('tTitle').textContent=type.toUpperCase()+' '+curCoin+' '+curPct+'%'; document.getElementById('tp').value=Math.floor((Number(document.getElementById('amt').value||100)*curPct)/100); document.getElementById('sl').value=Math.floor((Number(document.getElementById('amt').value||100)*0.5)); document.getElementById('profD').textContent='$'+Math.floor((Number(document.getElementById('amt').value||100)*curPct)/100); document.getElementById('tradeModal').classList.add('show');}
-function activate(){
- const amt=document.getElementById('amt').value;
- liveTrades.push({coin:curCoin,type:pending,amount:amt,pct:curPct,time:Date.now()});
- document.getElementById('tradeModal').classList.remove('show');
- showPop('TRADE SUCCESSFUL',curCoin+' '+pending.toUpperCase()+' '+curPct+'% - Live now','$'+amt);
- // LOSS/SUCCESS DEMO - after 10s show popup like final verdict
- setTimeout(()=>{
-   if(Math.random()>0.4){showPop('TRADE SUCCESSFUL','Your '+curCoin+' won +'+curPct+'%','$'+(Number(amt)+Number(amt)*curPct/100).toFixed(2));}
-   else{showPop('TRADE LOST','Your '+curCoin+' lost','$'+Math.floor(amt*0.5));}
- },10000);
-}
-function showPop(t,d,a){document.getElementById('popT').textContent=t; document.getElementById('popD').textContent=d; document.getElementById('popA').textContent=a; document.getElementById('pop').classList.add('show');}
-</script>
+<script src="trade.js"></script>
 </body>
 </html>

@@ -1,21 +1,17 @@
 *{box-sizing:border-box}body{margin:0;background:white;color:#08111f;font-family:Arial;height:100vh;display:flex;flex-direction:column;overflow:hidden}
 .topBarWhite{background:white;border-bottom:2px solid #155eef;display:flex;justify-content:space-between;padding:10px 12px;align-items:center}
-.coinDrop{background:#f1f5f9;border:1px solid #155eef;padding:7px 12px;border-radius:20px;font-weight:bold;cursor:pointer;display:flex;gap:6px}
-.coinList{position:absolute;top:50px;left:10px;right:10px;background:white;border:2px solid #155eef;border-radius:12px;z-index:20;display:none}.coinList.show{display:block}.coinList div{padding:12px;border-bottom:1px solid #e2e8f0;cursor:pointer}
-.up{color:#16a34a}.down{color:#ef4444}
-.topRight{display:flex;gap:10px;align-items:center}#userBalTop{font-weight:900;font-size:16px}
-.settingsBtn{background:#155eef;color:white;border:0;padding:7px 12px;border-radius:20px;font-weight:bold}
+.coinDrop{background:#f1f5f9;border:1px solid #155eef;padding:7px 12px;border-radius:20px;font-weight:bold;cursor:pointer;display:flex;gap:6px}.coinList{position:absolute;top:50px;left:10px;right:10px;background:white;border:2px solid #155eef;border-radius:12px;z-index:20;display:none}.coinList.show{display:block}.coinList div{padding:12px;border-bottom:1px solid #e2e8f0;cursor:pointer}.up{color:#16a34a}.down{color:#ef4444}
+.topRight{display:flex;gap:10px;align-items:center}#userBalTop{font-weight:900}.settingsBtn{background:#155eef;color:white;border:0;padding:7px 12px;border-radius:20px;font-weight:bold}
+.blueStats{display:flex;justify-content:space-between;background:#f1f5f9;border-bottom:2px solid #155eef;padding:8px 10px}.blueStats div{display:flex;flex-direction:column;text-align:center;font-size:11px;color:#64748b}.blueStats b{color:#08111f}.yellowBold{color:#ca8a04!important;font-size:16px!important;font-weight:900!important}
 #chartWrap{flex:1;position:relative;background:white}#tvChart{width:100%;height:100%}
-.liveGlow{position:absolute;top:10px;left:10px;z-index:10;background:#ef4444;color:white;border:0;padding:8px 16px;border-radius:20px;font-weight:900;font-size:12px;box-shadow:0 0 15px #ef4444,0 0 30px #ef4444a0;animation:glow 1.5s infinite}
+.liveGlow{position:absolute;top:10px;left:10px;z-index:10;background:#ef4444;color:white;border:0;padding:8px 16px;border-radius:20px;font-weight:900;font-size:12px;box-shadow:0 0 15px #ef4444;animation:glow 1.5s infinite}
 @keyframes glow{0%,100%{box-shadow:0 0 10px #ef4444}50%{box-shadow:0 0 25px #ef4444}}
 #drawLayer{position:absolute;inset:0;pointer-events:none;z-index:5}
-.lineWrap{position:absolute;left:10%;top:50%;width:60%;height:2px;pointer-events:auto;transform-origin:left center;cursor:move}
-.trendLine{width:100%;height:3px;background:#155eef;border-radius:2px}
-.predLine{width:100%;height:3px;background:white;border:1.5px dashed #08111f;box-shadow:0 0 0 2px white;border-radius:2px}
-.handle{position:absolute;width:14px;height:14px;background:#08111f;border:2px solid white;border-radius:50%;top:50%;transform:translate(-50%,-50%);cursor:pointer}
-.handle.rotate{right:-20px;background:#facc15;border-color:#08111f}
-.handle.len{right:0}
-.pinkDot{position:absolute;width:14px;height:14px;background:#ec4899;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;box-shadow:0 0 10px #ec4899;z-index:6}
+.lineWrap{position:absolute;left:10%;top:50%;width:60%;height:3px;pointer-events:auto;transform-origin:left center;cursor:move;z-index:6}
+.trendLine{width:100%;height:3px;background:#155eef;border-radius:2px}.predLine{width:100%;height:3px;background:white;border:1.5px dashed #08111f;box-shadow:0 0 0 2px white;border-radius:2px}
+.handle{position:absolute;width:14px;height:14px;background:#08111f;border:2px solid white;border-radius:50%;top:50%;transform:translate(-50%,-50%);cursor:pointer}.handle.rotate{right:-22px;background:#facc15}.handle.len{right:0;background:#155eef}
+.pinkDot{position:absolute;width:14px;height:14px;background:#ec4899;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 10px #ec4899;z-index:6;pointer-events:none}
+.saveBtn{position:absolute;bottom:10px;right:10px;z-index:10;background:#22c55e;color:white;border:0;padding:8px 14px;border-radius:20px;font-weight:bold}
 .tradeBar{background:#f8fafc;border-top:2px solid #155eef;padding:8px 10px;display:flex;gap:10px;align-items:center}
 .sell{background:#ef4444;border:0;color:white;padding:8px 16px;border-radius:20px;font-weight:bold}.buy{background:#155eef;border:0;color:white;padding:8px 16px;border-radius:20px;font-weight:bold}.flat{background:#e2e8f0;border:0;padding:8px 12px;border-radius:20px}.time{margin-left:auto;font-size:11px;color:#64748b}
 .settingsPanel{position:fixed;inset:0;background:white;z-index:30;padding:20px;display:none;flex-direction:column;gap:12px}.settingsPanel.show{display:flex}.settingsPanel button{padding:14px;border:1px solid #155eef;border-radius:12px;background:#f1f5f9;text-align:left}.closeS{background:#08111f!important;color:white!important;text-align:center!important}
@@ -25,8 +21,9 @@
 .btns{display:flex;gap:8px;margin-top:14px}.btns button{flex:1;padding:12px;border-radius:10px;border:0}.go{background:#155eef;color:white;font-weight:bold}
 .predictBox{background:#f1f5f9;border:1px dashed #155eef;padding:10px;border-radius:8px;margin-top:10px;font-size:12px}
 .liveDetail{position:fixed;inset:0;background:white;z-index:50;display:none;flex-direction:column}.liveDetail.show{display:flex}
-.detailTop{display:flex;justify-content:space-between;padding:12px;background:#f1f5f9;border-bottom:2px solid #155eef;font-weight:bold}
-.detailChart{flex:1;position:relative;background:white}.detailInfoWhite{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px;background:#f8fafc;border-top:2px solid #155eef}
+.detailTop{display:flex;justify-content:space-between;align-items:center;padding:12px;background:#f1f5f9;border-bottom:2px solid #155eef;font-weight:bold}.timerRed{background:#ef4444;color:white;padding:4px 10px;border-radius:20px;font-size:12px}
+.detailChart{flex:1;position:relative;background:white}#detailChart{width:100%;height:100%}
+.detailInfoWhite{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px;background:#f8fafc;border-top:2px solid #155eef}
 .detailInfoWhite div{background:white;border:1px solid #e2e8f0;border-radius:10px;padding:10px}.detailInfoWhite small{color:#64748b;font-size:10px;display:block}.profitLive{color:#16a34a;font-size:18px}
 .head{display:flex;justify-content:space-between;align-items:center}
 .popup{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:99;padding:20px}.popup.show{display:flex}.pBoxWhite{background:white;border:2px solid #155eef;border-radius:16px;padding:22px;text-align:center;max-width:320px;width:100%}.tick{width:60px;height:60px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;color:white;background:#22c55e;font-size:28px}.pBoxWhite button{width:100%;padding:12px;background:#155eef;border:0;border-radius:10px;color:white;font-weight:bold;margin-top:10px}

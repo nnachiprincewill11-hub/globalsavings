@@ -2,98 +2,135 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>StockPulse - Stocks</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stocks - StockPulse</title>
 <link rel="stylesheet" href="stocks.css">
 </head>
 <body>
-<div class="wrap">
-<div class="breaking"><b>⚡ BREAKING: Fed holds rates steady - Markets rally on earnings optimism</b><span>Live - Updated just now</span></div>
-<div class="top">
-<div class="logo"><i>◉</i> StockPulse</div>
-<div class="nav"><span id="navDash" class="active">Dashboard</span><span>News</span><span>Watchlist</span><span>Portfolio</span></div>
-<div class="rightTop">
-<div class="badgeBal">Balance: $<span id="mainBal">0.00</span></div>
-<div class="userBox"><div class="avatar" id="userInit">U</div><span id="userName">User</span> 🔔</div>
-</div>
-</div>
+<div class="app-container">
+  <!-- TOP HEADER WITH USERNAME + BALANCE BESIDE IT -->
+  <header class="top-header">
+    <div class="logo">StockPulse</div>
+    <div class="top-right">
+      <div class="main-bal">Balance: $<span id="mainBalanceTop">0.00</span></div>
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <span id="userNameTop">User Name</span>
+      </div>
+    </div>
+  </header>
 
-<div class="main">
-<div class="side">
-<a id="sDash" class="active">📊 Dashboard</a>
-<a id="sPort">📈 Portfolio</a>
-<a id="sWatch">⭐ Watchlist</a>
-<a id="sTrades">⇄ Trades</a>
-<a id="sNews">📰 News</a>
-<a href="dashboard.html" class="backHome">🏠 Back Home</a>
-</div>
+  <div class="body-wrap">
+    <!-- SIDEBAR - EXACT LIKE YOUR IMAGES -->
+    <aside class="sidebar">
+      <a class="side-item active" data-sec="dash"><span>◫</span> Dashboard</a>
+      <a class="side-item" data-sec="port"><span>📈</span> Portfolio</a>
+      <a class="side-item" data-sec="watch"><span>⭐</span> Watchlist</a>
+      <a class="side-item" data-sec="trades"><span>⇄</span> Trade</a>
+      <a class="side-item" data-sec="news"><span>📰</span> News</a>
+    </aside>
 
-<div class="content">
-<!-- DASHBOARD -->
-<div id="sec-dash">
-<div class="secTitle">Market Overview</div>
-<div class="cards3">
-<div class="card3"><div class="card3Label">S&P 500</div><div class="v green">+1.24%</div><div class="small">5,428.90 +66.42</div></div>
-<div class="card3"><div class="card3Label">NASDAQ</div><div class="v green">+1.78%</div><div class="small">17,056.03 +298.11</div></div>
-<div class="card3"><div class="card3Label">DOW JONES</div><div class="v green">+0.92%</div><div class="small">39,120.56 +358.24</div></div>
-</div>
-<div class="cards3 mt12">
-<div class="card3"><div class="card3Label">Portfolio Value</div><div class="v" id="portVal">$0.00</div><div class="green" id="portPer">0% today</div></div>
-<div class="card3"><div class="card3Label">Day Gain</div><div class="v green" id="dayGain">$0.00</div><div class="green">Today</div></div>
-<div class="card3"><div class="card3Label">Buying Power</div><div class="v" id="buyPower">$0.00</div><div class="small">Available to trade</div></div>
-</div>
-<div class="tableWrap mt14"><table id="stockTable"><tr><th>LOGO | TICKER</th><th>COMPANY</th><th>PRICE</th><th>CHANGE</th><th>ACTION</th></tr></table></div>
-</div>
+    <main class="main-content">
+      <!-- DASHBOARD - LIKE YOUR STOCK MARKET DASHBOARD IMAGE -->
+      <section id="sec-dash" class="sec">
+        <div class="dash-cards">
+          <div class="dash-card blue"><small>Portfolio Value</small><h2 id="dashPort">$0.00</h2><span class="muted">0.00% today</span></div>
+          <div class="dash-card green"><small>Day Gain</small><h2 id="dashGain">$0.00</h2><span>+0.00%</span></div>
+          <div class="dash-card light"><small>Buying Power</small><h2 id="dashBuyPower">$0.00</h2><span>Cash available</span></div>
+        </div>
+        <div class="table-box">
+          <div class="table-head">Popular Stocks <button class="small-btn" onclick="adminAddStockPrompt()">+ Add Stock (Admin)</button></div>
+          <div class="table-responsive">
+            <table id="popularTable">
+              <thead><tr><th>LOGO | TICKER</th><th>COMPANY</th><th>PRICE</th><th>CHANGE</th><th>ACTION</th></tr></thead>
+              <tbody id="popularBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
-<!-- PORTFOLIO - LIKE YOUR PORTFOLIO IMAGE -->
-<div id="sec-port" class="hidden">
-<h3>PortfolioPro - Portfolio Value $<span id="pVal2">0.00</span></h3>
-<div class="chartBox">Performance Chart - Total Return: <span id="pReturn">0%</span> — Cash Balance $<span id="cashBal">0.00</span></div>
-<div id="holdingsList"></div>
-</div>
+      <!-- PORTFOLIO - LIKE YOUR PORTFOLIOPRO IMAGE -->
+      <section id="sec-port" class="sec hidden">
+        <div class="port-header">
+          <h2>PortfolioPro <span>Portfolio Value $<span id="portValueBig">0.00</span> <b id="portPer" class="green">+0% Today</b></span></h2>
+        </div>
+        <div class="port-grid">
+          <div class="chart-card">
+            <div class="chart-tabs"><span>Performance</span><div><span class="tab active">1D</span><span class="tab">1W</span><span class="tab">1M</span><span class="tab">1Y</span><span class="tab">All</span></div></div>
+            <div class="chart-area"><div class="chart-line"></div><div class="chart-stats"><span>Total Return: <b id="totalReturn">0%</b></span><span>Cash Balance: $<span id="cashBal">0.00</span></span></div></div>
+          </div>
+          <div class="holdings-box">
+            <div class="hold-head"><b>Holdings (4 positions)</b><span>Cash Balance: $<span id="cashBal2">0.00</span></span></div>
+            <div id="holdingsList"></div>
+          </div>
+        </div>
+      </section>
 
-<!-- WATCHLIST - LIKE YOUR WATCHLIST IMAGE -->
-<div id="sec-watch" class="hidden">
-<h3 id="watchTitle">Stocks - Apple (AAPL)</h3>
-<div class="chartBox">Chart 1D | 1W | 1M | 1Y | All - Volume & Day Range</div>
-<div class="orderBox">
-<div class="orderTitle">Order Details</div>
-<div class="orderLines">
-<span>Order Type: Market</span>
-<label>Amount: $<input id="buyAmount" value="1000"></label>
-<span>Quantity: <span id="qtyCalc">≈0 shares</span></span>
-<span>Take Profit: $240.00 Stop Loss: $220.00</span>
-</div>
-<button class="buy fullBtn" id="buyBtn">Buy AAPL - $<span id="buyBtnAmt">1000</span></button>
-</div>
-</div>
+      <!-- WATCHLIST - LIKE YOUR WATCHLIST IMAGE -->
+      <section id="sec-watch" class="sec hidden">
+        <div class="watch-grid">
+          <div class="watch-left">
+            <h3 id="watchStockName">Stocks — Apple (AAPL)</h3>
+            <p class="sub"><span id="watchComp">Apple Inc. NASDAQ</span> • <b id="watchPrice">$229.32</b> <span id="watchChange" class="green">+1.24% today</span> • Market Open • Closes 4:00 PM ET</p>
+            <div class="chart-tabs"><div><span class="tab active">1D</span><span class="tab">1W</span><span class="tab">1M</span><span class="tab">1Y</span><span class="tab">All</span></div><span class="small">Day Range $226.85 - $230.10 • Volume 52.4M</span></div>
+            <div class="watch-chart"><div class="watch-line"></div><div class="time-row"><span>9:30 AM</span><span>11:00 AM</span><span>1:00 PM</span><span>3:30 PM</span></div></div>
+          </div>
+          <div class="watch-right">
+            <div class="tabs2"><span class="tab2 active">Buy</span><span class="tab2">Sell</span></div>
+            <div class="order-details">
+              <h4>Order Details</h4>
+              <div class="row"><span>Order Type</span><span>Market</span></div>
+              <div class="row"><span>Amount</span><input id="buyAmount" type="number" value="1000"></div>
+              <div class="row"><span>Quantity Calculator</span><span id="qtyCalc">≈4.36 shares</span></div>
+              <div class="row"><span>Take Profit</span><span>$240.00</span></div>
+              <div class="row"><span>Stop Loss</span><span>$220.00</span></div>
+              <div class="row"><span>Estimated Cost</span><span>$<span id="estCost">1000.00</span></span></div>
+              <div class="row"><span>Estimated Fee</span><span>$0.00 - Free</span></div>
+              <button id="buyBtn" class="buy-big">Buy <span id="buyBtnTicker">AAPL</span> — $<span id="buyBtnAmt">1,000.00</span></button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-<!-- TRADES - LIKE YOUR TRADES IMAGE -->
-<div id="sec-trades" class="hidden">
-<div class="tabs"><div class="pill active">Open Trades</div><div class="pill">Closed Trades</div></div>
-<div id="tradesList"></div>
-<div id="tradeDetail" class="hidden orderBox">
-<h4>Trade Details</h4>
-<div class="tradeLines">Entry Price: <span id="tdEntry"></span><br>Current Price: <span id="tdCurrent"></span><br>Duration: <span id="tdDur"></span><br>P&L: <span id="tdPnl" class="green"></span></div>
-<button class="buy fullBtn" id="sellBtn">Sell / Close Trade</button>
-</div>
-</div>
+      <!-- TRADES - LIKE YOUR TRADES IMAGE -->
+      <section id="sec-trades" class="sec hidden">
+        <div class="dash-cards">
+          <div class="dash-card blue"><small>Portfolio Value</small><h2 id="tradePortVal">$0.00</h2><span id="tradePortChange" class="green">+0% (+$0) today</span></div>
+          <div class="dash-card"><small>Total P&L</small><h2 id="totalPnl">+$0.00</h2><span id="totalPnlPer">+0% overall</span></div>
+          <div class="dash-card light"><small>Buying Power</small><h2 id="tradeBuyPower">$0.00</h2></div>
+        </div>
+        <div class="trade-tabs"><span class="trade-tab active">Open Trades</span><span class="trade-tab">Closed Trades</span></div>
+        <div class="trades-list" id="openTradesList"></div>
+        <div class="trade-detail-box hidden" id="tradeDetailBox">
+          <h4>Trade Details</h4>
+          <div class="detail-row"><span>Entry Price</span><span id="tdEntry">-</span></div>
+          <div class="detail-row"><span>Current Price</span><span id="tdCurrent">-</span></div>
+          <div class="detail-row"><span>P&L</span><span id="tdPnl" class="green">-</span></div>
+          <div class="detail-row"><span>Duration</span><span id="tdDur">-</span></div>
+          <button class="buy-big" id="closeTradeBtn">Sell / Close Trade</button>
+        </div>
+      </section>
 
-<!-- NEWS - LIKE YOUR NEWS IMAGE -->
-<div id="sec-news" class="hidden">
-<div class="tabs"><div class="pill active">All</div><div class="pill">My Stocks</div><div class="pill">Market</div><div class="pill">Trending</div></div>
-<div class="newsGrid" id="newsGrid"></div>
-</div>
-
-</div>
-</div>
+      <!-- NEWS - LIKE YOUR NEWS IMAGE -->
+      <section id="sec-news" class="sec hidden">
+        <div class="breaking-bar">⚡ BREAKING NEWS: <b>Fed holds rates steady - Markets rally</b><span>Live Updated just now</span></div>
+        <div class="market-overview">
+          <div class="m-card"><small>S&P 500</small><b class="green">+1.24%</b><span>5,428.90 +66.42</span></div>
+          <div class="m-card"><small>NASDAQ</small><b class="green">+1.78%</b><span>17,056.03 +298.11</span></div>
+          <div class="m-card"><small>DOW JONES</small><b class="green">+0.92%</b><span>39,120.56 +358.24</span></div>
+        </div>
+        <div class="news-filters"><span class="filter active">All</span><span class="filter">My Stocks</span><span class="filter">Market</span><span class="filter">Trending</span><button class="small-btn" onclick="adminAddNewsPrompt()">+ Add News (Admin)</button></div>
+        <div class="news-feed" id="newsFeed"></div>
+      </section>
+    </main>
+  </div>
 </div>
 
 <!-- POPUPS -->
-<div id="popBuy" class="popup"><div class="popupBox"><h3>Purchase Successful</h3><p>Stock bought will show in portfolio</p><button class="buy" id="closeBuyOk">OK</button></div></div>
-<div id="popSell" class="popup"><div class="popupBox"><h3>Withdrawal</h3><p>Withdrawal will be sent to main balance</p><p class="small">Enter password to confirm</p><input id="sellPass" type="password" placeholder="Enter password"><button class="buy fullBtn" id="confirmSell">Confirm Withdrawal</button><button class="sell fullBtn mt6" id="cancelSell">Cancel</button></div></div>
-<div id="popSellOk" class="popup"><div class="popupBox"><h3>Withdrawal Successful</h3><p>Thanks for buying stock we hope to see u again</p><button class="buy" id="closeSellOk">OK</button></div></div>
-<div id="popNo" class="popup"><div class="popupBox"><h3>Sorry 😔</h3><p>Not yet time to withdraw</p><button class="sell" id="closeNo">OK</button></div></div>
+<div id="popSuccess" class="popup"><div class="popBox"><h3>✅ Purchase Successful</h3><p>Stock bought will show in portfolio</p><button class="buy-big" onclick="closePops()">OK</button></div></div>
+<div id="popWithdraw" class="popup"><div class="popBox"><h3>Withdrawal</h3><p>Withdrawal will be sent to main balance</p><input id="withdrawPass" type="password" placeholder="Enter password"><button class="buy-big" id="doWithdrawBtn">Confirm Withdrawal</button><button class="sell-big" onclick="closePops()">Cancel</button></div></div>
+<div id="popWithdrawOk" class="popup"><div class="popBox"><h3>✅ Withdrawal Successful</h3><p>Thanks for buying stock we hope to see u again</p><button class="buy-big" onclick="closePops()">OK</button></div></div>
+<div id="popNoWithdraw" class="popup"><div class="popBox"><h3>Sorry 😔</h3><p>Not yet time to withdraw</p><button class="sell-big" onclick="closePops()">OK</button></div></div>
 
 <script src="stocks.js"></script>
 </body>

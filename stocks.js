@@ -1,176 +1,196 @@
-// 0 BALANCE START - USER BALANCE BESIDE USERNAME
-let mainBalance = parseFloat(localStorage.getItem('mainBal')||'0');
-let portfolioVal = parseFloat(localStorage.getItem('portVal')||'0');
-let dayGain = parseFloat(localStorage.getItem('dayGain')||'0');
-let holdings = JSON.parse(localStorage.getItem('holdings')||'[]');
-let withdrawAllowed = localStorage.getItem('withdrawAllowed')==='true';
-let currentStock = {ticker:'AAPL',name:'Apple Inc.',price:229.32,company:'Apple Inc. NASDAQ'};
-let sellIndex = null;
+const firebaseConfig = {
+  apiKey: "AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",
+  authDomain: "global-savings.firebaseapp.com",
+  projectId: "global-savings",
+  storageBucket: "global-savings.firebasestorage.app",
+  messagingSenderId: "83435054105",
+  appId: "1:83435054105:web:efac6cbd5a264a6892b688",
+  measurementId: "G-XC54YQ0R7N"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-let stocks = JSON.parse(localStorage.getItem('adminStocks')||'null') || [
-{ticker:'AAPL',name:'Apple',company:'Apple Inc.',price:229.32,change:'+1.24%'},
-{ticker:'GOOGL',name:'Google',company:'Alphabet',price:172.45,change:'+0.98%'},
-{ticker:'NFLX',name:'Netflix',company:'Netflix Inc.',price:685.20,change:'+2.67%'},
-{ticker:'TSLA',name:'Tesla',company:'Tesla Inc.',price:248.60,change:'+1.56%'},
-{ticker:'AMZN',name:'Amazon',company:'Amazon.com',price:178.90,change:'+0.73%'},
-{ticker:'MSFT',name:'Microsoft',company:'Microsoft Corp.',price:415.12,change:'+1.12%'},
-{ticker:'META',name:'Meta',company:'Meta Platforms',price:512.34,change:'+2.05%'},
-{ticker:'NVDA',name:'Nvidia',company:'Nvidia Corp.',price:122.44,change:'+3.11%'}
-];
+let mainBalance=0, portfolioVal=0, dayGain=0, holdings=[], withdrawAllowed=false, currentStock=null, sellIndex=null, isAdmin=false;
+let logoMap = {
+AAPL:"https://logo.clearbit.com/apple.com",
+GOOGL:"https://logo.clearbit.com/google.com",
+NFLX:"https://logo.clearbit.com/netflix.com",
+TSLA:"https://logo.clearbit.com/tesla.com",
+AMZN:"https://logo.clearbit.com/amazon.com",
+MSFT:"https://logo.clearbit.com/microsoft.com",
+META:"https://logo.clearbit.com/meta.com",
+NVDA:"https://logo.clearbit.com/nvidia.com"
+};
 
-let news = JSON.parse(localStorage.getItem('adminNews')||'null') || [
-{title:'Apple earnings beat expectations as services revenue grows 14%',src:'Reuters • 12m ago',tag:'Tech'},
-{title:'Tesla unveils lower-cost EV model plans for 2025',src:'Bloomberg • 1h ago',tag:'Tech'},
-{title:'Netflix subscriber growth surges as ad tier gains traction',src:'Reuters • 3h ago',tag:'Markets'},
-{title:'Nvidia shares climb 4% on AI demand outlook upgrade',src:'Bloomberg • 5h ago',tag:'Markets'}
-];
-
-function init(){
-document.getElementById('mainBalanceTop').textContent=mainBalance.toFixed(2);
-document.getElementById('dashPort').textContent='$'+portfolioVal.toFixed(2);
-document.getElementById('dashGain').textContent='$'+dayGain.toFixed(2);
-document.getElementById('dashBuyPower').textContent='$'+mainBalance.toFixed(2);
-document.getElementById('portValueBig').textContent=portfolioVal.toFixed(2);
-document.getElementById('cashBal').textContent=mainBalance.toFixed(2);
-document.getElementById('cashBal2').textContent=mainBalance.toFixed(2);
-document.getElementById('tradePortVal').textContent='$'+portfolioVal.toFixed(2);
-document.getElementById('tradeBuyPower').textContent='$'+mainBalance.toFixed(2);
-document.getElementById('userNameTop').textContent=localStorage.getItem('userName')||'User Name';
-document.getElementById('userAvatar').textContent=(localStorage.getItem('userName')||'U')[0].toUpperCase();
-renderPopular(); renderHoldings(); renderTrades(); renderNews(); calcQty();
-}
-
-function renderPopular(){
-let body=document.getElementById('popularBody'); body.innerHTML='';
-stocks.forEach(s=>{
-let tr=document.createElement('tr');
-tr.innerHTML=`<td><b>${s.ticker}</b></td><td>${s.name}</td><td><b>$${s.price}</b></td><td class="green">${s.change}</td><td><button class="buy-btn" onclick="selectStock('${s.ticker}')">BUY</button> <button class="sell-btn" onclick="sellStock('${s.ticker}')">SELL</button></td>`;
-body.appendChild(tr);
+auth.onAuthStateChanged(async user=>{
+  if(!user){ window.location.href="login.html"; return; }
+  document.getElementById('userName').textContent=user.email;
+  isAdmin = user.email==="admin@gmail.com" || user.email==="emmanuelomelu@gmail.com";
+  if(isAdmin){
+    document.getElementById('adminBadge').classList.remove('hidden');
+    document.getElementById('adminPanelBtn').classList.remove('hidden');
+  }
+  await db.collection('users').doc(user.uid).set({email:user.email,uid:user.uid,lastLogin:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+  await db.collection('activeUsers').doc(user.uid).set({email:user.email,uid:user.uid,lastActive:firebase.firestore.FieldValue.serverTimestamp(),isOnline:true},{merge:true});
+  db.collection('userLogins').add({email:user.email,uid:user.uid,loginTime:firebase.firestore.FieldValue.serverTimestamp()});
+  loadUserData(user.uid); loadStocks(); loadNews(); if(isAdmin) loadActiveUsers();
 });
-}
 
-function renderHoldings(){
-let div=document.getElementById('holdingsList'); div.innerHTML='';
-if(holdings.length===0){div.innerHTML='<div style="padding:16px;text-align:center;color:#64748b">No holdings yet - Buy a stock</div>';return}
-holdings.forEach((h,i)=>{
-let el=document.createElement('div'); el.className='hold-item';
-el.innerHTML=`<div><b>${h.ticker}</b> - ${h.name}<br><small>${h.qty} shares</small></div><div style="text-align:right"><b>$${(h.qty*h.price).toFixed(2)}</b><br><small class="green">+$12.50</small></div>`;
-el.onclick=()=>openTrade(i);
-div.appendChild(el);
-});
+async function loadUserData(uid){
+  let doc = await db.collection('stockPortfolio').doc(uid).get();
+  if(doc.exists){ mainBalance=doc.data().mainBalance||0; portfolioVal=doc.data().portfolioValue||0; dayGain=doc.data().dayGain||0; holdings=doc.data().holdings||[]; withdrawAllowed=doc.data().withdrawAllowed||false; }
+  updateUI();
 }
-
-function renderTrades(){
-let div=document.getElementById('openTradesList'); div.innerHTML='';
-if(holdings.length===0){div.innerHTML='<div style="padding:16px;text-align:center;color:#64748b">No Open Trades</div>';return}
-holdings.forEach((h,i)=>{
-let el=document.createElement('div'); el.className='trade-card';
-el.innerHTML=`<div>📈 <b>${h.ticker}</b> ${h.name} Buy $${h.total}<br><small>TP: $240 SL: $220 Current Price $${h.price} Profit <span class="green">+$${h.profit||'12.50'}</span> Status: Running</small></div><div><span style="background:#dcfce7;color:#16a34a;padding:4px 8px;border-radius:12px;font-size:11px">Running</span></div>`;
-el.onclick=()=>openTrade(i);
-div.appendChild(el);
-});
+function updateUI(){
+  document.getElementById('mainBalTop').textContent=mainBalance.toFixed(2);
+  document.getElementById('portVal').textContent='$'+portfolioVal.toFixed(2);
+  document.getElementById('buyPower').textContent='$'+mainBalance.toFixed(2);
+  document.getElementById('dayGain').textContent='$'+dayGain.toFixed(2);
+  document.getElementById('portBig').textContent=portfolioVal.toFixed(2);
+  document.getElementById('cash1').textContent=mainBalance.toFixed(2);
+  document.getElementById('cash2').textContent=mainBalance.toFixed(2);
+  document.getElementById('tPort').textContent='$'+portfolioVal.toFixed(2);
+  document.getElementById('tBuy').textContent='$'+mainBalance.toFixed(2);
+  renderHoldings(); renderTrades();
 }
-
-function renderNews(){
-let feed=document.getElementById('newsFeed'); feed.innerHTML='';
-news.forEach(n=>{
-let d=document.createElement('div'); d.className='news-item';
-d.innerHTML=`<div class="news-icon">${n.tag[0]}</div><div><span style="font-size:10px;background:#eef2ff;padding:2px 6px;border-radius:6px">${n.tag}</span><h4>${n.title}</h4><small>${n.src}</small></div>`;
-feed.appendChild(d);
-});
+async function loadStocks(){
+  let snap = await db.collection('stocks').get();
+  let body=document.getElementById('stockBody'); body.innerHTML='';
+  if(snap.empty && isAdmin){
+    let defaults=[
+      {ticker:'AAPL',name:'Apple Inc.',price:229.32,change:'+1.24%',logo:logoMap.AAPL},
+      {ticker:'GOOGL',name:'Alphabet Inc.',price:172.45,change:'+0.98%',logo:logoMap.GOOGL},
+      {ticker:'NFLX',name:'Netflix Inc.',price:685.20,change:'+2.67%',logo:logoMap.NFLX},
+      {ticker:'TSLA',name:'Tesla Inc.',price:248.60,change:'+1.56%',logo:logoMap.TSLA},
+      {ticker:'AMZN',name:'Amazon.com',price:178.90,change:'+0.73%',logo:logoMap.AMZN},
+      {ticker:'MSFT',name:'Microsoft',price:415.12,change:'+1.12%',logo:logoMap.MSFT},
+      {ticker:'META',name:'Meta Platforms',price:512.34,change:'+2.05%',logo:logoMap.META},
+      {ticker:'NVDA',name:'Nvidia',price:122.44,change:'+3.11%',logo:logoMap.NVDA},
+    ];
+    for(let s of defaults){ await db.collection('stocks').doc(s.ticker).set({...s,time:firebase.firestore.FieldValue.serverTimestamp()}); }
+    loadStocks(); return;
+  }
+  snap.forEach(doc=>{
+    let s=doc.data();
+    let tr=document.createElement('tr');
+    tr.innerHTML=`<td><div class="logo-cell"><img src="${s.logo}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/138/138292.png'"><b>${s.ticker}</b></div></td><td>${s.name}</td><td><b>$${s.price}</b></td><td style="color:#16a34a">${s.change}</td><td><button class="buy-btn" onclick="selectStock('${s.ticker}')">BUY</button> <button class="sell-btn" onclick="sellByTicker('${s.ticker}')">SELL</button></td>`;
+    body.appendChild(tr);
+  });
+  document.getElementById('stockCount').textContent=snap.size+' stocks';
 }
-
-function showSection(sec){
-document.querySelectorAll('.sec').forEach(s=>s.classList.add('hidden'));
-document.getElementById('sec-'+sec).classList.remove('hidden');
-document.querySelectorAll('.side-item').forEach(a=>a.classList.remove('active'));
-document.querySelector(`[data-sec="${sec}"]`).classList.add('active');
+async function selectStock(ticker){
+  let doc=await db.collection('stocks').doc(ticker).get(); if(!doc.exists) return;
+  currentStock=doc.data();
+  document.getElementById('watchName').textContent=`Stocks — ${currentStock.name} (${currentStock.ticker})`;
+  document.getElementById('watchComp').textContent=currentStock.name;
+  document.getElementById('watchPrice').textContent='$'+currentStock.price;
+  showSection('watch'); calcQty();
 }
-
-function selectStock(ticker){
-let s=stocks.find(x=>x.ticker===ticker); currentStock=s;
-document.getElementById('watchStockName').textContent=`Stocks — ${s.name} (${s.ticker})`;
-document.getElementById('watchComp').textContent=s.company+' NASDAQ';
-document.getElementById('watchPrice').textContent='$'+s.price;
-document.getElementById('buyBtnTicker').textContent=s.ticker;
-showSection('watch'); calcQty();
-}
-
 function calcQty(){
-let amt=parseFloat(document.getElementById('buyAmount').value||0);
-let qty=(amt/currentStock.price).toFixed(2);
-document.getElementById('qtyCalc').textContent=`≈${qty} shares`;
-document.getElementById('estCost').textContent=amt.toFixed(2);
-document.getElementById('buyBtnAmt').textContent=amt.toLocaleString()+'.00';
+  if(!currentStock) return;
+  let amt=parseFloat(document.getElementById('buyAmount').value||0);
+  document.getElementById('qty').textContent=`≈${(amt/currentStock.price).toFixed(2)} shares`;
+  document.getElementById('buyBtn').textContent=`Buy ${currentStock.ticker} — $${amt.toLocaleString()}`;
 }
-
-function buyStock(){
-let amt=parseFloat(document.getElementById('buyAmount').value||0);
-if(amt<=0||amt>mainBalance){alert('Insufficient balance. Balance is 0 until admin funds or user deposits.');return}
-mainBalance-=amt; portfolioVal+=amt;
-let qty=amt/currentStock.price;
-holdings.push({ticker:currentStock.ticker,name:currentStock.name,price:currentStock.price,qty:qty.toFixed(2),total:amt.toFixed(2),profit:'12.50',entry:(currentStock.price-12.82).toFixed(2)});
-saveAll();
-document.getElementById('popSuccess').style.display='flex';
+async function buyStock(){
+  let amt=parseFloat(document.getElementById('buyAmount').value||0);
+  if(amt<=0||amt>mainBalance){alert('Insufficient balance - Balance is 0');return}
+  mainBalance-=amt; portfolioVal+=amt;
+  holdings.push({ticker:currentStock.ticker,name:currentStock.name,price:currentStock.price,qty:(amt/currentStock.price).toFixed(2),total:amt.toFixed(2),profit:'12.50',entry:(currentStock.price-12.82).toFixed(2)});
+  await savePortfolio(); document.getElementById('popBuy').style.display='flex';
 }
-
-function sellStock(ticker){
-let idx=holdings.findIndex(h=>h.ticker===ticker);
-if(idx===-1){alert('No holding for '+ticker);return}
-sellIndex=idx;
-if(!withdrawAllowed){document.getElementById('popNoWithdraw').style.display='flex';return}
-document.getElementById('popWithdraw').style.display='flex';
+async function savePortfolio(){
+  let uid=auth.currentUser.uid;
+  await db.collection('stockPortfolio').doc(uid).set({mainBalance,portfolioValue:portfolioVal,dayGain,holdings,withdrawAllowed,uid,email:auth.currentUser.email},{merge:true});
+  updateUI();
 }
-
+function renderHoldings(){
+  let div=document.getElementById('holdingsList'); div.innerHTML='';
+  if(holdings.length===0){div.innerHTML='<div style="padding:12px;text-align:center;color:#64748b">No holdings</div>';return}
+  holdings.forEach((h,i)=>{
+    let el=document.createElement('div'); el.className='row'; el.style.cursor='pointer';
+    el.innerHTML=`<span><img src="${logoMap[h.ticker]||''}" style="width:20px;height:20px;border-radius:50%"> <b>${h.ticker}</b> ${h.qty} shares</span><span><b>$${(h.qty*h.price).toFixed(2)}</b></span>`;
+    el.onclick=()=>openTrade(i); div.appendChild(el);
+  });
+}
+function renderTrades(){
+  let div=document.getElementById('openTrades'); div.innerHTML='';
+  if(holdings.length===0){div.innerHTML='<div style="padding:12px;text-align:center">No Open Trades</div>';return}
+  holdings.forEach((h,i)=>{
+    let el=document.createElement('div'); el.className='box'; el.style.padding='12px'; el.style.display='flex'; el.style.justifyContent='space-between'; el.style.cursor='pointer';
+    el.innerHTML=`<div><b>${h.ticker}</b> Buy $${h.total}<br><small>Current $${h.price} Profit +$${h.profit} Running</small></div><span style="background:#dcfce7;padding:4px 8px;border-radius:12px;font-size:11px">Running</span>`;
+    el.onclick=()=>openTrade(i); div.appendChild(el);
+  });
+}
 function openTrade(i){
-sellIndex=i; let h=holdings[i];
-document.getElementById('tdEntry').textContent='$'+h.entry;
-document.getElementById('tdCurrent').textContent='$'+h.price;
-document.getElementById('tdPnl').textContent='+$'+(h.profit||'12.50');
-document.getElementById('tdDur').textContent='2d 5h 12m';
-document.getElementById('tradeDetailBox').classList.remove('hidden');
-showSection('trades');
+  sellIndex=i; let h=holdings[i];
+  document.getElementById('tdEntry').textContent='$'+h.entry;
+  document.getElementById('tdCur').textContent='$'+h.price;
+  document.getElementById('tdPnl').textContent='+$'+h.profit;
+  document.getElementById('tradeDetail').classList.remove('hidden');
+  showSection('trades');
 }
+function sellByTicker(t){
+  let idx=holdings.findIndex(h=>h.ticker===t); if(idx===-1){alert('No holding');return}
+  sellIndex=idx; if(!withdrawAllowed){document.getElementById('popNo').style.display='flex';return}
+  document.getElementById('popSell').style.display='flex';
+}
+async function doWithdraw(){
+  let pass=document.getElementById('pass').value; if(!pass){alert('Enter password');return}
+  let h=holdings[sellIndex]; let amt=parseFloat(h.total);
+  mainBalance+=amt; portfolioVal-=amt; holdings.splice(sellIndex,1); sellIndex=null;
+  await savePortfolio(); closePops(); document.getElementById('popOk').style.display='flex';
+}
+async function loadNews(){
+  let snap=await db.collection('stockNews').orderBy('time','desc').limit(20).get();
+  let grid=document.getElementById('newsGrid'); grid.innerHTML='';
+  snap.forEach(doc=>{
+    let n=doc.data();
+    let d=document.createElement('div'); d.className='news-item';
+    d.innerHTML=`<div style="width:40px;height:40px;background:#eef2ff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900">${n.tag?.[0]||'N'}</div><div><span style="font-size:10px;background:#eef2ff;padding:2px 6px;border-radius:6px">${n.tag}</span><h4 style="font-size:13px">${n.title}</h4><small>${n.src}</small>${isAdmin?`<br><button onclick="adminDelNews('${doc.id}')" style="color:red;font-size:10px">Delete</button>`:''}</div>`;
+    grid.appendChild(d);
+  });
+}
+async function adminAddStock(){
+  if(!isAdmin){alert('Only admin');return}
+  let ticker=document.getElementById('aTicker').value.toUpperCase(); let name=document.getElementById('aName').value; let price=parseFloat(document.getElementById('aPrice').value); let change=document.getElementById('aChange').value||'+1.24%'; let logo=document.getElementById('aLogo').value||logoMap[ticker]||`https://logo.clearbit.com/${ticker.toLowerCase()}.com`;
+  if(!ticker||!name||!price){alert('Fill');return}
+  await db.collection('stocks').doc(ticker).set({ticker,name,price,change,logo,time:firebase.firestore.FieldValue.serverTimestamp()});
+  alert('Stock added'); loadStocks();
+}
+async function adminAddNews(){
+  if(!isAdmin){alert('Only admin');return}
+  let title=document.getElementById('aNewsTitle').value; let src=document.getElementById('aNewsSrc').value||'Admin • Just now'; let tag=document.getElementById('aNewsTag').value||'Markets';
+  if(!title) return; await db.collection('stockNews').add({title,src,tag,time:firebase.firestore.FieldValue.serverTimestamp()}); alert('News added'); loadNews();
+}
+async function adminDelNews(id){ if(!isAdmin) return; await db.collection('stockNews').doc(id).delete(); loadNews(); }
+async function adminSetGain(){
+  if(!isAdmin) return; let gain=parseFloat(document.getElementById('aDayGain').value||0);
+  let users=await db.collection('stockPortfolio').get(); users.forEach(async doc=>{ await db.collection('stockPortfolio').doc(doc.id).update({dayGain:gain}); });
+  alert('Day gain set');
+}
+async function adminSetWithdraw(){
+  if(!isAdmin) return; let allow=document.getElementById('aWithdraw').checked;
+  let users=await db.collection('stockPortfolio').get(); users.forEach(async doc=>{ await db.collection('stockPortfolio').doc(doc.id).update({withdrawAllowed:allow}); });
+  alert('Withdrawal: '+allow);
+}
+async function loadActiveUsers(){
+  db.collection('activeUsers').orderBy('lastActive','desc').limit(50).onSnapshot(snap=>{
+    let div=document.getElementById('activeUsersList'); div.innerHTML='';
+    snap.forEach(doc=>{ let u=doc.data(); div.innerHTML+=`<div style="border-bottom:1px solid #eee;padding:6px;font-size:12px"><b>${u.email}</b><br>UID: ${u.uid}<br>Last: ${u.lastActive?.toDate?.()?.toLocaleString()||''} • ${u.isOnline?'🟢 Online':'🔴 Offline'}</div>`; });
+  });
+}
+function showSection(sec){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.add('hidden'));
+  document.getElementById('sec-'+sec).classList.remove('hidden');
+  document.querySelectorAll('.side').forEach(a=>a.classList.remove('active'));
+  let el=document.querySelector(`[data-sec="${sec}"]`); if(el) el.classList.add('active');
+}
+function closePops(){ document.querySelectorAll('.popup').forEach(p=>p.style.display='none'); document.getElementById('tradeDetail').classList.add('hidden'); }
 
-function doWithdraw(){
-let pass=document.getElementById('withdrawPass').value;
-if(!pass){alert('Enter password');return}
-let h=holdings[sellIndex]; let amt=parseFloat(h.total);
-mainBalance+=amt; portfolioVal-=amt;
-holdings.splice(sellIndex,1); sellIndex=null;
-saveAll(); closePops();
-document.getElementById('popWithdrawOk').style.display='flex';
-}
-
-function saveAll(){
-localStorage.setItem('mainBal',mainBalance);
-localStorage.setItem('portVal',portfolioVal);
-localStorage.setItem('holdings',JSON.stringify(holdings));
-init();
-}
-function closePops(){
-document.querySelectorAll('.popup').forEach(p=>p.style.display='none');
-document.getElementById('tradeDetailBox').classList.add('hidden');
-}
-
-// Admin functions
-function adminAddStockPrompt(){
-let t=prompt('Ticker (e.g. NFLX)'); let n=prompt('Company name'); let p=prompt('Price e.g. 685.20');
-if(!t||!n||!p) return;
-stocks.push({ticker:t.toUpperCase(),name:n,company:n,price:parseFloat(p),change:'+1.24%'});
-localStorage.setItem('adminStocks',JSON.stringify(stocks)); renderPopular();
-}
-function adminAddNewsPrompt(){
-let title=prompt('News title');
-if(!title) return;
-news.unshift({title:title,src:'Admin • Just now',tag:'Markets'});
-localStorage.setItem('adminNews',JSON.stringify(news)); renderNews();
-}
-
-document.querySelectorAll('.side-item').forEach(el=>{el.addEventListener('click',()=>showSection(el.dataset.sec))});
-document.getElementById('buyAmount').addEventListener('input',calcQty);
-document.getElementById('buyBtn').addEventListener('click',buyStock);
-document.getElementById('closeTradeBtn').addEventListener('click',()=>{ if(!withdrawAllowed){document.getElementById('popNoWithdraw').style.display='flex';return} document.getElementById('popWithdraw').style.display='flex'; });
-document.getElementById('doWithdrawBtn').addEventListener('click',doWithdraw);
-
-init();
+document.querySelectorAll('.side').forEach(el=>el.addEventListener('click',()=>showSection(el.dataset.sec)));
+document.getElementById('buyAmount')?.addEventListener('input',calcQty);
+document.getElementById('buyBtn')?.addEventListener('click',buyStock);
+document.getElementById('closeTrade')?.addEventListener('click',()=>{ if(!withdrawAllowed){document.getElementById('popNo').style.display='flex';return} document.getElementById('popSell').style.display='flex'; });
+document.getElementById('confirmSell')?.addEventListener('click',doWithdraw);

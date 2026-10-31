@@ -3,125 +3,57 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Global Savings - Stocks</title>
-<link rel="stylesheet" href="stocks.css">
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<title>Stock Market Dashboard</title>
+<link rel="stylesheet" href="stock.css">
 </head>
 <body>
-<div class="app">
-<div class="top">
-<div class="logo">GLOBAL <span>SAVINGS</span> 📈</div>
-<div class="bal-box">
-<div class="bal">Main: $<span id="mainBal">0.00</span> <small>Balance</small></div>
-<div class="bal green-bal">Portfolio: $<span id="portBal">0.00</span></div>
-<div class="user" id="userName">Loading...</div>
-</div>
-</div>
-
-<div class="body">
-<div class="side">
-<div class="s active" data-sec="dash">📊 Dashboard</div>
-<div class="s" data-sec="port">💼 Portfolio</div>
-<div class="s" data-sec="watch">⭐ Watchlist</div>
-<div class="s" data-sec="trades">⇄ Trades</div>
-<div class="s" data-sec="news">📰 News</div>
-<div class="s admin hidden" id="adminBtn" data-sec="admin">⚙️ Admin Panel</div>
+<div class="header">
+  <div class="logo">📈 Stock Market Dashboard</div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span id="userEmail"></span>
+    <button id="logoutBtn" class="btn btn-outline" style="padding:4px 8px">Logout</button>
+  </div>
 </div>
 
 <div class="main">
-<section id="sec-dash" class="sec">
-<div class="cards">
-<div class="c dark"><small>Portfolio Value</small><h2 id="dashPort">$0.00</h2><p>↑ 0% today • Live</p></div>
-<div class="c green"><small>Day Gain</small><h2 id="dashGain">$0.00</h2><p>+0% Today</p></div>
-<div class="c"><small>Buying Power</small><h2 id="dashBuy">$0.00</h2><p>Main balance beside username</p></div>
-</div>
-<div class="box">
-<div class="box-head">🔥 All Stocks Market With Logos <span id="stockCount">0</span> <span class="pill active">Live Market</span></div>
-<div style="overflow:auto">
-<table><thead><tr><th>LOGO | TICKER</th><th>COMPANY</th><th>PRICE</th><th>CHANGE</th><th>BUY | SELL</th></tr></thead><tbody id="stockBody"></tbody></table>
-</div>
-</div>
-</section>
+  <div class="sidebar">
+    <div class="nav-item active" data-tab="dashboard">📊 Dashboard</div>
+    <div class="nav-item" data-tab="portfolio">💼 Portfolio</div>
+    <div class="nav-item" data-tab="trades">🔄 Trades</div>
+    <div class="nav-item" data-tab="news">📰 News</div>
+    <div class="nav-item" id="adminNav" style="display:none" data-tab="admin">⚙️ Admin Panel</div>
+  </div>
 
-<section id="sec-port" class="sec hidden">
-<div class="box-head"><h3>💼 PortfolioPro - $<span id="portBig">0.00</span></h3><span class="pill">Cash: $<span id="cash1">0.00</span></span></div>
-<div class="grid2">
-<div class="box"><div class="box-head">Performance <div style="display:flex;gap:6px"><span class="pill active">1D</span><span class="pill">1W</span><span class="pill">1M</span><span class="pill">1Y</span><span class="pill">All</span></div></div><div class="chart"><div class="line"></div><div class="times"><span>9:30</span><span>1:00</span><span>3:30</span></div></div></div>
-<div class="box"><div class="box-head">My Holdings - Tap for Duration</div><div id="holdingsList" style="padding:8px"></div></div>
-</div>
-<div id="holdDetail" class="box hidden" style="padding:16px"></div>
-</section>
+  <div id="content">
+    <div id="tab-dashboard">
+      <div class="grid">
+        <div class="card"><small>Main Balance (withdrawable)</small><h2 id="mainBalance">$0.00</h2></div>
+        <div class="card"><small>Stock Balance (invested)</small><h2 id="stockBalance">$0.00</h2><div id="stockGain" class="badge-green"></div></div>
+        <div class="card"><small>Portfolio Value</small><h2 id="portfolioValue">$0.00</h2></div>
+      </div>
+      <div class="card">
+        <h3>Popular Stocks - Netflix, Apple, Google etc</h3>
+        <input id="stockSearch" placeholder="Search..." class="input" style="width:200px">
+        <div id="stocksList"></div>
+      </div>
+    </div>
 
-<section id="sec-watch" class="sec hidden">
-<div class="grid2">
-<div class="box">
-<div class="box-head"><span id="watchName">Apple (AAPL)</span> <span id="watchPrice" style="font-size:18px">$229.32</span></div>
-<p style="padding:0 16px;font-size:12px;color:#64748b"><span id="watchComp">Apple Inc. NASDAQ</span> • <span id="watchChange" style="color:#16a34a">+1.24% today</span></p>
-<div class="box-head"><div style="display:flex;gap:6px"><span class="pill active">1D</span><span class="pill">1W</span><span class="pill">1M</span><span class="pill">1Y</span><span class="pill">All</span></div><small>Range $226 - $230 • Vol 52.4M</small></div>
-<div class="chart"><div class="line"></div><div class="times"><span>9:30</span><span>11:00</span><span>1:00</span><span>3:30</span></div></div>
-<div style="padding:12px"><h4>⏳ Choose How Long You Want To Hold</h4>
-<div class="dur-grid">
-<div class="dur" data-d="1 Second">1 Sec</div>
-<div class="dur" data-d="1 Minute">1 Min</div>
-<div class="dur active" data-d="1 Day">1 Day</div>
-<div class="dur" data-d="1 Week">1W</div>
-<div class="dur" data-d="1 Month">1M</div>
-<div class="dur" data-d="1 Year">1Y</div>
-<div class="dur" data-d="All Time">All</div>
-</div>
-<p style="font-size:12px;color:#64748b">Selected: <b id="selDur">1 Day</b></p>
-</div>
-</div>
-<div class="box">
-<div class="box-head"><span class="pill active" id="bBuy">Buy</span><span class="pill" id="bSell">Sell</span></div>
-<div class="order">
-<h4>Order Details</h4>
-<div class="row"><span>Order Type</span><span>Market Order</span></div>
-<div class="row"><span>Amount $</span><input id="buyAmount" type="number" value="1000"></div>
-<div class="row"><span>Quantity</span><span id="qty">≈4.36 shares</span></div>
-<div class="row"><span>Duration</span><span id="durShow">1 Day</span></div>
-<div class="row"><span>Take Profit</span><span>$240</span></div>
-<div class="row"><span>Stop Loss</span><span>$220</span></div>
-<button id="buyBtn" class="buy-big">🚀 Buy Stock Now</button>
-<button id="sellBtn" class="sell-big">💸 Sell Stock</button>
-</div>
-</div>
-</div>
-</section>
-
-<section id="sec-trades" class="sec hidden">
-<div class="cards"><div class="c dark"><small>Portfolio Value</small><h2 id="tPort">$0.00</h2></div><div class="c"><small>Total P&L</small><h2 id="tPnl">+$0.00</h2></div><div class="c"><small>Buying Power</small><h2 id="tBuy">$0.00</h2></div></div>
-<div style="display:flex;gap:8px;margin-bottom:12px"><span class="pill active" data-t="open">Open Trades</span><span class="pill" data-t="all">All Stocks To Buy</span><span class="pill" data-t="closed">Closed</span></div>
-<div id="tradesBox"></div>
-<div id="tradeDetail" class="box hidden" style="padding:16px"></div>
-</section>
-
-<section id="sec-news" class="sec hidden">
-<div class="break"><span>⚡ BREAKING: Fed holds rates steady</span><span>Live just now</span></div>
-<div class="news-grid" id="newsGrid"></div>
-</section>
-
-<section id="sec-admin" class="sec hidden">
-<h2 style="margin-bottom:12px">⚙️ Admin Panel - Only You Can Edit</h2>
-<div class="admin-grid">
-<div class="box" style="padding:14px"><h4>➕ Add Stock + Logo</h4><input id="aTicker" placeholder="Ticker e.g. AAPL"><input id="aName" placeholder="Company e.g. Apple Inc."><input id="aPrice" type="number" placeholder="Price 229.32"><input id="aLogo" placeholder="Logo URL (auto if empty)"><button class="buy-big" onclick="adminAddStock()">Add Stock (Admin Only)</button></div>
-<div class="box" style="padding:14px"><h4>📰 Add News</h4><input id="aNewsTitle" placeholder="News Title"><input id="aNewsTag" placeholder="Tag Tech/Markets"><button class="buy-big" onclick="adminAddNews()">Add News</button></div>
-<div class="box" style="padding:14px"><h4>🎛️ Controls</h4><input id="aGain" type="number" placeholder="Day Gain 887.40"><button class="buy-big" onclick="adminSetGain()">Set Day Gain</button><div style="margin-top:12px"><label><input type="checkbox" id="aWithdraw"> Allow Withdrawal</label><button class="buy-big" onclick="adminSetWithdraw()">Update</button></div></div>
-<div class="box" style="padding:14px"><h4>👥 Active Users & Emails</h4><div id="usersList">Loading...</div></div>
-</div>
-</section>
-
-</div>
-</div>
+    <div id="tab-portfolio" style="display:none">
+      <div class="card"><h3>My Holdings - Where your stocks stay + Gain</h3><div id="holdingsList"></div></div>
+    </div>
+    <div id="tab-trades" style="display:none">
+      <div class="tabs"><div class="tab active" data-filter="open">Open Trades</div><div class="tab" data-filter="closed">Closed Trades</div></div>
+      <div id="tradesList" class="card"></div>
+    </div>
+    <div id="tab-news" style="display:none"><div id="newsList"></div></div>
+    <div id="tab-admin" style="display:none">
+      <!-- Admin add stock + logo partner + sell approval + sell date -->
+      <div class="card">...</div>
+    </div>
+  </div>
 </div>
 
-<div id="popBuy" class="popup"><div class="pop"><h3>✅ Purchase Successful</h3><p>Stock bought - now in portfolio with duration</p><button class="buy-big" onclick="closePops()">OK</button></div></div>
-<div id="popSell" class="popup"><div class="pop"><h3>Withdrawal Request</h3><p>Will be sent to main balance</p><input id="pass" type="password" placeholder="Enter password"><button class="buy-big" id="doSell">Confirm</button><button class="sell-big" onclick="closePops()">Cancel</button></div></div>
-<div id="popOk" class="popup"><div class="pop"><h3>✅ Withdrawal Successful</h3><p>Thanks for buying stock we hope to see u again</p><button class="buy-big" onclick="closePops()">OK</button></div></div>
-<div id="popNo" class="popup"><div class="pop"><h3>Sorry 😔</h3><p>Not yet time to withdraw - Admin has not allowed</p><button class="sell-big" onclick="closePops()">OK</button></div></div>
-
-<script src="stocks.js"></script>
+<div id="buyModal" class="modal">...</div>
+<script type="module" src="stock.js"></script>
 </body>
 </html>

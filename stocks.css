@@ -1,0 +1,59 @@
+*{box-sizing:border-box}
+body{margin:0;background:#eef2f8;font-family:Inter,Arial,sans-serif;color:#0f172a}
+.wrap{max-width:1150px;margin:12px auto;background:white;border-radius:22px;overflow:hidden;box-shadow:0 20px 50px #0001}
+.breaking{background:#155eef;color:white;display:flex;justify-content:space-between;align-items:center;padding:8px 16px;font-size:12px;font-weight:700}
+.breaking b{display:flex;gap:8px;align-items:center}
+.top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #eef2f8;flex-wrap:wrap;gap:10px}
+.logo{display:flex;gap:8px;align-items:center;font-weight:900}
+.logo i{width:32px;height:32px;background:#155eef;border-radius:10px;color:white;display:flex;align-items:center;justify-content:center;font-style:normal}
+.nav{display:flex;gap:12px;font-size:13px;font-weight:600;color:#64748b}
+.nav .active{color:#155eef;border-bottom:2px solid #155eef;padding-bottom:2px}
+.rightTop{display:flex;gap:10px;align-items:center}
+.badgeBal{background:#f1f5ff;border:1px solid #dbeafe;padding:6px 12px;border-radius:20px;font-weight:900;font-size:12px}
+.userBox{display:flex;gap:6px;align-items:center;font-size:13px;font-weight:700}
+.avatar{width:32px;height:32px;background:#155eef;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900}
+.main{display:flex;min-height:680px}
+.side{width:170px;background:#f8fbff;border-right:1px solid #eef2f8;padding:12px;display:flex;flex-direction:column;gap:6px}
+.side a{padding:10px 12px;border-radius:10px;text-decoration:none;color:#475569;display:flex;gap:8px;font-size:13px;cursor:pointer}
+.side a.active{background:#155eef;color:white;font-weight:800}
+.backHome{margin-top:auto;background:#eaf1ff;color:#155eef!important;font-weight:800}
+.content{flex:1;padding:16px;background:white}
+.secTitle{font-weight:800;margin-bottom:8px}
+.cards3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.card3{background:#f0f7ff;border:1px solid #e0eaff;border-radius:14px;padding:12px}
+.card3 .v{font-size:20px;font-weight:900;margin-top:4px}
+.card3Label{font-size:12px;color:#64748b}
+.small{font-size:11px;color:#475569}
+.green{color:#16a34a}.red{color:#ef4444}
+.tabs{margin:14px 0;display:flex;gap:8px;flex-wrap:wrap}
+.pill{padding:7px 14px;border-radius:20px;border:1px solid #e2e8f0;background:#f8fafc;font-weight:700;font-size:12px;cursor:pointer}
+.pill.active{background:#155eef;color:white}
+.tableWrap{border:1px solid #e2e8f0;border-radius:14px;overflow:auto}
+table{width:100%;border-collapse:collapse}
+th{background:#f8fafc;padding:10px;font-size:11px;color:#64748b;text-align:left}
+td{padding:12px 10px;border-top:1px solid #f1f5f9;font-size:13px}
+.buy{background:#155eef;color:white;border:0;padding:6px 14px;border-radius:18px;font-weight:800;cursor:pointer}
+.sell{background:white;border:1px solid #e2e8f0;padding:6px 14px;border-radius:18px;font-weight:700;cursor:pointer}
+.fullBtn{width:100%;margin-top:10px;padding:12px}
+.mt12{margin-top:12px}.mt14{margin-top:14px}.mt6{margin-top:6px}
+.hidden{display:none}
+.holdCard{border:1px solid #e2e8f0;border-radius:14px;padding:12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;cursor:pointer}
+.chartBox{height:120px;background:linear-gradient(180deg,#eaf2ff,white);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:12px;border:1px solid #e2e8f0;margin:10px 0;text-align:center;padding:8px}
+.newsGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.newsCard{border:1px solid #e2e8f0;border-radius:14px;overflow:hidden;display:flex;gap:10px;padding:10px}
+.orderBox{border:1px solid #e2e8f0;border-radius:14px;padding:12px;margin-top:10px}
+.orderTitle{font-weight:800}
+.orderLines{display:flex;flex-direction:column;gap:6px;margin-top:8px;font-size:13px}
+.orderLines input{width:100px;padding:6px;border-radius:8px;border:1px solid #e2e8f0}
+.tradeLines{font-size:13px;line-height:2}
+.popup{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:99}
+.popupBox{background:white;padding:18px;border-radius:16px;width:92%;max-width:380px;text-align:center}
+.popupBox input{width:100%;padding:10px;border-radius:10px;border:1px solid #e2e8f0;margin:8px 0}
+@media(max-width:800px){
+.main{flex-direction:column}
+.side{width:100%;flex-direction:row;overflow:auto}
+.cards3{grid-template-columns:1fr}
+.newsGrid{grid-template-columns:1fr}
+.top{flex-direction:column;align-items:stretch}
+.nav{overflow:auto}
+}

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StockPulse - Stocks</title>
+<link rel="stylesheet" href="stocks.css">
+</head>
+<body>
+<div class="wrap">
+<div class="breaking"><b>⚡ BREAKING: Fed holds rates steady - Markets rally on earnings optimism</b><span>Live - Updated just now</span></div>
+<div class="top">
+<div class="logo"><i>◉</i> StockPulse</div>
+<div class="nav"><span id="navDash" class="active">Dashboard</span><span>News</span><span>Watchlist</span><span>Portfolio</span></div>
+<div class="rightTop">
+<div class="badgeBal">Balance: $<span id="mainBal">0.00</span></div>
+<div class="userBox"><div class="avatar" id="userInit">U</div><span id="userName">User</span> 🔔</div>
+</div>
+</div>
+
+<div class="main">
+<div class="side">
+<a id="sDash" class="active">📊 Dashboard</a>
+<a id="sPort">📈 Portfolio</a>
+<a id="sWatch">⭐ Watchlist</a>
+<a id="sTrades">⇄ Trades</a>
+<a id="sNews">📰 News</a>
+<a href="dashboard.html" class="backHome">🏠 Back Home</a>
+</div>
+
+<div class="content">
+<!-- DASHBOARD -->
+<div id="sec-dash">
+<div class="secTitle">Market Overview</div>
+<div class="cards3">
+<div class="card3"><div class="card3Label">S&P 500</div><div class="v green">+1.24%</div><div class="small">5,428.90 +66.42</div></div>
+<div class="card3"><div class="card3Label">NASDAQ</div><div class="v green">+1.78%</div><div class="small">17,056.03 +298.11</div></div>
+<div class="card3"><div class="card3Label">DOW JONES</div><div class="v green">+0.92%</div><div class="small">39,120.56 +358.24</div></div>
+</div>
+<div class="cards3 mt12">
+<div class="card3"><div class="card3Label">Portfolio Value</div><div class="v" id="portVal">$0.00</div><div class="green" id="portPer">0% today</div></div>
+<div class="card3"><div class="card3Label">Day Gain</div><div class="v green" id="dayGain">$0.00</div><div class="green">Today</div></div>
+<div class="card3"><div class="card3Label">Buying Power</div><div class="v" id="buyPower">$0.00</div><div class="small">Available to trade</div></div>
+</div>
+<div class="tableWrap mt14"><table id="stockTable"><tr><th>LOGO | TICKER</th><th>COMPANY</th><th>PRICE</th><th>CHANGE</th><th>ACTION</th></tr></table></div>
+</div>
+
+<!-- PORTFOLIO - LIKE YOUR PORTFOLIO IMAGE -->
+<div id="sec-port" class="hidden">
+<h3>PortfolioPro - Portfolio Value $<span id="pVal2">0.00</span></h3>
+<div class="chartBox">Performance Chart - Total Return: <span id="pReturn">0%</span> — Cash Balance $<span id="cashBal">0.00</span></div>
+<div id="holdingsList"></div>
+</div>
+
+<!-- WATCHLIST - LIKE YOUR WATCHLIST IMAGE -->
+<div id="sec-watch" class="hidden">
+<h3 id="watchTitle">Stocks - Apple (AAPL)</h3>
+<div class="chartBox">Chart 1D | 1W | 1M | 1Y | All - Volume & Day Range</div>
+<div class="orderBox">
+<div class="orderTitle">Order Details</div>
+<div class="orderLines">
+<span>Order Type: Market</span>
+<label>Amount: $<input id="buyAmount" value="1000"></label>
+<span>Quantity: <span id="qtyCalc">≈0 shares</span></span>
+<span>Take Profit: $240.00 Stop Loss: $220.00</span>
+</div>
+<button class="buy fullBtn" id="buyBtn">Buy AAPL - $<span id="buyBtnAmt">1000</span></button>
+</div>
+</div>
+
+<!-- TRADES - LIKE YOUR TRADES IMAGE -->
+<div id="sec-trades" class="hidden">
+<div class="tabs"><div class="pill active">Open Trades</div><div class="pill">Closed Trades</div></div>
+<div id="tradesList"></div>
+<div id="tradeDetail" class="hidden orderBox">
+<h4>Trade Details</h4>
+<div class="tradeLines">Entry Price: <span id="tdEntry"></span><br>Current Price: <span id="tdCurrent"></span><br>Duration: <span id="tdDur"></span><br>P&L: <span id="tdPnl" class="green"></span></div>
+<button class="buy fullBtn" id="sellBtn">Sell / Close Trade</button>
+</div>
+</div>
+
+<!-- NEWS - LIKE YOUR NEWS IMAGE -->
+<div id="sec-news" class="hidden">
+<div class="tabs"><div class="pill active">All</div><div class="pill">My Stocks</div><div class="pill">Market</div><div class="pill">Trending</div></div>
+<div class="newsGrid" id="newsGrid"></div>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- POPUPS -->
+<div id="popBuy" class="popup"><div class="popupBox"><h3>Purchase Successful</h3><p>Stock bought will show in portfolio</p><button class="buy" id="closeBuyOk">OK</button></div></div>
+<div id="popSell" class="popup"><div class="popupBox"><h3>Withdrawal</h3><p>Withdrawal will be sent to main balance</p><p class="small">Enter password to confirm</p><input id="sellPass" type="password" placeholder="Enter password"><button class="buy fullBtn" id="confirmSell">Confirm Withdrawal</button><button class="sell fullBtn mt6" id="cancelSell">Cancel</button></div></div>
+<div id="popSellOk" class="popup"><div class="popupBox"><h3>Withdrawal Successful</h3><p>Thanks for buying stock we hope to see u again</p><button class="buy" id="closeSellOk">OK</button></div></div>
+<div id="popNo" class="popup"><div class="popupBox"><h3>Sorry 😔</h3><p>Not yet time to withdraw</p><button class="sell" id="closeNo">OK</button></div></div>
+
+<script src="stocks.js"></script>
+</body>
+</html>

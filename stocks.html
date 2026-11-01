@@ -2,99 +2,103 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stock Market Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0d47b7">
+<title>Global Stocks | Market Dashboard</title>
 <style>
-:root{--blue:#1455ce;--blue2:#0d3d9e;--ink:#08143e;--muted:#667085;--line:#d7deec;--pale:#edf3ff;--green:#087b45;--bg:#f3f6fc;--white:#fff;--shadow:0 12px 32px rgba(22,48,100,.09)}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,Arial,sans-serif;color:var(--ink)}
-button,input{font:inherit}button{cursor:pointer}.shell{max-width:1600px;margin:18px auto;background:#fff;border:1px solid #e5eaf3;border-radius:22px;box-shadow:var(--shadow);padding:24px;min-height:calc(100vh - 36px)}
-.top{display:flex;align-items:center;gap:20px;margin-bottom:28px}.brand{display:flex;align-items:center;gap:18px;min-width:390px}.logo{width:86px;height:86px;border-radius:22px;background:var(--blue);display:grid;place-items:center;color:white;font-size:43px}.brand h1{font-size:clamp(25px,3vw,43px);line-height:1.12;margin:0;font-weight:800;letter-spacing:-1.3px}
-.search{flex:1;min-width:180px;position:relative}.search input{width:100%;padding:16px 18px 16px 48px;border:0;border-radius:14px;background:#f0f2f7;font-size:16px;outline:0}.search span{position:absolute;left:17px;top:13px;font-size:23px;color:#53617f}
-.top-actions{display:flex;align-items:center;gap:14px}.avatar{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;background:var(--blue);color:white;font-size:23px}.icon-btn{border:0;background:transparent;font-size:28px;color:var(--ink);padding:8px}.top-tabs{display:flex;justify-content:flex-end;gap:12px;margin:-8px 8px 28px}.tab,.filter{border:1.5px solid #cbd4e6;background:#f2f4f8;color:#23345c;border-radius:15px;padding:11px 23px;font-size:16px}.tab.active,.filter.active{background:var(--blue);color:white;border-color:var(--blue)}
-.layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px}.sidebar{background:#eaf1ff;border-radius:18px;padding:14px 0;height:max-content;min-height:650px}.nav{display:flex;align-items:center;gap:14px;padding:17px 20px;color:#111a38;font-size:17px;border:0;background:transparent;width:100%;text-align:left}.nav .ico{font-size:22px;width:25px;text-align:center}.nav.active{background:var(--blue);color:white;border-radius:0 14px 14px 0;font-weight:700}.nav:hover:not(.active){background:#dce8ff}.nav-sep{height:1px;background:#bdcce6;margin:15px 22px}
-.content{min-width:0}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-bottom:26px}.stat{border:1.5px solid #cbd4e6;border-radius:17px;padding:23px 22px;box-shadow:0 8px 20px rgba(20,45,95,.06);min-height:145px}.stat-head{display:flex;gap:15px;align-items:center;color:#4b5261;font-size:17px}.stat-icon{font-size:30px;color:var(--blue)}.stat-value{font-size:clamp(24px,2.5vw,35px);font-weight:800;margin:9px 0 6px 44px;white-space:nowrap}.stat-sub{margin-left:44px;color:var(--green);font-weight:700;font-size:15px}
-.section-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:8px 4px 14px}.section-head h2{font-size:34px;letter-spacing:-.8px;margin:0}.filters{display:flex;gap:9px}.filter{padding:9px 17px;font-size:15px}
-.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid #e2e7f0}table{width:100%;border-collapse:collapse;min-width:850px}th{font-size:14px;color:#5e6471;text-align:left;padding:15px 10px;background:#fff;font-weight:500;white-space:nowrap}td{padding:11px 10px;border-top:1px solid #dce2ec;font-size:16px;white-space:nowrap}tbody tr:nth-child(odd){background:#f0f4ff}.ticker{font-size:21px;font-weight:800;color:#09225d}.price{font-weight:800}.positive{color:var(--green);font-weight:700}.negative{color:#c13737;font-weight:700}.stock-logo{font-size:23px;width:35px;display:inline-block;text-align:center}.mini{color:#159365;font-size:22px}.action{border:1.5px solid #173d86;color:#173d86;background:transparent;border-radius:12px;padding:8px 17px;font-weight:700}.action.buy{background:var(--blue);border-color:var(--blue);color:white}.admin-tools{display:none;background:#f6f8ff;border:1px solid #cbd8f2;border-radius:16px;padding:18px;margin:20px 0}.admin-tools.show{display:block}.admin-tools h3{margin:0 0 12px}.admin-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.field label{display:block;font-size:12px;color:#5c6680;margin-bottom:5px}.field input{width:100%;padding:10px;border:1px solid #cbd4e6;border-radius:9px;background:white}.admin-buttons{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.primary{background:var(--blue);color:#fff;border:0;border-radius:10px;padding:10px 15px;font-weight:700}.secondary{background:white;color:var(--ink);border:1px solid #cbd4e6;border-radius:10px;padding:10px 15px}.danger{background:#fff0f0;color:#a42323;border:1px solid #e8bcbc;border-radius:10px;padding:8px 12px}.footer{display:flex;justify-content:space-between;gap:12px;color:#303746;font-size:14px;margin:24px 8px 0;flex-wrap:wrap}.status{color:var(--green);font-weight:700}.notice{padding:12px 14px;border-radius:10px;background:#fff8e7;color:#70551a;font-size:13px;margin:0 0 16px}.login{max-width:430px;margin:10vh auto;padding:28px;background:white;border-radius:20px;box-shadow:var(--shadow)}.login h2{margin-top:0}.login input{display:block;width:100%;padding:13px;margin:10px 0;border:1px solid var(--line);border-radius:10px}.hidden{display:none!important}.small{font-size:12px;color:var(--muted)}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#14234d;color:white;padding:12px 18px;border-radius:12px;display:none;z-index:5;max-width:90%;text-align:center}
-@media(max-width:1050px){.shell{margin:0;border-radius:0;padding:17px}.brand{min-width:260px}.layout{grid-template-columns:190px minmax(0,1fr);gap:18px}.cards{gap:10px}.stat{padding:17px 12px}.stat-value,.stat-sub{margin-left:0}.admin-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:720px){.shell{padding:13px}.top{flex-wrap:wrap;gap:12px}.brand{min-width:0;width:100%}.logo{width:58px;height:58px;font-size:29px;border-radius:16px}.brand h1{font-size:27px}.search{order:3;flex-basis:100%}.top-actions{margin-left:auto}.avatar{width:43px;height:43px;font-size:17px}.top-tabs{justify-content:flex-start;overflow:auto;margin:0 0 18px}.layout{display:block}.sidebar{min-height:0;display:flex;overflow-x:auto;padding:5px;border-radius:12px;margin-bottom:16px}.nav{width:auto;white-space:nowrap;padding:12px;font-size:14px;border-radius:9px}.nav.active{border-radius:9px}.nav-sep{display:none}.cards{grid-template-columns:1fr}.stat{min-height:0}.stat-value{font-size:27px}.section-head{align-items:flex-start;flex-direction:column}.section-head h2{font-size:28px}.admin-grid{grid-template-columns:1fr}.footer{font-size:12px}}
+:root{--navy:#101d49;--blue:#1557d5;--blue2:#0c3e9f;--pale:#edf3ff;--bg:#f4f7fc;--ink:#17213c;--muted:#75809a;--line:#e2e8f2;--green:#13834d;--red:#c43d4b;--white:#fff;--shadow:0 10px 28px rgba(23,48,99,.07)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}
+.page{max-width:1600px;margin:auto;padding:22px}.topbar{display:flex;align-items:center;gap:18px;margin-bottom:22px}.brand{display:flex;align-items:center;gap:13px;min-width:280px}.brandmark{height:52px;width:52px;border-radius:16px;background:linear-gradient(145deg,#2369ed,#073caa);color:white;display:grid;place-items:center;font-size:28px;font-weight:800;box-shadow:0 7px 18px #1557d533}.brand h1{font-size:22px;line-height:1.1;margin:0;color:var(--navy)}.brand small{color:var(--muted);font-size:12px}
+.searchbox{position:relative;flex:1}.searchbox input{width:100%;border:1px solid var(--line);background:white;border-radius:14px;padding:14px 16px 14px 45px;outline:none}.searchbox input:focus,.field input:focus,.field textarea:focus,.field select:focus{border-color:#6b9af2;box-shadow:0 0 0 3px #1557d51a}.searchicon{position:absolute;left:16px;top:11px;font-size:21px;color:#71809c}.userarea{display:flex;align-items:center;gap:10px}.avatar{height:43px;width:43px;border-radius:50%;background:var(--blue);color:white;display:grid;place-items:center;font-weight:800}.useremail{font-size:12px;color:var(--muted);max-width:170px;overflow:hidden;text-overflow:ellipsis}
+.layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:22px}.sidebar{background:white;border:1px solid var(--line);border-radius:18px;padding:13px;height:max-content;box-shadow:var(--shadow);position:sticky;top:15px}.side-label{font-size:10px;font-weight:800;letter-spacing:1.4px;color:#98a2b8;padding:13px 12px 8px}.nav{width:100%;display:flex;align-items:center;gap:12px;border:0;background:transparent;padding:13px 12px;border-radius:11px;color:#46516d;text-align:left;font-weight:600}.nav span{width:22px;text-align:center;font-size:18px}.nav.active{background:var(--pale);color:var(--blue)}.nav:hover{background:#f3f6fc}.main{min-width:0}.heading{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin:4px 0 18px}.heading h2{margin:0;color:var(--navy);font-size:30px;letter-spacing:-.8px}.heading p{margin:5px 0 0;color:var(--muted);font-size:13px}.head-actions{display:flex;gap:9px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:white;color:#34415e;border-radius:10px;padding:10px 14px;font-weight:700}.btn.primary{background:var(--blue);color:white;border-color:var(--blue)}.btn.primary:hover{background:var(--blue2)}.btn.soft{background:var(--pale);border-color:#d8e5ff;color:var(--blue)}.btn.danger{color:var(--red);border-color:#f0cdd1;background:#fff7f8}.btn.small{padding:7px 10px;font-size:12px}.btn:disabled{opacity:.5;cursor:not-allowed}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-bottom:22px}.metric{background:white;border:1px solid var(--line);border-radius:16px;padding:19px;box-shadow:var(--shadow);min-width:0}.metric-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px;font-weight:600}.metric-icon{height:36px;width:36px;border-radius:11px;background:var(--pale);color:var(--blue);display:grid;place-items:center;font-size:19px}.metric strong{display:block;font-size:28px;letter-spacing:-.5px;color:var(--navy);margin:12px 0 4px;overflow-wrap:anywhere}.metric small{color:var(--green);font-weight:700}
+.panel{background:white;border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow);overflow:hidden}.panel-head{padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.panel-head h3{margin:0;color:var(--navy);font-size:19px}.filters{display:flex;gap:7px;flex-wrap:wrap}.filter{border:1px solid var(--line);background:white;color:#56617a;padding:8px 12px;border-radius:9px;font-size:12px;font-weight:700}.filter.active{background:var(--blue);border-color:var(--blue);color:white}
+.table-scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:760px}th{background:#f8faff;color:#7a849b;font-size:10px;letter-spacing:.8px;text-align:left;padding:13px 16px;font-weight:800}td{padding:14px 16px;border-top:1px solid #edf0f6;font-size:13px}tbody tr:hover{background:#f8faff}.company{display:flex;align-items:center;gap:11px}.coinlogo{height:36px;width:36px;display:grid;place-items:center;border-radius:11px;background:#f0f4fc;font-size:20px}.company b{display:block;color:var(--navy);font-size:13px}.company small{color:var(--muted)}.ticker{font-weight:800;color:#173c88;letter-spacing:.4px}.price{font-weight:800;color:var(--navy)}.change.up{color:var(--green);font-weight:800}.change.down{color:var(--red);font-weight:800}.row-actions{display:flex;gap:6px}.empty{padding:38px;text-align:center;color:var(--muted)}
+.footer{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#8791a6;font-size:11px;padding:17px 4px}
+.admin-banner{display:none;background:#eaf2ff;border:1px solid #cbdcff;border-radius:13px;padding:12px 15px;margin-bottom:17px;align-items:center;justify-content:space-between;gap:12px}.admin-banner.show{display:flex}.admin-banner b{color:#1246a9}.admin-banner span{font-size:12px;color:#5b6c8c}
+.editor{display:none;margin-top:20px;background:white;border:1px solid #cbdcff;border-radius:17px;box-shadow:var(--shadow);overflow:hidden}.editor.show{display:block}.editor-head{padding:17px 20px;background:#f6f9ff;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}.editor-head h3{margin:0;color:var(--navy)}.editor-body{padding:20px}.editor-section{margin-bottom:23px}.editor-section h4{margin:0 0 13px;color:#24345d}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.field label{display:block;font-size:11px;font-weight:700;color:#64708a;margin-bottom:6px}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px 11px;outline:none;background:white;color:var(--ink)}.field textarea{min-height:72px;resize:vertical}.editor-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.help{font-size:11px;color:var(--muted);line-height:1.5;margin-top:8px}.auth-note{max-width:650px;margin:12vh auto;background:white;border:1px solid var(--line);border-radius:18px;padding:28px;box-shadow:var(--shadow);text-align:center}.auth-note h2{color:var(--navy);margin:0 0 8px}.auth-note p{color:var(--muted);line-height:1.6}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);padding:12px 18px;background:#14234d;color:white;border-radius:11px;z-index:10;display:none;max-width:90%;font-size:13px}.modal-backdrop{display:none;position:fixed;inset:0;background:#07132d88;z-index:8;align-items:center;justify-content:center;padding:18px}.modal-backdrop.show{display:flex}.modal{width:min(520px,100%);background:white;border-radius:17px;padding:22px;box-shadow:0 20px 60px #0003}.modal h3{margin:0 0 14px;color:var(--navy)}.modal .field{margin:12px 0}
+@media(max-width:950px){.layout{grid-template-columns:180px minmax(0,1fr)}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.brand{min-width:220px}}
+@media(max-width:680px){.page{padding:12px}.topbar{flex-wrap:wrap}.brand{min-width:0;flex:1}.brand h1{font-size:18px}.searchbox{order:3;flex-basis:100%}.useremail{display:none}.layout{display:block}.sidebar{position:static;display:flex;overflow-x:auto;padding:7px;margin-bottom:15px;gap:4px}.side-label{display:none}.nav{white-space:nowrap;width:auto;padding:10px;font-size:12px}.nav span{width:auto}.heading{align-items:flex-start;flex-direction:column}.heading h2{font-size:25px}.metrics{grid-template-columns:1fr;gap:10px}.metric{padding:15px}.metric strong{font-size:25px}.grid{grid-template-columns:1fr}.editor-body{padding:15px}.admin-banner{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
 <body>
-<div id="loginPanel" class="login">
-  <h2>Stock Market Dashboard</h2>
-  <p class="small">Sign in with an account already created in Firebase Authentication.</p>
-  <form id="loginForm">
-    <input id="email" type="email" placeholder="Email address" autocomplete="username" required>
-    <input id="password" type="password" placeholder="Password" autocomplete="current-password" required>
-    <button class="primary" style="width:100%;padding:13px" type="submit">Sign in</button>
-  </form>
-  <p id="loginError" class="small" role="alert"></p>
+<div id="authNotice" class="auth-note">
+  <div class="brandmark" style="margin:0 auto 15px">↗</div>
+  <h2>Global Stocks</h2>
+  <p>This page uses the account session from your main website. Please sign in through your existing Global Savings login page, then open this stocks page again.</p>
+  <p class="help">There is no separate login form on this page.</p>
 </div>
-<div id="app" class="shell hidden">
-  <header class="top">
-    <div class="brand"><div class="logo">⌁</div><h1 id="dashboardTitle">Stock Market<br>Dashboard</h1></div>
-    <div class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Search stocks, ticker, company..."></div>
-    <div class="top-actions"><div class="avatar" id="avatar">JD</div><button class="icon-btn" title="Notifications" onclick="toast('No new alerts.')">♧</button><button class="icon-btn" title="Settings" onclick="document.getElementById('adminPanel').scrollIntoView({behavior:'smooth'})">⚙</button><button class="secondary" id="signOutBtn">Sign out</button></div>
+<div id="dashboard" class="page" hidden>
+  <header class="topbar">
+    <div class="brand"><div class="brandmark">↗</div><div><h1 id="brandTitle">Global Stocks</h1><small>Market overview</small></div></div>
+    <div class="searchbox"><span class="searchicon">⌕</span><input id="search" type="search" placeholder="Search by company or ticker..."></div>
+    <div class="userarea"><div class="avatar" id="avatar">U</div><div class="useremail" id="userEmail"></div></div>
   </header>
-  <div class="top-tabs"><button class="tab active" data-tab="portfolio">Portfolio</button><button class="tab" data-tab="watchlist">Watchlist</button><button class="tab" data-tab="alerts">Alerts</button></div>
   <div class="layout">
     <aside class="sidebar">
-      <button class="nav active" data-view="dashboard"><span class="ico">▰</span> DASHBOARD</button>
-      <button class="nav" data-view="portfolio"><span class="ico">◷</span> Portfolio</button>
-      <button class="nav" data-view="watchlist"><span class="ico">☆</span> Watchlist</button>
-      <button class="nav" data-view="trades"><span class="ico">⇄</span> Trades</button>
-      <button class="nav" data-view="news"><span class="ico">▤</span> News</button>
-      <button class="nav" data-view="analytics"><span class="ico">▥</span> Analytics</button>
-      <div class="nav-sep"></div>
-      <button class="nav" data-view="settings"><span class="ico">⚙</span> Settings</button>
-      <button class="nav" data-view="support"><span class="ico">ⓘ</span> Help &amp; Support</button>
+      <div class="side-label">WORKSPACE</div>
+      <button class="nav active" data-section="overview"><span>▦</span> Overview</button>
+      <button class="nav" data-section="stocks"><span>▤</span> All stocks</button>
+      <button class="nav" data-section="gainers"><span>↗</span> Top gainers</button>
+      <button class="nav" data-section="losers"><span>↘</span> Top losers</button>
+      <div class="side-label">ACCOUNT</div>
+      <button class="nav" data-section="about"><span>ⓘ</span> About market</button>
     </aside>
-    <main class="content">
-      <div class="notice">Demo dashboard: stock prices and portfolio figures are sample/admin-entered data, not live market quotes. Buy/Sell buttons do not place trades.</div>
-      <section class="cards">
-        <div class="stat"><div class="stat-head"><span class="stat-icon">▣</span> Portfolio Value</div><div class="stat-value" id="portfolioValue">$42,356.80</div><div class="stat-sub" id="portfolioSub">+2.14% (+$887.40) Today</div></div>
-        <div class="stat"><div class="stat-head"><span class="stat-icon">♧</span> Day Gain</div><div class="stat-value" id="dayGain">+$887.40</div><div class="stat-sub" id="dayGainSub">+2.14% ↗</div></div>
-        <div class="stat"><div class="stat-head"><span class="stat-icon">☆</span> Watchlist</div><div class="stat-value" id="watchCount">8 Stocks</div><div class="stat-sub" id="watchSub">All gaining today ↗</div></div>
+    <main class="main">
+      <div class="heading"><div><h2 id="pageTitle">Market overview</h2><p id="pageSubtitle">Explore the stocks displayed on Global Savings.</p></div><div class="head-actions"><button class="btn soft" id="refreshBtn">↻ Refresh</button><button class="btn primary" id="openEditor" hidden>⚙ Manage page</button></div></div>
+      <div id="adminBanner" class="admin-banner"><div><b>Administrator mode enabled</b><br><span>You can manage the stock list and every editable dashboard field.</span></div><button class="btn primary small" id="bannerEdit">Open editor</button></div>
+      <section class="metrics">
+        <div class="metric"><div class="metric-top"><span>Stocks listed</span><span class="metric-icon">▤</span></div><strong id="metricCount">0</strong><small id="metricCountSub">Companies in directory</small></div>
+        <div class="metric"><div class="metric-top"><span>Market direction</span><span class="metric-icon">↗</span></div><strong id="metricDirection">—</strong><small id="metricDirectionSub">Based on listed changes</small></div>
+        <div class="metric"><div class="metric-top"><span>Best performer</span><span class="metric-icon">★</span></div><strong id="metricBest">—</strong><small id="metricBestSub">No stock data yet</small></div>
       </section>
-      <div class="section-head"><h2 id="sectionTitle">Popular Stocks</h2><div class="filters"><button class="filter active" data-filter="all">All</button><button class="filter" data-filter="gainers">Gainers</button><button class="filter" data-filter="tech">Tech</button></div></div>
-      <div class="table-wrap">
-        <table><thead><tr><th>#</th><th>LOGO</th><th>TICKER</th><th>COMPANY NAME</th><th>PRICE</th><th>CHANGE %</th><th>MINI CHART</th><th>ACTION</th><th id="adminHead" class="hidden">ADMIN</th></tr></thead><tbody id="stockRows"><tr><td colspan="9">Loading stocks…</td></tr></tbody></table>
-      </div>
-      <section id="adminPanel" class="admin-tools">
-        <h3>Administrator control panel</h3>
-        <p class="small">Only accounts with the Firebase custom claim <b>admin: true</b> can save changes. You can edit dashboard figures and add, edit or remove stock rows here.</p>
-        <h4>Dashboard information</h4>
-        <div class="admin-grid">
-          <div class="field"><label>Dashboard title</label><input id="setTitle" maxlength="60"></div>
-          <div class="field"><label>Portfolio value</label><input id="setPortfolio" placeholder="$42,356.80"></div>
-          <div class="field"><label>Portfolio change text</label><input id="setPortfolioSub" placeholder="+2.14% (+$887.40) Today"></div>
-          <div class="field"><label>Day gain</label><input id="setGain" placeholder="+$887.40"></div>
-          <div class="field"><label>Day gain subtitle</label><input id="setGainSub" placeholder="+2.14%"></div>
-          <div class="field"><label>Watchlist subtitle</label><input id="setWatchSub" placeholder="All gaining today"></div>
-          <div class="field"><label>Market status/footer text</label><input id="setFooter" placeholder="Market is open • Sample data"></div>
-        </div>
-        <div class="admin-buttons"><button class="primary" id="saveSettings">Save dashboard changes</button></div>
-        <hr style="border:0;border-top:1px solid #dce3f2;margin:20px 0">
-        <h4 id="stockFormTitle">Add a stock</h4>
-        <div class="admin-grid">
-          <div class="field"><label>Ticker symbol</label><input id="stockTicker" maxlength="12" placeholder="AAPL"></div>
-          <div class="field"><label>Company name</label><input id="stockName" maxlength="70" placeholder="Apple"></div>
-          <div class="field"><label>Logo / emoji</label><input id="stockLogo" maxlength="8" placeholder="🍎"></div>
-          <div class="field"><label>Price (number)</label><input id="stockPrice" type="number" min="0" step="0.01" placeholder="229.32"></div>
-          <div class="field"><label>Change percent</label><input id="stockChange" type="number" step="0.01" placeholder="1.24"></div>
-          <div class="field"><label>Category</label><input id="stockCategory" maxlength="30" placeholder="Tech"></div>
-        </div>
-        <div class="admin-buttons"><button class="primary" id="saveStock">Add stock</button><button class="secondary" id="cancelEdit">Clear form</button></div>
+      <section class="panel">
+        <div class="panel-head"><h3 id="tableTitle">Stocks to watch</h3><div class="filters"><button class="filter active" data-filter="all">All</button><button class="filter" data-filter="gainers">Gainers</button><button class="filter" data-filter="losers">Losers</button></div></div>
+        <div class="table-scroll"><table><thead><tr><th>COMPANY</th><th>TICKER</th><th>PRICE</th><th>CHANGE</th><th>CATEGORY</th><th id="actionsHeader" hidden>ADMIN ACTIONS</th></tr></thead><tbody id="stockRows"><tr><td colspan="6" class="empty">Loading stock information...</td></tr></tbody></table></div>
       </section>
+      <section class="editor" id="editor">
+        <div class="editor-head"><h3>Page management</h3><button class="btn small" id="closeEditor">Close</button></div>
+        <div class="editor-body">
+          <div class="editor-section"><h4>Edit page content</h4><div class="grid">
+            <div class="field"><label>Page / brand title</label><input id="editTitle" maxlength="70"></div>
+            <div class="field"><label>Page heading</label><input id="editHeading" maxlength="90"></div>
+            <div class="field"><label>Subtitle / description</label><input id="editSubtitle" maxlength="180"></div>
+            <div class="field"><label>Stocks section heading</label><input id="editTableTitle" maxlength="70"></div>
+            <div class="field"><label>First metric label</label><input id="editMetricOne" maxlength="40"></div>
+            <div class="field"><label>Second metric label</label><input id="editMetricTwo" maxlength="40"></div>
+            <div class="field"><label>Third metric label</label><input id="editMetricThree" maxlength="40"></div>
+            <div class="field"><label>Footer / market status</label><input id="editFooter" maxlength="160"></div>
+            <div class="field"><label>Currency symbol</label><input id="editCurrency" maxlength="5" placeholder="$"></div>
+          </div><div class="editor-actions"><button class="btn primary" id="savePage">Save page content</button></div></div>
+          <div class="editor-section">
+            <h4 id="stockEditorHeading">Add a stock</h4>
+            <div class="grid">
+              <div class="field"><label>Company name</label><input id="stockName" maxlength="80" placeholder="Apple"></div>
+              <div class="field"><label>Ticker symbol</label><input id="stockTicker" maxlength="15" placeholder="AAPL"></div>
+              <div class="field"><label>Logo / emoji</label><input id="stockLogo" maxlength="10" placeholder="🍎"></div>
+              <div class="field"><label>Price</label><input id="stockPrice" type="number" min="0" step="any" placeholder="229.32"></div>
+              <div class="field"><label>Percentage change</label><input id="stockChange" type="number" step="any" placeholder="1.24"></div>
+              <div class="field"><label>Category</label><input id="stockCategory" maxlength="40" placeholder="Technology"></div>
+              <div class="field"><label>Short description</label><input id="stockDescription" maxlength="160" placeholder="Company description"></div>
+              <div class="field"><label>Display order</label><input id="stockOrder" type="number" step="1" placeholder="1"></div>
+              <div class="field"><label>Visibility</label><select id="stockVisible"><option value="true">Visible</option><option value="false">Hidden</option></select></div>
+            </div>
+            <div class="editor-actions"><button class="btn primary" id="saveStock">Add stock</button><button class="btn" id="clearStock">Clear fields</button></div>
+            <p class="help">Admin changes are saved to Firestore. Use accurate, licensed market-data sources if you later connect live prices. This page does not execute real trades.</p>
+          </div>
+        </div>
+      </section>
+      <footer class="footer"><span id="footerText">Global Stocks • Market information</span><span id="updatedText">Waiting for data…</span></footer>
     </main>
   </div>
-  <footer class="footer"><span id="marketFooter">Market status • Sample data • Admin maintained</span><span id="rowCount">Showing 0 stocks</span></footer>
 </div>
-<div id="toast" class="toast"></div>
+<div class="modal-backdrop" id="deleteModal"><div class="modal"><h3>Delete stock?</h3><p id="deleteText" class="help">This stock will be removed from the page.</p><div class="editor-actions"><button class="btn danger" id="confirmDelete">Delete permanently</button><button class="btn" id="cancelDelete">Cancel</button></div></div></div>
+<div class="toast" id="toast"></div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-import { getFirestore, collection, doc, getDoc, getDocs, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+import { getFirestore, collection, doc, onSnapshot, addDoc, setDoc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",
@@ -105,132 +109,137 @@ const firebaseConfig = {
   appId: "1:83435054105:web:efac6cbd5a264a6892b688",
   measurementId: "G-XC54YQ0R7N"
 };
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const $ = id => document.getElementById(id);
-let currentUser=null, isAdmin=false, stocks=[], settings={}, editingId=null, activeFilter="all", activeView="dashboard";
-let stopStocks=null, stopSettings=null;
-
-function toast(message){const el=$("toast");el.textContent=message;el.style.display="block";clearTimeout(window.__toastTimer);window.__toastTimer=setTimeout(()=>el.style.display="none",3000)}
-window.toast=toast;
-const esc = value => String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-function money(v){const n=Number(v);return Number.isFinite(n)?"$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}):String(v??"—")}
-function render(){
-  const q=$("searchInput").value.trim().toLowerCase();
-  let rows=stocks.filter(s=>{
-    const matches=(`${s.ticker||""} ${s.name||""}`).toLowerCase().includes(q);
-    const gain=Number(s.change||0)>=0;
-    const category=String(s.category||"").toLowerCase();
-    return matches && (activeFilter==="all" || (activeFilter==="gainers"&&gain) || (activeFilter==="tech"&&category.includes("tech")));
-  });
-  $("stockRows").innerHTML=rows.length?rows.map((s,i)=>{
-    const change=Number(s.change||0), positive=change>=0;
-    return `<tr>
-      <td>${i+1}.</td><td><span class="stock-logo">${esc(s.logo||"◈")}</span></td>
-      <td class="ticker">${esc(s.ticker||"—")}</td><td>${esc(s.name||"—")}</td>
-      <td class="price">${money(s.price)}</td><td class="${positive?"positive":"negative"}">${positive?"+":""}${change.toFixed(2)}%</td>
-      <td class="mini">${positive?"⌁↗":"⌁↘"}</td>
-      <td><button class="action buy" data-demo="buy">BUY</button> <button class="action" data-demo="sell">SELL</button></td>
-      ${isAdmin?`<td><button class="action" data-edit="${esc(s.id)}">Edit</button> <button class="danger" data-delete="${esc(s.id)}">Delete</button></td>`:""}
-    </tr>`;
-  }).join(""):`<tr><td colspan="${isAdmin?9:8}" style="padding:25px;text-align:center">No stocks match this filter.</td></tr>`;
-  $("rowCount").textContent=`Showing ${rows.length} of ${stocks.length} stocks`;
-  $("watchCount").textContent=`${stocks.length} Stocks`;
+const app=initializeApp(firebaseConfig), auth=getAuth(app), db=getFirestore(app);
+const $=id=>document.getElementById(id);
+let user=null,isAdmin=false,stocks=[],pageData={},editingId=null,pendingDelete=null,filter="all",stopStocks=null,stopPage=null;
+const escapeHTML=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function notify(msg){const t=$("toast");t.textContent=msg;t.style.display="block";clearTimeout(window.__toastTimer);window.__toastTimer=setTimeout(()=>t.style.display="none",3200)}
+function currency(v){let n=Number(v);return (pageData.currency||"$")+(Number.isFinite(n)?n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}):"—")}
+function fillPageForm(){
+ $("editTitle").value=pageData.title||"Global Stocks";
+ $("editHeading").value=pageData.heading||"Market overview";
+ $("editSubtitle").value=pageData.subtitle||"Explore the stocks displayed on Global Savings.";
+ $("editTableTitle").value=pageData.tableTitle||"Stocks to watch";
+ $("editMetricOne").value=pageData.metricOne||"Stocks listed";
+ $("editMetricTwo").value=pageData.metricTwo||"Market direction";
+ $("editMetricThree").value=pageData.metricThree||"Best performer";
+ $("editFooter").value=pageData.footer||"Global Stocks • Market information";
+ $("editCurrency").value=pageData.currency||"$";
 }
-function applySettings(s={}){
-  settings=s;
-  $("dashboardTitle").textContent=s.title||"Stock Market\nDashboard";
-  $("dashboardTitle").innerHTML=esc(s.title||"Stock Market Dashboard").replace(/\n/g,"<br>");
-  $("portfolioValue").textContent=s.portfolioValue||"$42,356.80";
-  $("portfolioSub").textContent=s.portfolioSub||"+2.14% (+$887.40) Today";
-  $("dayGain").textContent=s.dayGain||"+$887.40";
-  $("dayGainSub").textContent=s.dayGainSub||"+2.14% ↗";
-  $("watchSub").textContent=s.watchSub||"All gaining today ↗";
-  $("marketFooter").textContent=s.footer||"Market status • Sample data • Admin maintained";
-  $("setTitle").value=s.title||"Stock Market Dashboard";
-  $("setPortfolio").value=s.portfolioValue||"$42,356.80";
-  $("setPortfolioSub").value=s.portfolioSub||"+2.14% (+$887.40) Today";
-  $("setGain").value=s.dayGain||"+$887.40";
-  $("setGainSub").value=s.dayGainSub||"+2.14% ↗";
-  $("setWatchSub").value=s.watchSub||"All gaining today ↗";
-  $("setFooter").value=s.footer||"Market status • Sample data • Admin maintained";
+function renderPage(){
+ $("brandTitle").textContent=pageData.title||"Global Stocks";
+ $("pageTitle").textContent=pageData.heading||"Market overview";
+ $("pageSubtitle").textContent=pageData.subtitle||"Explore the stocks displayed on Global Savings.";
+ $("tableTitle").textContent=pageData.tableTitle||"Stocks to watch";
+ $("footerText").textContent=pageData.footer||"Global Stocks • Market information";
+ const visible=stocks.filter(s=>s.visible!==false);
+ const gainers=visible.filter(s=>Number(s.change||0)>0), losers=visible.filter(s=>Number(s.change||0)<0);
+ $("metricCount").textContent=visible.length;
+ $("metricCountSub").textContent=pageData.metricOne||"Companies in directory";
+ $("metricDirection").textContent=visible.length?(gainers.length>=losers.length?"Positive":"Negative"):"—";
+ $("metricDirectionSub").textContent=`${gainers.length} gaining • ${losers.length} declining`;
+ const best=[...visible].sort((a,b)=>Number(b.change||0)-Number(a.change||0))[0];
+ $("metricBest").textContent=best?best.ticker||best.name:"—";
+ $("metricBestSub").textContent=best?`${Number(best.change||0)>0?"+":""}${Number(best.change||0).toFixed(2)}% change`:"No stock data yet";
+ const query=$("search").value.trim().toLowerCase();
+ let list=visible.filter(s=>`${s.name||""} ${s.ticker||""} ${s.category||""}`.toLowerCase().includes(query));
+ if(filter==="gainers")list=list.filter(s=>Number(s.change||0)>0);
+ if(filter==="losers")list=list.filter(s=>Number(s.change||0)<0);
+ const section=document.querySelector(".nav.active")?.dataset.section;
+ if(section==="gainers")list=list.filter(s=>Number(s.change||0)>0);
+ if(section==="losers")list=list.filter(s=>Number(s.change||0)<0);
+ list.sort((a,b)=>(Number(a.displayOrder)||9999)-(Number(b.displayOrder)||9999)||String(a.ticker||"").localeCompare(String(b.ticker||"")));
+ $("stockRows").innerHTML=list.length?list.map(s=>{
+  const change=Number(s.change||0),up=change>=0;
+  return `<tr><td><div class="company"><div class="coinlogo">${escapeHTML(s.logo||"◈")}</div><div><b>${escapeHTML(s.name||"Unnamed company")}</b><small>${escapeHTML(s.description||s.category||"Listed stock")}</small></div></div></td><td class="ticker">${escapeHTML(s.ticker||"—")}</td><td class="price">${currency(s.price)}</td><td class="change ${up?"up":"down"}">${up?"+":""}${change.toFixed(2)}%</td><td>${escapeHTML(s.category||"Other")}</td>${isAdmin?`<td><div class="row-actions"><button class="btn soft small" data-edit="${escapeHTML(s.id)}">Edit</button><button class="btn danger small" data-delete="${escapeHTML(s.id)}">Delete</button></div></td>`:""}</tr>`;
+ }).join(""):`<tr><td colspan="${isAdmin?6:5}" class="empty">No stocks found. ${isAdmin?"Use Manage page to add your first stock.":""}</td></tr>`;
+ $("updatedText").textContent="Last synced: "+new Date().toLocaleString();
 }
-function showAdmin(){
-  $("adminPanel").classList.toggle("show",isAdmin);
-  $("adminHead").classList.toggle("hidden",!isAdmin);
+function setAdminUI(){
+ $("openEditor").hidden=!isAdmin;
+ $("adminBanner").classList.toggle("show",isAdmin);
+ $("actionsHeader").hidden=!isAdmin;
+ $("editor").classList.remove("show");
 }
-async function loadData(){
-  if(stopStocks)stopStocks(); if(stopSettings)stopSettings();
-  stopStocks=onSnapshot(collection(db,"stocks"),snap=>{
-    stocks=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(a.ticker||"").localeCompare(String(b.ticker||"")));
-    render();
-  },err=>toast("Could not load stocks: "+err.message));
-  stopSettings=onSnapshot(doc(db,"marketSettings","dashboard"),snap=>applySettings(snap.exists()?snap.data():{}),err=>toast("Could not load dashboard settings: "+err.message));
+function startListeners(){
+ if(stopStocks)stopStocks();if(stopPage)stopPage();
+ stopStocks=onSnapshot(collection(db,"stocks"),snap=>{
+   stocks=snap.docs.map(d=>({id:d.id,...d.data()}));
+   renderPage();
+ },err=>notify("Stocks could not load. Check Firestore rules: "+err.message));
+ stopPage=onSnapshot(doc(db,"marketSettings","stocksPage"),snap=>{
+   pageData=snap.exists()?snap.data():{};
+   fillPageForm();renderPage();
+ },err=>notify("Page settings could not load: "+err.message));
 }
-$("loginForm").addEventListener("submit",async e=>{
-  e.preventDefault();$("loginError").textContent="";
-  try{await signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value)}
-  catch(err){$("loginError").textContent=err.message}
-});
-$("signOutBtn").addEventListener("click",()=>signOut(auth));
-onAuthStateChanged(auth,async user=>{
-  currentUser=user;
-  if(!user){$("app").classList.add("hidden");$("loginPanel").classList.remove("hidden");if(stopStocks)stopStocks();if(stopSettings)stopSettings();return}
-  try{
-    const token=await user.getIdTokenResult(true);
-    isAdmin=token.claims.admin===true;
-    $("avatar").textContent=(user.email||"U").slice(0,2).toUpperCase();
-    $("loginPanel").classList.add("hidden");$("app").classList.remove("hidden");
-    showAdmin();await loadData();
-  }catch(err){toast("Account access error: "+err.message)}
-});
-$("searchInput").addEventListener("input",render);
-document.querySelectorAll("[data-filter]").forEach(b=>b.addEventListener("click",()=>{
-  document.querySelectorAll("[data-filter]").forEach(x=>x.classList.remove("active"));b.classList.add("active");activeFilter=b.dataset.filter;render();
+function clearStockForm(){
+ editingId=null;
+ ["stockName","stockTicker","stockLogo","stockPrice","stockChange","stockCategory","stockDescription","stockOrder"].forEach(id=>$(id).value="");
+ $("stockVisible").value="true";$("stockEditorHeading").textContent="Add a stock";$("saveStock").textContent="Add stock";
+}
+function openEditor(){if(!isAdmin)return notify("Administrator permission required.");$("editor").classList.add("show");$("editor").scrollIntoView({behavior:"smooth",block:"start"});}
+$("openEditor").addEventListener("click",openEditor);$("bannerEdit").addEventListener("click",openEditor);
+$("closeEditor").addEventListener("click",()=>$("editor").classList.remove("show"));
+$("search").addEventListener("input",renderPage);
+$("refreshBtn").addEventListener("click",()=>{renderPage();notify("Dashboard refreshed.");});
+document.querySelectorAll("[data-filter]").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("[data-filter]").forEach(x=>x.classList.remove("active"));b.classList.add("active");filter=b.dataset.filter;renderPage();}));
+document.querySelectorAll("[data-section]").forEach(b=>b.addEventListener("click",()=>{
+ document.querySelectorAll("[data-section]").forEach(x=>x.classList.remove("active"));b.classList.add("active");
+ const s=b.dataset.section;
+ $("pageTitle").textContent=s==="gainers"?"Top gainers":s==="losers"?"Top losers":s==="stocks"?"All stocks":s==="about"?"About market":pageData.heading||"Market overview";
+ if(s==="about")$("pageSubtitle").textContent="Stock information displayed here is managed by the site administrator.";
+ else $("pageSubtitle").textContent=pageData.subtitle||"Explore the stocks displayed on Global Savings.";
+ renderPage();
 }));
-document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>{
-  document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("active"));b.classList.add("active");activeView=b.dataset.view;
-  $("sectionTitle").textContent=activeView==="watchlist"?"Watchlist":activeView==="portfolio"?"Portfolio":activeView==="trades"?"Recent Trades":activeView==="news"?"Market News":activeView==="analytics"?"Analytics":activeView==="settings"?"Settings":activeView==="support"?"Help & Support":"Popular Stocks";
-  if(["settings"].includes(activeView)&&isAdmin)$("adminPanel").scrollIntoView({behavior:"smooth"});
-  else if(["trades","news","analytics","support"].includes(activeView))toast("This section is a dashboard placeholder. Ask your developer to connect its data source.");
-}));
-document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{
-  document.querySelectorAll("[data-tab]").forEach(x=>x.classList.remove("active"));b.classList.add("active");
-  if(b.dataset.tab==="watchlist"){activeFilter="all";$("sectionTitle").textContent="Watchlist";render()}
-  else if(b.dataset.tab==="alerts")toast("No alerts have been configured.");
-  else $("sectionTitle").textContent="Popular Stocks";
-}));
-$("stockRows").addEventListener("click",async e=>{
-  const edit=e.target.closest("[data-edit]"), del=e.target.closest("[data-delete]"), demo=e.target.closest("[data-demo]");
-  if(demo){toast("Demo only: no real order or financial transaction was made.");return}
-  if(!isAdmin)return;
-  if(edit){const s=stocks.find(x=>x.id===edit.dataset.edit);if(!s)return;editingId=s.id;
-    $("stockFormTitle").textContent="Edit "+s.ticker;
-    $("stockTicker").value=s.ticker||"";$("stockName").value=s.name||"";$("stockLogo").value=s.logo||"";
-    $("stockPrice").value=s.price??"";$("stockChange").value=s.change??"";$("stockCategory").value=s.category||"";
-    $("saveStock").textContent="Save stock changes";$("adminPanel").scrollIntoView({behavior:"smooth"});
-  }
-  if(del){if(!confirm("Delete this stock from the dashboard?"))return;try{await deleteDoc(doc(db,"stocks",del.dataset.delete));toast("Stock deleted.")}catch(err){toast("Delete failed: "+err.message)}}
+$("stockRows").addEventListener("click",e=>{
+ if(!isAdmin)return;
+ const edit=e.target.closest("[data-edit]"),del=e.target.closest("[data-delete]");
+ if(edit){const s=stocks.find(x=>x.id===edit.dataset.edit);if(!s)return;editingId=s.id;
+  $("stockName").value=s.name||"";$("stockTicker").value=s.ticker||"";$("stockLogo").value=s.logo||"";
+  $("stockPrice").value=s.price??"";$("stockChange").value=s.change??"";$("stockCategory").value=s.category||"";
+  $("stockDescription").value=s.description||"";$("stockOrder").value=s.displayOrder??"";$("stockVisible").value=String(s.visible!==false);
+  $("stockEditorHeading").textContent="Edit "+(s.ticker||"stock");$("saveStock").textContent="Save stock changes";openEditor();
+ }
+ if(del){pendingDelete=del.dataset.delete;$("deleteText").textContent="This will permanently remove "+(stocks.find(x=>x.id===pendingDelete)?.ticker||"this stock")+" from the stocks page.";$("deleteModal").classList.add("show");}
 });
-$("saveSettings").addEventListener("click",async()=>{
-  if(!isAdmin)return toast("Administrator access required.");
-  const data={title:$("setTitle").value.trim(),portfolioValue:$("setPortfolio").value.trim(),portfolioSub:$("setPortfolioSub").value.trim(),dayGain:$("setGain").value.trim(),dayGainSub:$("setGainSub").value.trim(),watchSub:$("setWatchSub").value.trim(),footer:$("setFooter").value.trim(),updatedAt:serverTimestamp(),updatedBy:currentUser.uid};
-  try{await setDoc(doc(db,"marketSettings","dashboard"),data,{merge:true});toast("Dashboard details saved.")}catch(err){toast("Save failed: "+err.message)}
+$("cancelDelete").addEventListener("click",()=>$("deleteModal").classList.remove("show"));
+$("confirmDelete").addEventListener("click",async()=>{
+ if(!isAdmin||!pendingDelete)return;
+ try{await deleteDoc(doc(db,"stocks",pendingDelete));notify("Stock deleted.");}
+ catch(e){notify("Delete failed: "+e.message)}
+ pendingDelete=null;$("deleteModal").classList.remove("show");
+});
+$("savePage").addEventListener("click",async()=>{
+ if(!isAdmin)return;
+ const data={title:$("editTitle").value.trim(),heading:$("editHeading").value.trim(),subtitle:$("editSubtitle").value.trim(),tableTitle:$("editTableTitle").value.trim(),metricOne:$("editMetricOne").value.trim(),metricTwo:$("editMetricTwo").value.trim(),metricThree:$("editMetricThree").value.trim(),footer:$("editFooter").value.trim(),currency:$("editCurrency").value.trim()||"$",updatedAt:serverTimestamp(),updatedBy:user.uid};
+ try{await setDoc(doc(db,"marketSettings","stocksPage"),data,{merge:true});notify("Page content saved.");}
+ catch(e){notify("Could not save page content: "+e.message)}
 });
 $("saveStock").addEventListener("click",async()=>{
-  if(!isAdmin)return toast("Administrator access required.");
-  const ticker=$("stockTicker").value.trim().toUpperCase(),name=$("stockName").value.trim(),price=Number($("stockPrice").value),change=Number($("stockChange").value);
-  if(!ticker||!name||$("stockPrice").value===""||$("stockChange").value===""||!Number.isFinite(price)||price<0||!Number.isFinite(change))return toast("Enter a ticker, company, valid price and change percent.");
-  const data={ticker,name,logo:$("stockLogo").value.trim()||"◈",price,change,category:$("stockCategory").value.trim()||"Other",updatedAt:serverTimestamp(),updatedBy:currentUser.uid};
-  try{
-    if(editingId)await updateDoc(doc(db,"stocks",editingId),data);
-    else await addDoc(collection(db,"stocks"),{...data,createdAt:serverTimestamp()});
-    clearStockForm();toast(editingId?"Stock updated.":"Stock added.");
-  }catch(err){toast("Could not save stock: "+err.message)}
+ if(!isAdmin)return;
+ const name=$("stockName").value.trim(),ticker=$("stockTicker").value.trim().toUpperCase(),priceRaw=$("stockPrice").value,changeRaw=$("stockChange").value;
+ const price=Number(priceRaw),change=Number(changeRaw);
+ if(!name||!ticker||priceRaw===""||changeRaw===""||!Number.isFinite(price)||price<0||!Number.isFinite(change)){notify("Enter company, ticker, valid price and percentage change.");return;}
+ const orderRaw=$("stockOrder").value;
+ const data={name,ticker,logo:$("stockLogo").value.trim()||"◈",price,change,category:$("stockCategory").value.trim()||"Other",description:$("stockDescription").value.trim(),displayOrder:orderRaw===""?9999:Number(orderRaw),visible:$("stockVisible").value==="true",updatedAt:serverTimestamp(),updatedBy:user.uid};
+ try{
+  if(editingId)await updateDoc(doc(db,"stocks",editingId),data);
+  else await addDoc(collection(db,"stocks"),{...data,createdAt:serverTimestamp()});
+  notify(editingId?"Stock updated.":"Stock added.");clearStockForm();
+ }catch(e){notify("Could not save stock: "+e.message)}
 });
-function clearStockForm(){editingId=null;["stockTicker","stockName","stockLogo","stockPrice","stockChange","stockCategory"].forEach(id=>$(id).value="");$("stockFormTitle").textContent="Add a stock";$("saveStock").textContent="Add stock"}
-$("cancelEdit").addEventListener("click",clearStockForm);
+$("clearStock").addEventListener("click",clearStockForm);
+onAuthStateChanged(auth,async u=>{
+ user=u;
+ if(!u){$("dashboard").hidden=true;$("authNotice").style.display="block";if(stopStocks)stopStocks();if(stopPage)stopPage();return;}
+ try{
+  const token=await u.getIdTokenResult(true);
+  isAdmin=token.claims.admin===true;
+  $("authNotice").style.display="none";$("dashboard").hidden=false;
+  $("userEmail").textContent=u.email||"Signed in";$("avatar").textContent=(u.email||"U").slice(0,1).toUpperCase();
+  setAdminUI();startListeners();
+ }catch(e){notify("Could not verify account permissions: "+e.message);}
+});
 </script>
 </body>
 </html>

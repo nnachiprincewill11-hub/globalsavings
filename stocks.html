@@ -4,186 +4,96 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Global Savings - Stocks & Crypto Market</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#0a0e13;--card:#111822;--card2:#172130;--border:#1f2d40;--text:#e6edf5;--muted:#8aa0bd;--green:#00d084;--red:#ff4d5a;--blue:#2f80ff;--yellow:#ffb020}
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui}
-body{background:var(--bg);color:var(--text);min-height:100vh}
-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,14,19,.9);backdrop-filter:blur(12px);z-index:10}
-.logo{font-weight:800;font-size:18px}.logo span{color:var(--blue)}
-.btn{padding:10px 16px;border-radius:10px;border:1px solid var(--border);background:var(--card2);color:var(--text);cursor:pointer;font-weight:600}
-.btn-primary{background:var(--blue);border-color:var(--blue);color:white}
-.btn-sm{padding:6px 10px;font-size:13px}
-.badge{padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700}
-.badge-crypto{background:rgba(255,176,32,.15);color:var(--yellow);border:1px solid rgba(255,176,32,.3)}
-.badge-stock{background:rgba(47,128,255,.15);color:var(--blue);border:1px solid rgba(47,128,255,.3)}
-.tabs{display:flex;gap:8px;padding:16px 20px;overflow:auto}
-.tab{padding:8px 14px;border-radius:999px;background:var(--card);border:1px solid var(--border);cursor:pointer;color:var(--muted);white-space:nowrap}
-.tab.active{background:var(--text);color:var(--bg)}
-.controls{display:flex;gap:10px;padding:0 20px 16px;flex-wrap:wrap}
-.controls input{flex:1;min-width:200px;padding:12px 14px;border-radius:10px;background:var(--card);border:1px solid var(--border);color:var(--text)}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;padding:0 20px 16px}
-.stat{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px}
-.table-wrap{margin:0 20px 30px;background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:auto}
-table{width:100%;border-collapse:collapse;min-width:900px}
-th{padding:12px 14px;text-align:left;color:var(--muted);font-size:12px;text-transform:uppercase;border-bottom:1px solid var(--border)}
-td{padding:14px;border-bottom:1px solid rgba(31,45,64,.6)}
-.price{font-weight:700}.up{color:var(--green)}.down{color:var(--red)}
-.icon{width:32px;height:32px;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
-.editable{border:1px dashed transparent;padding:2px 6px;border-radius:6px}.admin .editable{border-color:rgba(47,128,255,.4);background:rgba(47,128,255,.08)}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
-.modal.show{display:flex}
-.modal-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;width:100%;max-width:480px}
-.modal-card input,.modal-card select{width:100%;padding:12px;border-radius:10px;background:var(--bg);border:1px solid var(--border);color:var(--text);margin-bottom:10px}
-.row{display:flex;gap:8px}
-.hidden{display:none!important}
-#adminBanner{display:none;background:linear-gradient(90deg,#2f80ff,#7b61ff);padding:10px 20px;text-align:center;font-weight:700}
-#adminBanner.show{display:block}
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="adminBanner">ADMIN MODE - You can edit all stocks & crypto directly</div>
+<div id="adminBanner">ADMIN MODE - Click any price to edit | Portfolio moves live</div>
 <header>
-<div class="logo">GLOBAL <span>SAVINGS</span></div>
+<div class="logo">GLOBAL <span>SAVINGS</span> <small><span class="live-dot"></span> LIVE</small></div>
 <div class="row">
-<button class="btn btn-sm" id="loginBtn">Login Admin</button>
-<button class="btn btn-sm btn-primary hidden" id="addBtn">+ Add Asset</button>
+<button class="btn btn-sm" id="loginBtn">Login</button>
+<button class="btn btn-sm btn-primary hidden" id="addBtn">+ Add</button>
 <button class="btn btn-sm hidden" id="logoutBtn">Logout</button>
 </div>
 </header>
 
+<div class="portfolio" id="userPortfolio">
+<h3>💼 My Portfolio <span id="userEmail"></span></h3>
+<div class="port-grid">
+<div class="p-item"><small>Stock Balance (Deposited)</small><b id="p_balance">$0.00</b></div>
+<div class="p-item"><small>Holdings Value (Live)</small><b id="p_holdings">$0.00</b></div>
+<div class="p-item"><small>Total Gain / Loss</small><b id="p_gain" class="up">$0.00</b></div>
+<div class="p-item"><small>Total Assets Count</small><b id="p_count">0 Holdings</b></div>
+</div>
+<div class="row" style="margin-top:12px">
+<button class="btn btn-sm btn-primary" id="depositBtn">+ Add Stock Money</button>
+<button class="btn btn-sm" id="viewHoldingsBtn">View My Holdings</button>
+</div>
+</div>
+
 <div class="tabs">
-<div class="tab active" data-filter="all">All Markets</div>
-<div class="tab" data-filter="crypto">Crypto Only</div>
-<div class="tab" data-filter="stock">Stocks Only</div>
-<div class="tab" data-filter="gainers">Top Gainers</div>
-<div class="tab" data-filter="losers">Top Losers</div>
+<div class="tab active" data-filter="all">All</div>
+<div class="tab" data-filter="crypto">Crypto</div>
+<div class="tab" data-filter="stock">Stocks</div>
+<div class="tab" data-filter="gainers">Gainers</div>
+<div class="tab" data-filter="losers">Losers</div>
+<div class="tab" data-filter="my">My Holdings</div>
 </div>
 
 <div class="controls">
 <input id="search" placeholder="Search BTC, AAPL, Tesla..."/>
-<button class="btn btn-sm" id="refreshBtn">Refresh Live Prices</button>
-<button class="btn btn-sm hidden" id="seedBtn">Seed 35 Default</button>
-<button class="btn btn-sm" id="fetchAllBtn">Fetch 250+ Live Crypto</button>
+<button class="btn btn-sm" id="refreshBtn">↻ Live</button>
+<button class="btn btn-sm hidden" id="seedBtn">Seed 35</button>
+<button class="btn btn-sm" id="fetchAllBtn">Fetch 250 Crypto</button>
 </div>
 
 <div class="stats">
-<div class="stat"><small>Total Assets</small><b id="statTotal">0</b></div>
+<div class="stat"><small>Total Market</small><b id="statTotal">0</b></div>
 <div class="stat"><small>Crypto</small><b id="statCrypto">0</b></div>
 <div class="stat"><small>Stocks</small><b id="statStock">0</b></div>
-<div class="stat"><small>Status</small><b style="color:#00d084">Live + Admin Override</b></div>
+<div class="stat gain"><small>My Gain</small><b id="statGain" class="up">+ $0.00</b></div>
 </div>
 
 <div class="table-wrap">
+<div class="table-scroll">
 <table>
-<thead><tr><th>#</th><th>Asset</th><th>Type</th><th>Price</th><th>24h %</th><th>Market Cap</th><th>Admin</th></tr></thead>
+<thead><tr><th>#</th><th>Asset</th><th>Type</th><th>Price (Live)</th><th>24h</th><th>Value</th><th>Action</th></tr></thead>
 <tbody id="tbody"></tbody>
 </table>
+</div>
+</div>
+
+<div class="hold-card" id="mobileList"></div>
+
+<div class="modal" id="holdingsModal">
+<div class="modal-card">
+<h3>My Stock Holdings - Live P/L</h3>
+<div id="holdingsList"></div>
+<button class="btn" style="width:100%;margin-top:12px" id="closeHoldings">Close</button>
+</div>
 </div>
 
 <div class="modal" id="modal">
 <div class="modal-card">
-<h3 id="modalTitle">Add New Asset</h3>
-<input id="m_symbol" placeholder="Symbol e.g. BTC"/>
-<input id="m_name" placeholder="Name e.g. Bitcoin"/>
+<h3 id="modalTitle">Trade Asset</h3>
+<input id="m_symbol" placeholder="Symbol"/>
+<input id="m_name" placeholder="Name"/>
 <select id="m_type"><option value="crypto">Crypto</option><option value="stock">Stock</option></select>
 <input id="m_price" type="number" step="0.00001" placeholder="Price"/>
 <input id="m_change" type="number" step="0.01" placeholder="24h %"/>
 <input id="m_cap" placeholder="Market Cap / Sector"/>
-<div class="row"><button class="btn btn-primary" id="saveBtn" style="flex:1">Save</button><button class="btn" id="cancelBtn" style="flex:1">Cancel</button></div>
+<div class="row" id="tradeRow" style="display:none;margin-bottom:10px">
+<input id="tradeQty" type="number" placeholder="Quantity" style="flex:1"/>
+<div style="display:flex;flex-direction:column;gap:6px;flex:1"><button class="btn btn-primary" id="buyBtn">Buy</button><button class="btn" id="sellBtn">Sell</button></div>
+</div>
+<div class="row">
+<button class="btn btn-primary" id="saveBtn" style="flex:1">Save (Admin)</button>
+<button class="btn" id="cancelBtn" style="flex:1">Cancel</button>
+</div>
 </div>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-const firebaseConfig = {
-  apiKey: "AIzaSyCmRE7PK3ve9DjBGIOCcOuq_5WyfUrwM50",
-  authDomain: "global-savings.firebaseapp.com",
-  projectId: "global-savings",
-  storageBucket: "global-savings.firebasestorage.app",
-  messagingSenderId: "83435054105",
-  appId: "1:83435054105:web:efac6cbd5a264a6892b688",
-  measurementId: "G-XC54YQ0R7N"
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-let isAdmin=false, allAssets=[], filter="all", editId=null;
-const ADMIN_EMAILS=["admin@gmail.com","emmanuelomelu@gmail.com"];
-function checkAdmin(u){return u && (ADMIN_EMAILS.includes(u.email) || u.email.includes("admin"))}
-onAuthStateChanged(auth, user=>{
-  isAdmin=checkAdmin(user);
-  document.body.classList.toggle("admin",isAdmin);
-  document.getElementById("adminBanner").classList.toggle("show",isAdmin);
-  document.getElementById("addBtn").classList.toggle("hidden",!isAdmin);
-  document.getElementById("logoutBtn").classList.toggle("hidden",!user);
-  document.getElementById("loginBtn").classList.toggle("hidden",!!user);
-  document.getElementById("seedBtn").classList.toggle("hidden",!isAdmin);
-  render();
-});
-document.getElementById("loginBtn").onclick=async()=>{
-  const email=prompt("Admin Email:"); const pass=prompt("Password:");
-  if(!email||!pass) return; try{await signInWithEmailAndPassword(auth,email,pass);}catch(e){alert(e.message);}
-};
-document.getElementById("logoutBtn").onclick=()=>signOut(auth);
-const DEFAULT_LIST=[
-{symbol:"BTC",name:"Bitcoin",type:"crypto",price:68420,change:2.31,cap:"$1.35T"},
-{symbol:"ETH",name:"Ethereum",type:"crypto",price:2540,change:-0.84,cap:"$305B"},
-{symbol:"SOL",name:"Solana",type:"crypto",price:178,change:5.4,cap:"$84B"},
-{symbol:"DOGE",name:"Dogecoin",type:"crypto",price:0.14,change:3.1,cap:"$20B"},
-{symbol:"AAPL",name:"Apple Inc.",type:"stock",price:228.5,change:1.2,cap:"Technology"},
-{symbol:"MSFT",name:"Microsoft",type:"stock",price:415,change:0.8,cap:"Technology"},
-{symbol:"NVDA",name:"NVIDIA",type:"stock",price:875,change:3.4,cap:"Semiconductors"},
-{symbol:"TSLA",name:"Tesla",type:"stock",price:248,change:-1.4,cap:"Automotive"},
-{symbol:"SPY",name:"S&P 500 ETF",type:"stock",price:520,change:0.7,cap:"ETF"},
-];
-async function seed(){ for(let item of DEFAULT_LIST){ await setDoc(doc(db,"stocks",item.symbol.toLowerCase()),{...item,updatedAt:Date.now(),uid:auth.currentUser.uid}); } alert("Seeded!"); }
-document.getElementById("seedBtn").onclick=seed;
-const q=query(collection(db,"stocks"),orderBy("symbol"));
-onSnapshot(q, snap=>{
-  allAssets=snap.docs.map(d=>({id:d.id,...d.data()}));
-  if(allAssets.length===0) allAssets=DEFAULT_LIST.map(d=>({id:d.symbol.toLowerCase(),...d}));
-  render();
-});
-function render(){
-  let list=[...allAssets];
-  const s=document.getElementById("search").value.toLowerCase();
-  if(s) list=list.filter(x=>x.symbol.toLowerCase().includes(s)||x.name.toLowerCase().includes(s));
-  if(filter==="crypto") list=list.filter(x=>x.type==="crypto");
-  if(filter==="stock") list=list.filter(x=>x.type==="stock");
-  if(filter==="gainers") list=[...list].sort((a,b)=>b.change-a.change).slice(0,20);
-  if(filter==="losers") list=[...list].sort((a,b)=>a.change-b.change).slice(0,20);
-  document.getElementById("statTotal").textContent=allAssets.length;
-  document.getElementById("statCrypto").textContent=allAssets.filter(x=>x.type==="crypto").length+" cryptos";
-  document.getElementById("statStock").textContent=allAssets.filter(x=>x.type==="stock").length+" stocks";
-  document.getElementById("tbody").innerHTML=list.map((a,i)=>{
-    const up=a.change>=0;
-    return `<tr><td>${i+1}</td><td><div style="display:flex;gap:10px;align-items:center"><div class="icon">${a.symbol[0]}</div><div><div style="font-weight:700" class="editable" data-field="symbol" data-id="${a.id}">${a.symbol}</div><div style="color:#8aa0bd;font-size:12px" class="editable" data-field="name" data-id="${a.id}">${a.name}</div></div></div></td><td><span class="badge ${a.type==="crypto"?"badge-crypto":"badge-stock"}">${a.type}</span></td><td class="price editable" data-field="price" data-id="${a.id}">$${Number(a.price).toLocaleString()}</td><td class="${up?"up":"down"} editable" data-field="change" data-id="${a.id}">${up?"▲":"▼"} ${a.change}%</td><td class="editable" data-field="cap" data-id="${a.id}">${a.cap||""}</td><td>${isAdmin?`<button class="btn btn-sm" onclick="window.editAsset('${a.id}')">Edit</button> <button class="btn btn-sm" onclick="window.delAsset('${a.id}')">Del</button>`:`View`}</td></tr>`;
-  }).join("");
-  if(isAdmin){ document.querySelectorAll(".editable").forEach(el=>{ el.contentEditable=true; el.onblur=async()=>{ const id=el.dataset.id; const field=el.dataset.field; let val=el.innerText.replace("$","").replace("%","").replace("▲","").replace("▼","").trim(); if(field==="price"||field==="change") val=parseFloat(val); await updateDoc(doc(db,"stocks",id),{[field]:val}); }; }); }
-}
-document.querySelectorAll(".tab").forEach(t=>{ t.onclick=()=>{ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active")); t.classList.add("active"); filter=t.dataset.filter; render(); }});
-document.getElementById("search").oninput=render;
-document.getElementById("fetchAllBtn").onclick=async()=>{
-  if(!isAdmin) return alert("Admin only");
-  const res=await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false");
-  const data=await res.json();
-  for(let c of data){ await setDoc(doc(db,"stocks",c.symbol.toLowerCase()),{symbol:c.symbol.toUpperCase(),name:c.name,type:"crypto",price:c.current_price,change:+(c.price_change_percentage_24h?.toFixed(2)||0),cap:"$"+(c.market_cap/1e9).toFixed(2)+"B",updatedAt:Date.now(),uid:auth.currentUser.uid},{merge:true}); }
-  alert("Added 250 cryptos!");
-};
-const modal=document.getElementById("modal");
-document.getElementById("addBtn").onclick=()=>{ editId=null; modal.classList.add("show"); };
-document.getElementById("cancelBtn").onclick=()=>modal.classList.remove("show");
-window.editAsset=(id)=>{ const a=allAssets.find(x=>x.id===id); editId=id; document.getElementById("m_symbol").value=a.symbol; document.getElementById("m_name").value=a.name; document.getElementById("m_type").value=a.type; document.getElementById("m_price").value=a.price; document.getElementById("m_change").value=a.change; document.getElementById("m_cap").value=a.cap||""; modal.classList.add("show"); };
-window.delAsset=async(id)=>{ if(confirm("Delete?")) await deleteDoc(doc(db,"stocks",id)); };
-document.getElementById("saveBtn").onclick=async()=>{
-  const data={symbol:document.getElementById("m_symbol").value.toUpperCase(),name:document.getElementById("m_name").value,type:document.getElementById("m_type").value,price:parseFloat(document.getElementById("m_price").value),change:parseFloat(document.getElementById("m_change").value)||0,cap:document.getElementById("m_cap").value,updatedAt:Date.now(),uid:auth.currentUser?.uid||"admin"};
-  const id=editId||data.symbol.toLowerCase();
-  await setDoc(doc(db,"stocks",id),data,{merge:true});
-  modal.classList.remove("show");
-};
-</script>
+<script type="module" src="app.js"></script>
 </body>
 </html>

@@ -1,0 +1,42 @@
+:root{--bg:#080c12;--card:#111822;--card2:#172130;--border:#1f2d40;--text:#e6edf5;--muted:#8aa0bd;--green:#00d084;--red:#ff5a68;--blue:#3b82ff;--yellow:#ffb020}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:var(--bg);color:var(--text);min-height:100vh}
+header{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:rgba(8,12,18,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{font-weight:800;font-size:19px}.logo span{color:var(--blue)}
+.btn{padding:10px 16px;border-radius:12px;border:1px solid var(--border);background:var(--card2);color:var(--text);cursor:pointer;font-weight:600;font-size:14px}
+.btn-primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn-sm{padding:7px 12px;font-size:13px;border-radius:10px}
+.badge{padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid}
+.badge-crypto{background:rgba(255,176,32,.12);color:var(--yellow);border-color:rgba(255,176,32,.25)}
+.badge-stock{background:rgba(59,130,255,.12);color:var(--blue);border-color:rgba(59,130,255,.25)}
+#adminBanner{display:none;background:linear-gradient(90deg,#3b82ff,#7c5cff);padding:9px 16px;text-align:center;font-weight:700;font-size:13px}
+#adminBanner.show{display:block}
+.tabs{display:flex;gap:8px;padding:14px 16px;overflow-x:auto}.tab{padding:8px 14px;border-radius:999px;background:var(--card);border:1px solid var(--border);cursor:pointer;color:var(--muted);white-space:nowrap;font-size:13px;font-weight:600}
+.tab.active{background:var(--text);color:var(--bg)}
+.controls{display:flex;gap:8px;padding:0 16px 14px;flex-wrap:wrap}
+.controls input{flex:1;min-width:180px;padding:12px 14px;border-radius:12px;background:var(--card);border:1px solid var(--border);color:var(--text)}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 16px 14px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px}
+.portfolio{background:linear-gradient(135deg,#111822 0%,#172130 100%);border:1px solid var(--border);border-radius:20px;margin:0 16px 16px;padding:16px}
+.port-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.p-item{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:12px}
+.table-wrap{margin:0 16px 20px;background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden}
+.table-scroll{overflow:auto} table{width:100%;border-collapse:collapse;min-width:720px}
+th{padding:12px 14px;text-align:left;color:var(--muted);font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--card)}
+td{padding:14px 12px;border-bottom:1px solid rgba(31,45,64,.5)}
+.hold-card{display:none;margin:0 16px 16px;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px}
+.hold-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
+.modal.show{display:flex}
+.modal-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:20px;width:100%;max-width:460px}
+.modal-card input,.modal-card select{width:100%;padding:13px 14px;border-radius:12px;background:var(--bg);border:1px solid var(--border);color:var(--text);margin-bottom:10px}
+.row{display:flex;gap:8px}.hidden{display:none!important}
+.live-dot{width:8px;height:8px;background:var(--green);border-radius:50%;display:inline-block;animation:pulse 1.5s infinite}
+@keyframes pulse{0%{opacity:1}50%{opacity:.3}100%{opacity:1}}
+@media(min-width:768px){
+ header{padding:16px 24px} .tabs{padding:16px 24px} .controls{padding:0 24px 16px} .stats{grid-template-columns:repeat(4,1fr);padding:0 24px 16px} .portfolio{margin:0 24px 16px;padding:20px} .port-grid{grid-template-columns:repeat(4,1fr)} .table-wrap{margin:0 24px 24px} .hold-card{display:none!important}
+}
+@media(max-width:767px){
+ .table-wrap .table-scroll{display:none}
+ .hold-card{display:block}
+}

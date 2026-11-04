@@ -3,97 +3,53 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Global Savings - Stocks & Crypto Market</title>
+<title>Stocks Market - Global Savings</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="stocks.css">
 </head>
 <body>
-<div id="adminBanner">ADMIN MODE - Click any price to edit | Portfolio moves live</div>
+<div id="adminBanner">ADMIN MODE - You can edit all assets prices directly</div>
 <header>
-<div class="logo">GLOBAL <span>SAVINGS</span> <small><span class="live-dot"></span> LIVE</small></div>
+<div class="logo">GLOBAL <span>SAVINGS</span> <small><span class="live-dot"></span> LIVE MARKET</small></div>
 <div class="row">
 <button class="btn btn-sm" id="loginBtn">Login</button>
-<button class="btn btn-sm btn-primary hidden" id="addBtn">+ Add</button>
 <button class="btn btn-sm hidden" id="logoutBtn">Logout</button>
 </div>
 </header>
 
-<div class="portfolio" id="userPortfolio">
-<h3>💼 My Portfolio <span id="userEmail"></span></h3>
-<div class="port-grid">
-<div class="p-item"><small>Stock Balance (Deposited)</small><b id="p_balance">$0.00</b></div>
-<div class="p-item"><small>Holdings Value (Live)</small><b id="p_holdings">$0.00</b></div>
-<div class="p-item"><small>Total Gain / Loss</small><b id="p_gain" class="up">$0.00</b></div>
-<div class="p-item"><small>Total Assets Count</small><b id="p_count">0 Holdings</b></div>
+<div class="bal-grid">
+<div class="bal-card main"><small>Main Balance (Real)</small><b id="mainBal">$0.00</b><span id="userEmail">Not logged in</span></div>
+<div class="bal-card"><small>Stocks Balance</small><b id="stockBal">$0.00</b><span>Used for buying</span></div>
+<div class="bal-card"><small>Deposited Balance</small><b id="depBal">$0.00</b><span>Total moved to stocks</span></div>
+<div class="bal-card gain-card"><small>My Gain (Admin Editable)</small><b id="gainBal" class="up">$0.00</b><span>Set by admin</span></div>
+<div class="bal-card"><small>Holdings Value Live</small><b id="holdVal">$0.00</b><span>Moves with price</span></div>
+<div class="bal-card"><small>My Holdings Count</small><b id="holdCount">0</b><span>Stocks owned</span></div>
 </div>
-<div class="row" style="margin-top:12px">
-<button class="btn btn-sm btn-primary" id="depositBtn">+ Add Stock Money</button>
-<button class="btn btn-sm" id="viewHoldingsBtn">View My Holdings</button>
-</div>
+
+<div class="actions">
+<button class="btn btn-primary" id="moveBtn">Move Main → Stocks</button>
+<button class="btn" id="fetchLiveBtn">Fetch 250+ Live Crypto (Admin)</button>
+<button class="btn hidden" id="seedBtn">Seed 40 Assets (Admin)</button>
 </div>
 
 <div class="tabs">
-<div class="tab active" data-filter="all">All</div>
+<div class="tab active" data-filter="all">All Markets</div>
 <div class="tab" data-filter="crypto">Crypto</div>
 <div class="tab" data-filter="stock">Stocks</div>
+<div class="tab" data-filter="my">My Holdings</div>
 <div class="tab" data-filter="gainers">Gainers</div>
 <div class="tab" data-filter="losers">Losers</div>
-<div class="tab" data-filter="my">My Holdings</div>
 </div>
 
-<div class="controls">
-<input id="search" placeholder="Search BTC, AAPL, Tesla..."/>
-<button class="btn btn-sm" id="refreshBtn">↻ Live</button>
-<button class="btn btn-sm hidden" id="seedBtn">Seed 35</button>
-<button class="btn btn-sm" id="fetchAllBtn">Fetch 250 Crypto</button>
-</div>
+<div class="controls"><input id="search" placeholder="Search BTC, AAPL, TSLA, ETH..."/></div>
 
-<div class="stats">
-<div class="stat"><small>Total Market</small><b id="statTotal">0</b></div>
-<div class="stat"><small>Crypto</small><b id="statCrypto">0</b></div>
-<div class="stat"><small>Stocks</small><b id="statStock">0</b></div>
-<div class="stat gain"><small>My Gain</small><b id="statGain" class="up">+ $0.00</b></div>
-</div>
+<div class="table-wrap"><div class="table-scroll"><table><thead><tr><th>#</th><th>Asset</th><th>Type</th><th>Live Price</th><th>24h %</th><th>My Holdings</th><th>Action</th></tr></thead><tbody id="tbody"></tbody></table></div></div>
+<div class="mobile-list" id="mobileList"></div>
 
-<div class="table-wrap">
-<div class="table-scroll">
-<table>
-<thead><tr><th>#</th><th>Asset</th><th>Type</th><th>Price (Live)</th><th>24h</th><th>Value</th><th>Action</th></tr></thead>
-<tbody id="tbody"></tbody>
-</table>
-</div>
-</div>
+<div class="modal" id="moveModal"><div class="modal-card"><h3>Move Money: Main → Stocks</h3><p>This will REMOVE from Main and ADD to Stocks + Deposited</p><input id="moveAmount" type="number" placeholder="Amount e.g. 500"/><div class="row"><button class="btn btn-primary" id="confirmMove" style="flex:1">Confirm Move</button><button class="btn" id="cancelMove" style="flex:1">Cancel</button></div></div></div>
 
-<div class="hold-card" id="mobileList"></div>
+<div class="modal" id="tradeModal"><div class="modal-card"><h3 id="tradeTitle">Trade</h3><input id="tradeSymbol" disabled/><input id="tradeQty" type="number" placeholder="Quantity"/><input id="tradePass" type="password" placeholder="Trading Password (for Sell)"/><p style="font-size:12px;color:#8aa0bd;margin-bottom:10px">Buy = from Stocks Balance | Sell = password required → goes to Main Balance</p><div class="row"><button class="btn btn-primary" id="buyBtn" style="flex:1">Buy</button><button class="btn" id="sellBtn" style="flex:1">Sell</button></div><div class="row" style="margin-top:8px"><button class="btn" id="closeTrade" style="flex:1">Close</button><button class="btn btn-sm hidden" id="adminEditBtn" style="flex:1">Save Price Edit (Admin)</button></div></div></div>
 
-<div class="modal" id="holdingsModal">
-<div class="modal-card">
-<h3>My Stock Holdings - Live P/L</h3>
-<div id="holdingsList"></div>
-<button class="btn" style="width:100%;margin-top:12px" id="closeHoldings">Close</button>
-</div>
-</div>
-
-<div class="modal" id="modal">
-<div class="modal-card">
-<h3 id="modalTitle">Trade Asset</h3>
-<input id="m_symbol" placeholder="Symbol"/>
-<input id="m_name" placeholder="Name"/>
-<select id="m_type"><option value="crypto">Crypto</option><option value="stock">Stock</option></select>
-<input id="m_price" type="number" step="0.00001" placeholder="Price"/>
-<input id="m_change" type="number" step="0.01" placeholder="24h %"/>
-<input id="m_cap" placeholder="Market Cap / Sector"/>
-<div class="row" id="tradeRow" style="display:none;margin-bottom:10px">
-<input id="tradeQty" type="number" placeholder="Quantity" style="flex:1"/>
-<div style="display:flex;flex-direction:column;gap:6px;flex:1"><button class="btn btn-primary" id="buyBtn">Buy</button><button class="btn" id="sellBtn">Sell</button></div>
-</div>
-<div class="row">
-<button class="btn btn-primary" id="saveBtn" style="flex:1">Save (Admin)</button>
-<button class="btn" id="cancelBtn" style="flex:1">Cancel</button>
-</div>
-</div>
-</div>
-
-<script type="module" src="app.js"></script>
+<script type="module" src="stocks.js"></script>
 </body>
 </html>

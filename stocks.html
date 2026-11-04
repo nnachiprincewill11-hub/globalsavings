@@ -8,28 +8,38 @@
 <link rel="stylesheet" href="stocks.css">
 </head>
 <body>
-<div id="adminBanner">ADMIN MODE - You can edit all assets prices directly</div>
 <header>
-<div class="logo">GLOBAL <span>SAVINGS</span> <small><span class="live-dot"></span> LIVE MARKET</small></div>
+<div class="logo">GLOBAL <span>SAVINGS</span> <small><span class="live-dot"></span> LIVE</small></div>
 <div class="row">
 <button class="btn btn-sm" id="loginBtn">Login</button>
 <button class="btn btn-sm hidden" id="logoutBtn">Logout</button>
 </div>
 </header>
 
+<div class="user-header">
+<div class="email-box">
+<small>Logged in as</small>
+<b id="userEmail">Not logged in</b>
+</div>
+<div class="bal-card main">
+<small>Main Balance</small>
+<b id="mainBal">$0.00</b>
+</div>
+</div>
+
 <div class="bal-grid">
-<div class="bal-card main"><small>Main Balance (Real)</small><b id="mainBal">$0.00</b><span id="userEmail">Not logged in</span></div>
-<div class="bal-card"><small>Stocks Balance</small><b id="stockBal">$0.00</b><span>Used for buying</span></div>
-<div class="bal-card"><small>Deposited Balance</small><b id="depBal">$0.00</b><span>Total moved to stocks</span></div>
-<div class="bal-card gain-card"><small>My Gain (Admin Editable)</small><b id="gainBal" class="up">$0.00</b><span>Set by admin</span></div>
-<div class="bal-card"><small>Holdings Value Live</small><b id="holdVal">$0.00</b><span>Moves with price</span></div>
-<div class="bal-card"><small>My Holdings Count</small><b id="holdCount">0</b><span>Stocks owned</span></div>
+<div class="bal-card"><small>Stocks Balance</small><b id="stockBal">$0.00</b></div>
+<div class="bal-card"><small>Deposited Balance</small><b id="depBal">$0.00</b></div>
+<div class="bal-card gain-card"><small>My Gain</small><b id="gainBal" class="up">$0.00</b></div>
+<div class="bal-card"><small>Holdings Value</small><b id="holdVal">$0.00</b></div>
+<div class="bal-card"><small>Holdings Count</small><b id="holdCount">0</b></div>
 </div>
 
 <div class="actions">
-<button class="btn btn-primary" id="moveBtn">Move Main → Stocks</button>
-<button class="btn" id="fetchLiveBtn">Fetch 250+ Live Crypto (Admin)</button>
-<button class="btn hidden" id="seedBtn">Seed 40 Assets (Admin)</button>
+<button class="btn btn-primary action-btn" id="moveBtn"><span class="btn-icon">↗</span> Move Main → Stocks</button>
+<button class="btn action-btn" id="buyStockBtn"><span class="btn-icon">+</span> Buy Stock</button>
+<button class="btn action-btn" id="myHoldBtn"><span class="btn-icon">💼</span> My Holdings</button>
+<button class="btn hidden" id="seedBtn">Seed Assets (Admin)</button>
 </div>
 
 <div class="tabs">
@@ -46,9 +56,9 @@
 <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th>#</th><th>Asset</th><th>Type</th><th>Live Price</th><th>24h %</th><th>My Holdings</th><th>Action</th></tr></thead><tbody id="tbody"></tbody></table></div></div>
 <div class="mobile-list" id="mobileList"></div>
 
-<div class="modal" id="moveModal"><div class="modal-card"><h3>Move Money: Main → Stocks</h3><p>This will REMOVE from Main and ADD to Stocks + Deposited</p><input id="moveAmount" type="number" placeholder="Amount e.g. 500"/><div class="row"><button class="btn btn-primary" id="confirmMove" style="flex:1">Confirm Move</button><button class="btn" id="cancelMove" style="flex:1">Cancel</button></div></div></div>
+<div class="modal" id="moveModal"><div class="modal-card"><h3>Move Money</h3><p>Remove from Main Balance and add to Stocks Balance</p><input id="moveAmount" type="number" placeholder="Amount e.g. 500"/><div class="row"><button class="btn btn-primary" id="confirmMove" style="flex:1">Confirm Move</button><button class="btn" id="cancelMove" style="flex:1">Cancel</button></div></div></div>
 
-<div class="modal" id="tradeModal"><div class="modal-card"><h3 id="tradeTitle">Trade</h3><input id="tradeSymbol" disabled/><input id="tradeQty" type="number" placeholder="Quantity"/><input id="tradePass" type="password" placeholder="Trading Password (for Sell)"/><p style="font-size:12px;color:#8aa0bd;margin-bottom:10px">Buy = from Stocks Balance | Sell = password required → goes to Main Balance</p><div class="row"><button class="btn btn-primary" id="buyBtn" style="flex:1">Buy</button><button class="btn" id="sellBtn" style="flex:1">Sell</button></div><div class="row" style="margin-top:8px"><button class="btn" id="closeTrade" style="flex:1">Close</button><button class="btn btn-sm hidden" id="adminEditBtn" style="flex:1">Save Price Edit (Admin)</button></div></div></div>
+<div class="modal" id="tradeModal"><div class="modal-card"><h3 id="tradeTitle">Trade</h3><input id="tradeSymbol" disabled/><input id="tradeQty" type="number" placeholder="Quantity"/><input id="tradePass" type="password" placeholder="Trading Password (for Sell)"/><p>Sell proceeds go to Main Balance automatically</p><div class="row"><button class="btn btn-primary" id="buyBtn" style="flex:1">Buy</button><button class="btn" id="sellBtn" style="flex:1">Sell</button></div><div class="row" style="margin-top:8px"><button class="btn" id="closeTrade" style="flex:1">Close</button><button class="btn btn-sm hidden" id="adminEditBtn" style="flex:1">Edit Price (Admin)</button></div></div></div>
 
 <script type="module" src="stocks.js"></script>
 </body>

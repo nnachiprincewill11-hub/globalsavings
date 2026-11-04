@@ -1,40 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ADMIN PANEL - Global Savings</title>
 <link rel="stylesheet" href="admin.css">
-</head>
-<body>
+</head><body>
 <h2 style="margin:4px 0">🔐 ADMIN - admin@gmail.com</h2>
 <div style="font-size:11px;color:#8aa0c2;margin-bottom:12px">Control: Disable / Pause / Delete | WhatsApp: +2349134538841 | <span style="color:#22c55e">● Live</span></div>
-
-<div id="loginBox" class="card">
-<h3>Admin Login</h3>
+<div id="loginBox" class="card"><h3>Admin Login</h3>
 <input id="email" value="admin@gmail.com">
 <input id="pass" type="password" placeholder="Password">
 <button class="btn btnB" onclick="login()">Login</button>
 <div id="loginMsg" style="color:#f87171;font-size:12px;margin-top:8px"></div>
 </div>
-
 <div id="adminBox" style="display:none">
 <div style="flex-wrap:wrap;display:flex;gap:4px">
 <div class="tab active" id="tabDep" onclick="showTab('deposits')">Deposits</div>
 <div class="tab" id="tabTrade" onclick="showTab('trades')">Trades</div>
-<div class="tab" id="tabUsers" onclick="showTab('users')">Users</div>
-<div class="tab" id="tabTrans" onclick="showTab('transactions')">Transactions</div>
-<div class="tab" id="tabTier" onclick="showTab('tierVerifications')">Tier</div>
+<div class="tab" id="tabUsers" onclick="showTab('users')">Users - Edit + Stocks</div>
+<div class="tab" id="tabTrans" onclick="showTab('transactions')">Transactions - EDIT ALL</div>
+<div class="tab" id="tabTier" onclick="showTab('tierVerifications')">Tier - EDIT</div>
 <div class="tab" id="tabNotif" onclick="showTab('admin_notifications')">🔔 Alerts</div>
 <div class="tab" id="tabInfect" onclick="showTab('trade_indicators')">📈 Indicators</div>
-<div class="tab" id="tabOnline" onclick="showTab('online_users')" style="background:#0f3d1f;border:1px solid #22c55e;color:#22c55e">🟢 Online Users <span id="onlineCount" style="background:#22c55e;color:white;padding:2px 6px;border-radius:10px;font-size:10px">0</span></div>
-<div class="tab" id="tabStocks" onclick="showTab('stocks')" style="background:#1e293b;border:1px solid #3b82f6;color:#60a5fa">📊 Stocks Market</div>
-<div class="tab" id="tabBalances" onclick="showTab('user_balances')" style="background:#1e293b;border:1px solid #f59e0b;color:#fbbf24">💰 User Stocks Balances</div>
+<div class="tab" id="tabOnline" onclick="showTab('online_users')" style="background:#0f3d1f;border:1px solid #22c55e;color:#22c55e">🟢 Online <span id="onlineCount" style="background:#22c55e;color:white;padding:2px 6px;border-radius:10px;font-size:10px">0</span></div>
+<div class="tab" id="tabStocks" onclick="showTab('stocks')" style="background:#1e293b;border:1px solid #3b82f6;color:#60a5fa">📊 Stocks</div>
+<div class="tab" id="tabBalances" onclick="showTab('user_balances')" style="background:#1e293b;border:1px solid #f59e0b;color:#fbbf24">💰 Balances</div>
 </div>
-
 <h3 id="title">Deposits</h3>
 <div id="list">Loading...</div>
-
 <div id="stockModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;padding:16px;overflow:auto">
 <div class="card" style="max-width:500px;margin:20px auto">
 <h3 id="stockModalTitle">Edit Stock</h3>
@@ -50,10 +41,7 @@
 </div>
 </div>
 </div>
-
 <button class="btn btnR" onclick="logout()" style="margin-top:16px">Logout</button>
 </div>
-
 <script type="module" src="admin.js"></script>
-</body>
-</html>
+</body></html>

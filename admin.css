@@ -3,8 +3,7 @@ input,textarea,select{padding:11px;border-radius:8px;border:1px solid #28456e;ba
 .btn{padding:9px 13px;border-radius:8px;border:0;font-weight:bold;cursor:pointer;font-size:11px;margin:3px}
 .btnG{background:#22c55e;color:white}.btnR{background:#ef4444;color:white}.btnB{background:#155eef;color:white}.btnY{background:#f59e0b;color:black}.btnGray{background:#334155;color:white}
 .card{background:#132a48;border-radius:14px;padding:14px;margin:12px 0;border:1px solid #1e3a5f}
-.tab{padding:9px 12px;background:#11264a;border-radius:10px;cursor:pointer;display:inline-block;margin:4px;font-size:11px}
-.tab.active{background:#22c55e;color:white;font-weight:bold}
+.tab{padding:9px 12px;background:#11264a;border-radius:10px;cursor:pointer;display:inline-block;margin:4px;font-size:11px;transition:.2s}.tab.active{background:#22c55e;color:white;font-weight:bold}
 .item{background:#0d1d38;padding:12px;border-radius:12px;margin:10px 0;border:1px solid #223a5e}
 .detailBox{background:#08162e;padding:12px;border-radius:10px;margin-top:10px;border:1px solid #1a3357;display:none;max-height:600px;overflow:auto}
 .detailBox.show{display:block}
@@ -14,7 +13,6 @@ input,textarea,select{padding:11px;border-radius:8px;border:1px solid #28456e;ba
 .statusBadge{padding:3px 8px;border-radius:20px;font-size:10px;font-weight:bold}
 .disabled{background:#ef4444;color:white}.paused{background:#f59e0b;color:black}.activeS{background:#22c55e;color:white}
 .wa{background:#25D366;color:white;padding:5px 10px;border-radius:6px;text-decoration:none;font-size:11px;font-weight:bold}
-/* NEW STYLES FOR ONLINE & STOCKS */
 .onlineDot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
 .onlineDot.online{background:#22c55e;box-shadow:0 0 8px #22c55e;animation:pulse 2s infinite}
 .onlineDot.offline{background:#64748b}
@@ -28,4 +26,3 @@ input,textarea,select{padding:11px;border-radius:8px;border:1px solid #28456e;ba
 .balanceGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 .balanceItem{background:#08162e;padding:10px;border-radius:8px;border:1px solid #1a3357}
 .balanceItem small{color:#8aa0c2;font-size:10px;display:block}
-.balanceItem b{font-size:14px;display:block;margin-top:4px}
